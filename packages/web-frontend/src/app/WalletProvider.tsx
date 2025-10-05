@@ -48,17 +48,17 @@ export function WalletProvider({ children }: WalletProviderProps) {
     console.log('WalletProvider - Estado atualizado:', state)
   }, [state])
 
-  // Configuração da rede Ethereum Mainnet (compatível com MetaMask)
-  const ethereumMainnetConfig = {
-    chainId: "0x1", // Ethereum Mainnet
-    chainName: "Ethereum Mainnet",
+  // Configuração da rede Polkadot Mainnet
+  const polkadotMainnetConfig = {
+    chainId: "0x0", // Polkadot Mainnet
+    chainName: "Polkadot Mainnet",
     nativeCurrency: { 
-      name: "Ether", 
-      symbol: "ETH", 
-      decimals: 18 
+      name: "Polkadot", 
+      symbol: "DOT", 
+      decimals: 10 
     },
-    rpcUrls: ["https://eth.llamarpc.com"],
-    blockExplorerUrls: ["https://etherscan.io"],
+    rpcUrls: ["wss://rpc.polkadot.io"],
+    blockExplorerUrls: ["https://polkascan.io/polkadot"],
   }
 
   const getWalletBalance = useCallback(async () => {
@@ -70,20 +70,27 @@ export function WalletProvider({ children }: WalletProviderProps) {
     console.log(`getWalletBalance: Obtendo saldo para ${state.address}`)
 
     try {
-      const provider = new ethers.JsonRpcProvider(ethereumMainnetConfig.rpcUrls[0])
-      const balance = await provider.getBalance(state.address)
-      const formattedBalance = ethers.formatEther(balance)
+      // Para Polkadot, vamos usar uma API REST para obter o saldo
+      const response = await fetch(`https://api.polkascan.io/polkadot/api/v1/account/${state.address}/balance`)
+      const data = await response.json()
       
-      console.log(`getWalletBalance: Saldo obtido: ${formattedBalance} ETH`)
-      
-      setState(prev => ({
-        ...prev,
-        balance: formattedBalance,
-        error: null, // Limpar erro anterior
-      }))
+      if (data.data && data.data.balance) {
+        // Converter de planck para DOT (1 DOT = 10^10 planck)
+        const balanceInDOT = (parseInt(data.data.balance) / Math.pow(10, 10)).toFixed(4)
+        
+        console.log(`getWalletBalance: Saldo obtido: ${balanceInDOT} DOT`)
+        
+        setState(prev => ({
+          ...prev,
+          balance: balanceInDOT,
+          error: null, // Limpar erro anterior
+        }))
 
-      console.log(`Saldo real da carteira: ${formattedBalance} ETH`)
-      return formattedBalance
+        console.log(`Saldo real da carteira: ${balanceInDOT} DOT`)
+        return balanceInDOT
+      } else {
+        throw new Error('Dados de saldo não encontrados')
+      }
     } catch (error: any) {
       console.error('Erro ao obter saldo real:', error)
       setState(prev => ({
@@ -99,17 +106,17 @@ export function WalletProvider({ children }: WalletProviderProps) {
 
     try {
       const currentChainId = await window.ethereum.request({ method: 'eth_chainId' })
-      if (currentChainId !== ethereumMainnetConfig.chainId) {
+      if (currentChainId !== polkadotMainnetConfig.chainId) {
         try {
           await window.ethereum.request({
             method: 'wallet_switchEthereumChain',
-            params: [{ chainId: ethereumMainnetConfig.chainId }],
+            params: [{ chainId: polkadotMainnetConfig.chainId }],
           })
         } catch (switchError: any) {
           if (switchError.code === 4902) {
             await window.ethereum.request({
               method: 'wallet_addEthereumChain',
-              params: [ethereumMainnetConfig],
+              params: [polkadotMainnetConfig],
             })
           } else {
             throw switchError

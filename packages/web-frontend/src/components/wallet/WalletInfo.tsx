@@ -30,27 +30,27 @@ export const WalletInfo: React.FC = () => {
 
   const getNetworkName = (chainId: string | null) => {
     switch (chainId) {
-      case '0x1911f0a6': // 420420422
-        return 'Polkadot Hub TestNet';
+      case '0x0': // Polkadot Mainnet
+        return 'Polkadot Mainnet';
       case '0x1':
         return 'Ethereum Mainnet';
       case '0x5':
         return 'Goerli Testnet';
       default:
-        return 'Rede Desconhecida';
+        return 'Polkadot Mainnet';
     }
   };
 
   const getNetworkColor = (chainId: string | null) => {
     switch (chainId) {
-      case '0x1911f0a6': // 420420422
-        return 'bg-blue-100 text-blue-800';
+      case '0x0': // Polkadot Mainnet
+        return 'bg-purple-100 text-purple-800';
       case '0x1':
         return 'bg-green-100 text-green-800';
       case '0x5':
         return 'bg-yellow-100 text-yellow-800';
       default:
-        return 'bg-gray-100 text-gray-800';
+        return 'bg-purple-100 text-purple-800';
     }
   };
 
@@ -81,7 +81,7 @@ export const WalletInfo: React.FC = () => {
           <span className="text-sm text-gray-600">Saldo:</span>
           <div className="flex items-center space-x-2">
             <span className="font-mono text-sm">
-              {formatBalance(balance)} ETH
+              {formatBalance(balance)} DOT
             </span>
             <button
               onClick={async () => {
@@ -116,9 +116,9 @@ export const WalletInfo: React.FC = () => {
 
       <div className="pt-4 border-t border-gray-200">
         <div className="text-xs text-gray-500 space-y-1">
-          <p>• Rede: Ethereum Mainnet</p>
-          <p>• RPC: https://eth.llamarpc.com</p>
-          <p>• Explorer: https://etherscan.io</p>
+          <p>• Rede: Polkadot Mainnet</p>
+          <p>• RPC: wss://rpc.polkadot.io</p>
+          <p>• Explorer: https://polkascan.io/polkadot</p>
         </div>
       </div>
     </div>

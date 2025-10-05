@@ -66,11 +66,11 @@ export default function WalletPage() {
           </div>
         </div>
 
-        {/* Seção de Recursos */}
-        <div className="mt-8 bg-white rounded-lg shadow-md p-6">
-          <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Recursos da Rede Ethereum
-          </h2>
+               {/* Seção de Recursos */}
+               <div className="mt-8 bg-white rounded-lg shadow-md p-6">
+                 <h2 className="text-xl font-semibold text-gray-900 mb-4">
+                   Recursos da Rede Polkadot
+                 </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div className="text-center">
@@ -81,7 +81,7 @@ export default function WalletPage() {
               </div>
               <h3 className="font-medium text-gray-900 mb-2">Rede Rápida</h3>
               <p className="text-sm text-gray-600">
-                Transações rápidas e eficientes na rede Ethereum
+                Transações rápidas e eficientes na rede Polkadot
               </p>
             </div>
 
@@ -116,11 +116,11 @@ export default function WalletPage() {
           <h3 className="font-medium text-gray-900 mb-4">Links Úteis</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-gray-700 mb-2">Rede Ethereum</h4>
+              <h4 className="font-medium text-gray-700 mb-2">Rede Polkadot</h4>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>
                   <a 
-                    href="https://eth.llamarpc.com" 
+                    href="wss://rpc.polkadot.io" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
@@ -130,22 +130,22 @@ export default function WalletPage() {
                 </li>
                 <li>
                   <a 
-                    href="https://etherscan.io" 
+                    href="https://polkascan.io/polkadot" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Etherscan Explorer
+                    Polkascan Explorer
                   </a>
                 </li>
                 <li>
                   <a 
-                    href="https://metamask.io/" 
+                    href="https://polkadot.js.org/apps/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    MetaMask Wallet
+                    Polkadot.js Apps
                   </a>
                 </li>
               </ul>
@@ -155,7 +155,7 @@ export default function WalletPage() {
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>
                   <a 
-                    href="https://ethereum.org/pt/developers/" 
+                    href="https://polkadot.network/docs/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
@@ -165,22 +165,22 @@ export default function WalletPage() {
                 </li>
                 <li>
                   <a 
-                    href="https://docs.ethereum.org/" 
+                    href="https://substrate.dev/docs/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Documentação Oficial
+                    Documentação Substrate
                   </a>
                 </li>
                 <li>
                   <a 
-                    href="https://ethers.org/" 
+                    href="https://polkadot.js.org/docs/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Ethers.js Library
+                    Polkadot.js Library
                   </a>
                 </li>
               </ul>
