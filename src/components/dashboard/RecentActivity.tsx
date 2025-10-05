@@ -87,13 +87,41 @@ const getStatusColor = (status: string) => {
   }
 }
 
-export function RecentActivity() {
+interface RecentActivityProps {
+  activities?: Array<{
+    id: string
+    type: string
+    description: string
+    amount?: number
+    date: string
+  }>
+  isLoading?: boolean
+}
+
+export function RecentActivity({ activities: propActivities, isLoading = false }: RecentActivityProps) {
   const [activities, setActivities] = useState<ActivityItem[]>([])
 
   useEffect(() => {
-    // Simular carregamento de atividades
-    setActivities(mockActivities)
-  }, [])
+    if (propActivities) {
+      // Converter atividades das props para o formato do componente
+      const convertedActivities: ActivityItem[] = propActivities.map(activity => ({
+        id: activity.id,
+        type: activity.type as any,
+        title: activity.type === 'payment' ? 'Pagamento Realizado' :
+               activity.type === 'score_update' ? 'Score Atualizado' :
+               activity.type === 'wallet_connected' ? 'Carteira Conectada' : 'Atividade',
+        description: activity.description,
+        timestamp: new Date(activity.date).toLocaleString('pt-BR'),
+        status: activity.type === 'payment' ? 'success' as const :
+                activity.type === 'score_update' ? 'success' as const :
+                activity.type === 'wallet_connected' ? 'info' as const : 'info' as const,
+        value: activity.amount ? `R$ ${activity.amount.toFixed(2)}` : undefined
+      }))
+      setActivities(convertedActivities)
+    } else {
+      setActivities(mockActivities)
+    }
+  }, [propActivities])
 
   return (
     <div className="card">

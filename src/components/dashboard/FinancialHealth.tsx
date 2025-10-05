@@ -136,12 +136,41 @@ const formatValue = (value: number, unit: string) => {
   return value.toString()
 }
 
-export function FinancialHealth() {
+interface FinancialHealthProps {
+  data?: {
+    totalDebt: number
+    monthlyIncome: number
+    creditUtilization: number
+    paymentHistory: number
+  }
+  isLoading?: boolean
+}
+
+export function FinancialHealth({ data, isLoading = false }: FinancialHealthProps) {
   const [metrics, setMetrics] = useState<FinancialMetric[]>([])
 
   useEffect(() => {
-    setMetrics(getDefaultMetrics())
-  }, [])
+    if (data) {
+      // Atualizar métricas com dados reais
+      const updatedMetrics = getDefaultMetrics().map(metric => {
+        switch (metric.name) {
+          case 'Saldo da Carteira':
+            return { ...metric, value: data.monthlyIncome, status: 'good' as const }
+          case 'Transações Totais':
+            return { ...metric, value: data.paymentHistory, status: 'good' as const }
+          case 'Valor Total Movimentado':
+            return { ...metric, value: data.totalDebt, status: data.totalDebt > 0 ? 'warning' as const : 'good' as const }
+          case 'Score de Crédito':
+            return { ...metric, value: 750, status: 'good' as const }
+          default:
+            return metric
+        }
+      })
+      setMetrics(updatedMetrics)
+    } else {
+      setMetrics(getDefaultMetrics())
+    }
+  }, [data])
 
   const overallHealth = metrics.reduce((acc, metric) => {
     const weight = metric.name === 'Score de Crédito' ? 0.3 : 0.14

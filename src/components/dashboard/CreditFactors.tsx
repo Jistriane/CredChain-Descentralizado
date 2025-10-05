@@ -119,12 +119,39 @@ const getTrendColor = (trend: string) => {
   }
 }
 
-export function CreditFactors() {
+interface CreditFactorsProps {
+  factors?: Array<{
+    name: string
+    score: number
+    impact: 'high' | 'medium' | 'low'
+  }>
+  isLoading?: boolean
+}
+
+export function CreditFactors({ factors: propFactors, isLoading = false }: CreditFactorsProps) {
   const [factors, setFactors] = useState<CreditFactor[]>([])
 
   useEffect(() => {
-    setFactors(getDefaultFactors())
-  }, [])
+    if (propFactors) {
+      // Atualizar fatores com dados reais
+      const updatedFactors = getDefaultFactors().map(defaultFactor => {
+        const propFactor = propFactors.find(f => f.name === defaultFactor.name)
+        if (propFactor) {
+          return {
+            ...defaultFactor,
+            score: propFactor.score,
+            impact: propFactor.impact === 'high' ? 'positive' as const : 
+                   propFactor.impact === 'medium' ? 'neutral' as const : 'negative' as const,
+            lastUpdate: 'Atualizado agora'
+          }
+        }
+        return defaultFactor
+      })
+      setFactors(updatedFactors)
+    } else {
+      setFactors(getDefaultFactors())
+    }
+  }, [propFactors])
 
   const totalScore = factors.reduce((acc, factor) => {
     return acc + (factor.score * factor.weight / 100)
