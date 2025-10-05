@@ -72,6 +72,37 @@ contract CredChainIdentityVerification is ReentrancyGuard, Ownable, Pausable {
         uint256 timestamp
     );
 
+
+    // Eventos de auditoria
+    event SecurityEvent(
+        string indexed eventType,
+        address indexed user,
+        uint256 timestamp,
+        string details
+    );
+    
+    event AccessGranted(
+        address indexed user,
+        string indexed role,
+        uint256 timestamp
+    );
+    
+    event AccessRevoked(
+        address indexed user,
+        string indexed role,
+        uint256 timestamp
+    );
+    
+    event ContractPaused(
+        address indexed admin,
+        uint256 timestamp,
+        string reason
+    );
+    
+    event ContractUnpaused(
+        address indexed admin,
+        uint256 timestamp
+    );
     // Mapeamentos
     mapping(address => IdentityInfo) public identities;
     mapping(uint256 => VerificationRequest) public verificationRequests;

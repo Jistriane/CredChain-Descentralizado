@@ -62,6 +62,37 @@ contract CredChainPaymentRegistry is ReentrancyGuard, Ownable, Pausable {
         bool isVerified
     );
 
+
+    // Eventos de auditoria
+    event SecurityEvent(
+        string indexed eventType,
+        address indexed user,
+        uint256 timestamp,
+        string details
+    );
+    
+    event AccessGranted(
+        address indexed user,
+        string indexed role,
+        uint256 timestamp
+    );
+    
+    event AccessRevoked(
+        address indexed user,
+        string indexed role,
+        uint256 timestamp
+    );
+    
+    event ContractPaused(
+        address indexed admin,
+        uint256 timestamp,
+        string reason
+    );
+    
+    event ContractUnpaused(
+        address indexed admin,
+        uint256 timestamp
+    );
     // Mapeamentos
     mapping(uint256 => Payment) public payments;
     mapping(address => uint256[]) public userPayments;

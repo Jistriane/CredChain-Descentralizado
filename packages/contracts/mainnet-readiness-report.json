@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-10-05T18:41:30.735Z",
+  "timestamp": "2025-10-05T18:49:59.847Z",
   "network": "polkadot",
   "isMainnet": false,
   "checks": [
@@ -17,7 +17,7 @@
     },
     {
       "name": "Segurança",
-      "status": "❌ FAIL"
+      "status": "✅ PASS"
     },
     {
       "name": "Otimização de gas",
