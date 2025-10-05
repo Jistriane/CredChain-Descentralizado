@@ -1,0 +1,37 @@
+{
+  "name": "credchain-substrate-node",
+  "version": "1.0.0",
+  "description": "Substrate Node for CredChain - Polkadot Parachain",
+  "main": "index.js",
+  "scripts": {
+    "dev": "cargo run --release",
+    "dev:watch": "cargo watch -x run",
+    "build": "cargo build --release",
+    "test": "cargo test",
+    "check": "cargo check",
+    "clean": "cargo clean",
+    "clippy": "cargo clippy",
+    "fmt": "cargo fmt"
+  },
+  "keywords": [
+    "substrate",
+    "polkadot",
+    "blockchain",
+    "credchain",
+    "credit-scoring"
+  ],
+  "author": "CredChain Team",
+  "license": "MIT",
+  "engines": {
+    "rust": ">=1.70.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/credchain/credchain.git",
+    "directory": "packages/substrate-node"
+  },
+  "bugs": {
+    "url": "https://github.com/credchain/credchain/issues"
+  },
+  "homepage": "https://credchain.io"
+}

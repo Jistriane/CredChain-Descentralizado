@@ -1,0 +1,152 @@
+{
+  "timestamp": "2025-10-05T05:04:12.658Z",
+  "criticalIssues": 4,
+  "warnings": 10,
+  "totalChecks": 28,
+  "results": [
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Modificadores de Acesso",
+      "status": "❌ FAIL"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Modificadores de Acesso",
+      "status": "❌ FAIL"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Modificadores de Acesso",
+      "status": "❌ FAIL"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Modificadores de Acesso",
+      "status": "❌ FAIL"
+    },
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Validação de Entradas",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Validação de Entradas",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Validação de Entradas",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Validação de Entradas",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Proteção Reentrância",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Proteção Reentrância",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Proteção Reentrância",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Proteção Reentrância",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Eventos de Auditoria",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Eventos de Auditoria",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Eventos de Auditoria",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Eventos de Auditoria",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Constantes de Segurança",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Constantes de Segurança",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Constantes de Segurança",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Constantes de Segurança",
+      "status": "⚠️  WARNING"
+    },
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Dados Mocados",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Dados Mocados",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Dados Mocados",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Dados Mocados",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainCreditScore.sol",
+      "check": "Conformidade Polkadot",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainPaymentRegistry.sol",
+      "check": "Conformidade Polkadot",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainIdentityVerification.sol",
+      "check": "Conformidade Polkadot",
+      "status": "✅ PASS"
+    },
+    {
+      "contract": "CredChainOracleIntegration.sol",
+      "check": "Conformidade Polkadot",
+      "status": "✅ PASS"
+    }
+  ],
+  "status": "FAILED",
+  "recommendations": [
+    "Corrigir problemas críticos antes do deploy"
+  ]
+}

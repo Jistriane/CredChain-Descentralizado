@@ -1,0 +1,200 @@
+{
+  "dashboard": {
+    "id": null,
+    "title": "CredChain - Blockchain Dashboard",
+    "tags": ["credchain", "blockchain", "substrate"],
+    "style": "dark",
+    "timezone": "browser",
+    "panels": [
+      {
+        "id": 1,
+        "title": "Block Production",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "substrate_block_height",
+            "legendFormat": "Current block height"
+          },
+          {
+            "expr": "substrate_finalized_block_height",
+            "legendFormat": "Finalized block height"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 0},
+        "yAxes": [
+          {
+            "label": "Block number",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 2,
+        "title": "Block Time",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "substrate_block_time_seconds",
+            "legendFormat": "Block time"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "yAxes": [
+          {
+            "label": "Seconds",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Transaction Volume",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(substrate_transactions_total[5m])",
+            "legendFormat": "Transactions/sec"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 8},
+        "yAxes": [
+          {
+            "label": "Transactions/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Pallet Activity",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(substrate_pallet_calls_total[5m])",
+            "legendFormat": "{{pallet_name}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 8},
+        "yAxes": [
+          {
+            "label": "Calls/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "Credit Score Operations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(pallet_credit_score_operations_total[5m])",
+            "legendFormat": "{{operation_type}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "yAxes": [
+          {
+            "label": "Operations/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Payment Registry Operations",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(pallet_payment_registry_operations_total[5m])",
+            "legendFormat": "{{operation_type}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "yAxes": [
+          {
+            "label": "Operations/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "Oracle Data Updates",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(pallet_oracle_integration_updates_total[5m])",
+            "legendFormat": "{{data_type}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 24},
+        "yAxes": [
+          {
+            "label": "Updates/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "XCM Messages",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(xcm_messages_total[5m])",
+            "legendFormat": "{{message_type}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 24},
+        "yAxes": [
+          {
+            "label": "Messages/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "Off-chain Worker Activity",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(offchain_worker_tasks_total[5m])",
+            "legendFormat": "{{task_type}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 32},
+        "yAxes": [
+          {
+            "label": "Tasks/sec",
+            "min": 0
+          }
+        ]
+      },
+      {
+        "id": 10,
+        "title": "Smart Contract Calls",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(ink_contract_calls_total[5m])",
+            "legendFormat": "{{contract_name}}"
+          }
+        ],
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 32},
+        "yAxes": [
+          {
+            "label": "Calls/sec",
+            "min": 0
+          }
+        ]
+      }
+    ],
+    "time": {
+      "from": "now-1h",
+      "to": "now"
+    },
+    "refresh": "30s"
+  }
+}

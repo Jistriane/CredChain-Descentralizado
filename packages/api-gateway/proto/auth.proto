@@ -1,0 +1,62 @@
+syntax = "proto3";
+
+package credchain;
+
+service AuthService {
+  rpc authenticate(AuthenticateRequest) returns (AuthenticateResponse);
+  rpc refreshToken(RefreshTokenRequest) returns (RefreshTokenResponse);
+  rpc logout(LogoutRequest) returns (LogoutResponse);
+  rpc validateToken(ValidateTokenRequest) returns (ValidateTokenResponse);
+}
+
+message AuthenticateRequest {
+  string username = 1;
+  string password = 2;
+}
+
+message AuthenticateResponse {
+  bool success = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  int64 expires_in = 4;
+  UserInfo user = 5;
+}
+
+message RefreshTokenRequest {
+  string refresh_token = 1;
+}
+
+message RefreshTokenResponse {
+  bool success = 1;
+  string access_token = 2;
+  string refresh_token = 3;
+  int64 expires_in = 4;
+}
+
+message LogoutRequest {
+  string token = 1;
+}
+
+message LogoutResponse {
+  bool success = 1;
+}
+
+message ValidateTokenRequest {
+  string token = 1;
+}
+
+message ValidateTokenResponse {
+  bool valid = 1;
+  UserInfo user = 2;
+  int64 expires_at = 3;
+}
+
+message UserInfo {
+  string user_id = 1;
+  string username = 2;
+  string email = 3;
+  string role = 4;
+  bool is_active = 5;
+  int64 created_at = 6;
+  int64 last_login = 7;
+}

@@ -1,0 +1,35 @@
+{
+  "name": "@credchain/integrations",
+  "version": "1.0.0",
+  "description": "CredChain External Integrations - APIs bancárias, provedores, gateways",
+  "main": "dist/index.js",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev --respawn --transpile-only src/index.ts",
+    "build": "tsc",
+    "test": "jest"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "axios": "^1.5.0",
+    "stripe": "^13.5.0",
+    "paypal-rest-sdk": "^1.8.1",
+    "braintree": "^3.7.0",
+    "plaid": "^11.0.0",
+    "twilio": "^4.15.0",
+    "sendgrid": "^5.2.3",
+    "firebase-admin": "^11.10.1",
+    "aws-sdk": "^2.1447.0",
+    "crypto": "^1.0.1",
+    "jsonwebtoken": "^9.0.2",
+    "uuid": "^9.0.0",
+    "winston": "^3.10.0",
+    "dotenv": "^16.3.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.4.5",
+    "typescript": "^5.1.6",
+    "ts-node-dev": "^2.0.0",
+    "jest": "^29.6.1"
+  }
+}

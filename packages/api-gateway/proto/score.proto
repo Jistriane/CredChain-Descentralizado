@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package credchain;
+
+service ScoreService {
+  rpc calculateScore(CalculateScoreRequest) returns (CalculateScoreResponse);
+  rpc getScore(GetScoreRequest) returns (GetScoreResponse);
+  rpc updateScore(UpdateScoreRequest) returns (UpdateScoreResponse);
+  rpc getScoreHistory(GetScoreHistoryRequest) returns (GetScoreHistoryResponse);
+}
+
+message CalculateScoreRequest {
+  string user_id = 1;
+  ScoreData data = 2;
+}
+
+message CalculateScoreResponse {
+  bool success = 1;
+  CreditScore score = 2;
+  string transaction_hash = 3;
+  int64 calculated_at = 4;
+}
+
+message GetScoreRequest {
+  string user_id = 1;
+}
+
+message GetScoreResponse {
+  bool success = 1;
+  CreditScore score = 2;
+}
+
+message UpdateScoreRequest {
+  string user_id = 1;
+  int32 score = 2;
+  repeated ScoreFactor factors = 3;
+}
+
+message UpdateScoreResponse {
+  bool success = 1;
+  CreditScore score = 2;
+  string transaction_hash = 3;
+}
+
+message GetScoreHistoryRequest {
+  string user_id = 1;
+  int32 limit = 2;
+  int32 offset = 3;
+}
+
+message GetScoreHistoryResponse {
+  bool success = 1;
+  repeated CreditScore scores = 2;
+  int32 total = 3;
+}
+
+message ScoreData {
+  repeated PaymentHistory payments = 1;
+  repeated CreditAccount accounts = 2;
+  repeated CreditInquiry inquiries = 3;
+  PersonalInfo personal_info = 4;
+}
+
+message CreditScore {
+  string user_id = 1;
+  int32 score = 2;
+  repeated ScoreFactor factors = 3;
+  string grade = 4;
+  int64 calculated_at = 5;
+  string blockchain_hash = 6;
+  ScoreMetadata metadata = 7;
+}
+
+message ScoreFactor {
+  string name = 1;
+  double weight = 2;
+  double value = 3;
+  string impact = 4;
+  string description = 5;
+}
+
+message PaymentHistory {
+  string payment_id = 1;
+  double amount = 2;
+  string due_date = 3;
+  string paid_date = 4;
+  string status = 5;
+  string account_type = 6;
+}
+
+message CreditAccount {
+  string account_id = 1;
+  string account_type = 2;
+  double balance = 3;
+  double limit = 4;
+  string status = 5;
+  string opened_date = 6;
+}
+
+message CreditInquiry {
+  string inquiry_id = 1;
+  string creditor = 2;
+  string date = 3;
+  string type = 4;
+}
+
+message PersonalInfo {
+  string cpf = 1;
+  string name = 2;
+  string birth_date = 3;
+  string address = 4;
+  string phone = 5;
+  string email = 6;
+}
+
+message ScoreMetadata {
+  string model_version = 1;
+  string algorithm = 2;
+  double confidence = 3;
+  repeated string data_sources = 4;
+  int64 last_updated = 5;
+}

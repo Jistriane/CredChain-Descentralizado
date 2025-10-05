@@ -1,0 +1,43 @@
+{
+  "timestamp": "2025-10-05T05:04:03.971Z",
+  "network": "hardhat",
+  "isMainnet": false,
+  "checks": [
+    {
+      "name": "Rede Mainnet",
+      "status": "⚠️  TESTNET"
+    },
+    {
+      "name": "Variáveis de Ambiente",
+      "status": "❌ FAIL"
+    },
+    {
+      "name": "Saldo da Conta",
+      "status": "✅ PASS"
+    },
+    {
+      "name": "Compilação",
+      "status": "✅ PASS"
+    },
+    {
+      "name": "Tamanho dos Contratos",
+      "status": "✅ PASS"
+    },
+    {
+      "name": "Testes",
+      "status": "✅ READY"
+    },
+    {
+      "name": "Segurança",
+      "status": "✅ PASS"
+    },
+    {
+      "name": "Dados Mocados",
+      "status": "✅ PASS"
+    }
+  ],
+  "allPassed": false,
+  "recommendations": [
+    "Corrigir problemas identificados antes do deploy"
+  ]
+}

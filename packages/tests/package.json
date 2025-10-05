@@ -1,0 +1,79 @@
+{
+  "name": "@credchain/tests",
+  "version": "1.0.0",
+  "description": "CredChain Test Suite - Unit, Integration, E2E",
+  "main": "dist/index.js",
+  "scripts": {
+    "test": "jest",
+    "test:unit": "jest --testPathPattern=unit",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:e2e": "jest --testPathPattern=e2e",
+    "test:watch": "jest --watch",
+    "test:coverage": "jest --coverage",
+    "test:ci": "jest --ci --coverage --watchAll=false"
+  },
+  "dependencies": {
+    "jest": "^29.6.1",
+    "supertest": "^6.3.3",
+    "axios": "^1.5.0",
+    "puppeteer": "^21.3.6",
+    "playwright": "^1.36.2",
+    "selenium-webdriver": "^4.11.0",
+    "cypress": "^13.3.0",
+    "detox": "^20.11.0",
+    "appium": "^2.0.0",
+    "webdriverio": "^8.13.0",
+    "testcontainers": "^9.9.1",
+    "mongodb-memory-server": "^8.15.1",
+    "redis-memory-server": "^0.6.0",
+    "pg-mem": "^2.7.0",
+    "msw": "^2.0.0",
+    "nock": "^13.3.0",
+    "sinon": "^15.2.0",
+    "chai": "^4.3.7",
+    "mocha": "^10.2.0",
+    "karma": "^6.4.1",
+    "jasmine": "^5.1.0",
+    "vitest": "^0.34.0",
+    "testcafe": "^2.6.0",
+    "nightwatch": "^2.6.0",
+    "webdriver": "^7.0.0",
+    "selenium-standalone": "^8.0.0",
+    "chromedriver": "^115.0.0",
+    "geckodriver": "^4.2.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.3",
+    "@types/supertest": "^2.0.12",
+    "@types/chai": "^4.3.5",
+    "@types/mocha": "^10.0.1",
+    "@types/sinon": "^10.0.0",
+    "typescript": "^5.1.6",
+    "ts-jest": "^29.1.1",
+    "jest-environment-jsdom": "^29.6.1",
+    "jest-environment-node": "^29.6.1"
+  },
+  "jest": {
+    "preset": "ts-jest",
+    "testEnvironment": "node",
+    "collectCoverageFrom": [
+      "src/**/*.{ts,tsx}",
+      "!src/**/*.d.ts",
+      "!src/**/*.test.{ts,tsx}",
+      "!src/**/*.spec.{ts,tsx}"
+    ],
+    "coverageThreshold": {
+      "global": {
+        "branches": 80,
+        "functions": 80,
+        "lines": 80,
+        "statements": 80
+      }
+    },
+    "testMatch": [
+      "**/__tests__/**/*.{ts,tsx}",
+      "**/?(*.)+(spec|test).{ts,tsx}"
+    ],
+    "setupFilesAfterEnv": ["<rootDir>/src/setup.ts"]
+  }
+}

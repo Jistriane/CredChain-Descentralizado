@@ -1,0 +1,44 @@
+{
+  "name": "credchain-contracts",
+  "version": "1.0.0",
+  "description": "Smart contracts for CredChain - Decentralized Credit Scoring System",
+  "main": "index.js",
+  "scripts": {
+    "compile": "hardhat compile",
+    "test": "hardhat test",
+    "deploy:polkadot": "hardhat run scripts/deploy.js --network polkadot",
+    "deploy:paseo": "hardhat run scripts/deploy.js --network paseo",
+    "deploy:assetHub": "hardhat run scripts/deploy.js --network assetHub",
+    "verify:polkadot": "hardhat run scripts/verify-contracts.js --network polkadot",
+    "verify:paseo": "hardhat run scripts/verify-contracts.js --network paseo",
+    "verify:assetHub": "hardhat run scripts/verify-contracts.js --network assetHub",
+    "size": "hardhat size-contracts",
+    "gas": "REPORT_GAS=true hardhat test",
+    "coverage": "hardhat coverage",
+    "clean": "hardhat clean",
+    "check:mainnet": "hardhat run scripts/check-mainnet-readiness.js",
+    "security:audit": "hardhat run scripts/security-audit.js"
+  },
+  "keywords": [
+    "blockchain",
+    "polkadot",
+    "credit-scoring",
+    "smart-contracts",
+    "solidity",
+    "defi"
+  ],
+  "author": "CredChain Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^4.0.0",
+    "@openzeppelin/contracts": "^4.9.0",
+    "hardhat": "^2.19.0",
+    "hardhat-gas-reporter": "^1.0.9",
+    "solidity-coverage": "^0.8.5"
+  },
+  "dependencies": {
+    "@polkadot/api": "^10.0.0",
+    "@polkadot/types": "^10.0.0",
+    "ethers": "^6.8.0"
+  }
+}

@@ -1,0 +1,63 @@
+{
+  "name": "credchain-descentralizado",
+  "version": "1.0.0",
+  "description": "Sistema Descentralizado de Credit Scoring CredChain",
+  "main": "index.js",
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:eliza\" \"npm run dev:web\" \"npm run dev:mobile\" \"npm run dev:database\"",
+    "dev:api": "cd packages/api-gateway && npm run dev",
+    "dev:eliza": "cd packages/eliza-runtime && npm run dev",
+    "dev:web": "cd packages/web-frontend && npm run dev",
+    "dev:mobile": "cd packages/mobile-app && npm run dev",
+    "dev:database": "docker-compose up -d postgres mongodb redis",
+    "dev:blockchain": "cd packages/substrate-node && npm run dev",
+    "dev:all": "concurrently \"npm run dev:database\" \"npm run dev:blockchain\" \"npm run dev:api\" \"npm run dev:eliza\" \"npm run dev:web\" \"npm run dev:mobile\"",
+    "build": "npm run build:api && npm run build:eliza && npm run build:web && npm run build:mobile",
+    "build:api": "cd packages/api-gateway && npm run build",
+    "build:eliza": "cd packages/eliza-runtime && npm run build",
+    "build:web": "cd packages/web-frontend && npm run build",
+    "build:mobile": "cd packages/mobile-app && npm run build",
+    "test": "npm run test:api && npm run test:eliza && npm run test:web && npm run test:mobile",
+    "test:api": "cd packages/api-gateway && npm test",
+    "test:eliza": "cd packages/eliza-runtime && npm test",
+    "test:web": "cd packages/web-frontend && npm test",
+    "test:mobile": "cd packages/mobile-app && npm test",
+    "install:all": "npm install && npm run install:packages",
+    "install:packages": "cd packages/api-gateway && npm install && cd ../eliza-runtime && npm install && cd ../web-frontend && npm install && cd ../mobile-app && npm install && cd ../substrate-node && npm install",
+    "clean": "npm run clean:packages && docker-compose down -v",
+    "clean:packages": "cd packages/api-gateway && rm -rf node_modules && cd ../eliza-runtime && rm -rf node_modules && cd ../web-frontend && rm -rf node_modules && cd ../mobile-app && rm -rf node_modules",
+    "setup": "./scripts/dev-setup.sh",
+    "deploy:contracts": "cd packages/contracts && npm run deploy:polkadot",
+    "verify:contracts": "cd packages/contracts && npm run verify:polkadot",
+    "docker:up": "docker-compose up -d",
+    "docker:down": "docker-compose down",
+    "docker:logs": "docker-compose logs -f",
+    "docker:restart": "docker-compose restart",
+    "status": "npm run status:services",
+    "status:services": "./scripts/check-services.sh",
+    "start": "./scripts/start-dev.sh"
+  },
+  "keywords": [
+    "blockchain",
+    "credit-scoring",
+    "polkadot",
+    "elizaos",
+    "fintech",
+    "brasil",
+    "descentralizado"
+  ],
+  "author": "CredChain Team",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2",
+    "cross-env": "^7.0.3",
+    "nodemon": "^3.1.10"
+  },
+  "workspaces": [
+    "packages/*"
+  ],
+  "engines": {
+    "node": ">=18.0.0",
+    "npm": ">=8.0.0"
+  }
+}

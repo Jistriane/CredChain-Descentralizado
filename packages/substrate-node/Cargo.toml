@@ -1,0 +1,169 @@
+[package]
+name = "credchain-node"
+version = "0.1.0"
+edition = "2021"
+authors = ["CredChain Team <dev@credchain.io>"]
+description = "CredChain - Descentralizado Credit Scoring Node"
+license = "MIT"
+
+[dependencies]
+# Substrate Core
+sp-core = { version = "6.0.0", default-features = false }
+sp-runtime = { version = "6.0.0", default-features = false }
+sp-io = { version = "6.0.0", default-features = false }
+sp-std = { version = "6.0.0", default-features = false }
+sp-consensus-aura = { version = "0.10.0", default-features = false }
+sp-inherents = { version = "4.0.0", default-features = false }
+sp-offchain = { version = "4.0.0", default-features = false }
+sp-session = { version = "4.0.0", default-features = false }
+sp-transaction-pool = { version = "4.0.0", default-features = false }
+sp-version = { version = "5.0.0", default-features = false }
+
+# Frame
+frame-benchmarking = { version = "4.0.0", default-features = false, optional = true }
+frame-benchmarking-cli = { version = "4.0.0", default-features = false }
+frame-executive = { version = "4.0.0", default-features = false }
+frame-rpc = { version = "4.0.0", default-features = false }
+frame-support = { version = "4.0.0", default-features = false }
+frame-system = { version = "4.0.0", default-features = false }
+frame-system-benchmarking = { version = "4.0.0", default-features = false, optional = true }
+frame-system-rpc-runtime-api = { version = "4.0.0", default-features = false }
+frame-try-runtime = { version = "0.10.0", default-features = false, optional = true }
+
+# Pallets
+pallet-balances = { version = "4.0.0", default-features = false }
+pallet-grandpa = { version = "4.0.0", default-features = false }
+pallet-randomness-collective-flip = { version = "4.0.0", default-features = false }
+pallet-session = { version = "4.0.0", default-features = false }
+pallet-sudo = { version = "4.0.0", default-features = false }
+pallet-timestamp = { version = "4.0.0", default-features = false }
+pallet-transaction-payment = { version = "4.0.0", default-features = false }
+pallet-transaction-payment-rpc-runtime-api = { version = "4.0.0", default-features = false }
+pallet-aura = { version = "4.0.0", default-features = false }
+
+# CredChain Custom Pallets
+pallet-credit-score = { path = "pallets/pallet-credit-score", default-features = false }
+pallet-payment-registry = { path = "pallets/pallet-payment-registry", default-features = false }
+pallet-identity-verification = { path = "pallets/pallet-identity-verification", default-features = false }
+pallet-oracle-integration = { path = "pallets/pallet-oracle-integration", default-features = false }
+
+# Substrate
+sc-api = { version = "4.0.0", default-features = false }
+sc-block-builder = { version = "4.0.0", default-features = false }
+sc-client-api = { version = "4.0.0", default-features = false }
+sc-client-db = { version = "4.0.0", default-features = false }
+sc-consensus = { version = "0.10.0", default-features = false }
+sc-consensus-aura = { version = "0.10.0", default-features = false }
+sc-executor = { version = "4.0.0", default-features = false }
+sc-finality-grandpa = { version = "0.10.0", default-features = false }
+sc-keystore = { version = "0.10.0", default-features = false }
+sc-mmr = { version = "0.10.0", default-features = false }
+sc-network = { version = "0.10.0", default-features = false }
+sc-offchain = { version = "4.0.0", default-features = false }
+sc-rpc = { version = "4.0.0", default-features = false }
+sc-rpc-api = { version = "4.0.0", default-features = false }
+sc-rpc-server = { version = "4.0.0", default-features = false }
+sc-sync = { version = "0.10.0", default-features = false }
+sc-telemetry = { version = "4.0.0", default-features = false }
+sc-transaction-pool = { version = "4.0.0", default-features = false }
+sc-transaction-pool-rpc = { version = "4.0.0", default-features = false }
+
+# Substrate Node
+substrate-frame-rpc-system = { version = "4.0.0", default-features = false }
+substrate-frame-rpc-transaction-payment = { version = "4.0.0", default-features = false }
+
+# Runtime
+credchain-runtime = { path = "runtime", default-features = false }
+
+# Standard Library
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+tokio = { version = "1.0", default-features = false, features = ["macros"] }
+log = { version = "0.4", default-features = false }
+tracing = { version = "0.1", default-features = false }
+
+[features]
+default = ["std"]
+std = [
+    "sp-core/std",
+    "sp-runtime/std",
+    "sp-io/std",
+    "sp-std/std",
+    "sp-consensus-aura/std",
+    "sp-inherents/std",
+    "sp-offchain/std",
+    "sp-session/std",
+    "sp-transaction-pool/std",
+    "sp-version/std",
+    "frame-benchmarking/std",
+    "frame-benchmarking-cli/std",
+    "frame-executive/std",
+    "frame-rpc/std",
+    "frame-support/std",
+    "frame-system/std",
+    "frame-system-benchmarking/std",
+    "frame-system-rpc-runtime-api/std",
+    "frame-try-runtime/std",
+    "pallet-balances/std",
+    "pallet-grandpa/std",
+    "pallet-randomness-collective-flip/std",
+    "pallet-session/std",
+    "pallet-sudo/std",
+    "pallet-timestamp/std",
+    "pallet-transaction-payment/std",
+    "pallet-transaction-payment-rpc-runtime-api/std",
+    "pallet-aura/std",
+    "pallet-credit-score/std",
+    "pallet-payment-registry/std",
+    "pallet-identity-verification/std",
+    "pallet-oracle-integration/std",
+    "sc-api/std",
+    "sc-block-builder/std",
+    "sc-client-api/std",
+    "sc-client-db/std",
+    "sc-consensus/std",
+    "sc-consensus-aura/std",
+    "sc-executor/std",
+    "sc-finality-grandpa/std",
+    "sc-keystore/std",
+    "sc-mmr/std",
+    "sc-network/std",
+    "sc-offchain/std",
+    "sc-rpc/std",
+    "sc-rpc-api/std",
+    "sc-rpc-server/std",
+    "sc-sync/std",
+    "sc-telemetry/std",
+    "sc-transaction-pool/std",
+    "sc-transaction-pool-rpc/std",
+    "substrate-frame-rpc-system/std",
+    "substrate-frame-rpc-transaction-payment/std",
+    "credchain-runtime/std",
+    "serde/std",
+    "tokio/std",
+    "log/std",
+    "tracing/std",
+]
+runtime-benchmarks = [
+    "frame-benchmarking/runtime-benchmarks",
+    "frame-system/runtime-benchmarks",
+    "frame-system-benchmarking/runtime-benchmarks",
+    "pallet-balances/runtime-benchmarks",
+    "pallet-credit-score/runtime-benchmarks",
+    "pallet-payment-registry/runtime-benchmarks",
+    "pallet-identity-verification/runtime-benchmarks",
+    "pallet-oracle-integration/runtime-benchmarks",
+]
+try-runtime = [
+    "frame-try-runtime",
+    "frame-system/try-runtime",
+    "frame-executive/try-runtime",
+    "pallet-balances/try-runtime",
+    "pallet-credit-score/try-runtime",
+    "pallet-payment-registry/try-runtime",
+    "pallet-identity-verification/try-runtime",
+    "pallet-oracle-integration/try-runtime",
+]
+
+[[bin]]
+name = "credchain-node"
+path = "node/src/main.rs"

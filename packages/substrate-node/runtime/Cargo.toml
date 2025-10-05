@@ -1,0 +1,97 @@
+[package]
+name = "credchain-runtime"
+version = "0.1.0"
+edition = "2021"
+authors = ["CredChain Team <dev@credchain.io>"]
+description = "CredChain Runtime"
+license = "MIT"
+
+[dependencies]
+# Substrate Core
+sp-core = { version = "6.0.0", default-features = false }
+sp-runtime = { version = "6.0.0", default-features = false }
+sp-std = { version = "6.0.0", default-features = false }
+sp-io = { version = "6.0.0", default-features = false }
+
+# Frame
+frame-benchmarking = { version = "4.0.0", default-features = false, optional = true }
+frame-executive = { version = "4.0.0", default-features = false }
+frame-support = { version = "4.0.0", default-features = false }
+frame-system = { version = "4.0.0", default-features = false }
+frame-system-benchmarking = { version = "4.0.0", default-features = false, optional = true }
+frame-system-rpc-runtime-api = { version = "4.0.0", default-features = false }
+frame-try-runtime = { version = "0.10.0", default-features = false, optional = true }
+
+# Pallets
+pallet-balances = { version = "4.0.0", default-features = false }
+pallet-grandpa = { version = "4.0.0", default-features = false }
+pallet-randomness-collective-flip = { version = "4.0.0", default-features = false }
+pallet-session = { version = "4.0.0", default-features = false }
+pallet-sudo = { version = "4.0.0", default-features = false }
+pallet-timestamp = { version = "4.0.0", default-features = false }
+pallet-transaction-payment = { version = "4.0.0", default-features = false }
+pallet-transaction-payment-rpc-runtime-api = { version = "4.0.0", default-features = false }
+pallet-aura = { version = "4.0.0", default-features = false }
+
+# CredChain Custom Pallets
+pallet-credit-score = { path = "../pallets/pallet-credit-score", default-features = false }
+pallet-payment-registry = { path = "../pallets/pallet-payment-registry", default-features = false }
+pallet-identity-verification = { path = "../pallets/pallet-identity-verification", default-features = false }
+pallet-oracle-integration = { path = "../pallets/pallet-oracle-integration", default-features = false }
+
+# Serde
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+
+# Codec
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+
+[features]
+default = ["std"]
+std = [
+    "sp-core/std",
+    "sp-runtime/std",
+    "sp-std/std",
+    "sp-io/std",
+    "frame-benchmarking/std",
+    "frame-executive/std",
+    "frame-support/std",
+    "frame-system/std",
+    "frame-system-benchmarking/std",
+    "frame-system-rpc-runtime-api/std",
+    "frame-try-runtime/std",
+    "pallet-balances/std",
+    "pallet-grandpa/std",
+    "pallet-randomness-collective-flip/std",
+    "pallet-session/std",
+    "pallet-sudo/std",
+    "pallet-timestamp/std",
+    "pallet-transaction-payment/std",
+    "pallet-transaction-payment-rpc-runtime-api/std",
+    "pallet-aura/std",
+    "pallet-credit-score/std",
+    "pallet-payment-registry/std",
+    "pallet-identity-verification/std",
+    "pallet-oracle-integration/std",
+    "serde/std",
+    "codec/std",
+]
+runtime-benchmarks = [
+    "frame-benchmarking/runtime-benchmarks",
+    "frame-system/runtime-benchmarks",
+    "frame-system-benchmarking/runtime-benchmarks",
+    "pallet-balances/runtime-benchmarks",
+    "pallet-credit-score/runtime-benchmarks",
+    "pallet-payment-registry/runtime-benchmarks",
+    "pallet-identity-verification/runtime-benchmarks",
+    "pallet-oracle-integration/runtime-benchmarks",
+]
+try-runtime = [
+    "frame-try-runtime",
+    "frame-system/try-runtime",
+    "frame-executive/try-runtime",
+    "pallet-balances/try-runtime",
+    "pallet-credit-score/try-runtime",
+    "pallet-payment-registry/try-runtime",
+    "pallet-identity-verification/try-runtime",
+    "pallet-oracle-integration/try-runtime",
+]

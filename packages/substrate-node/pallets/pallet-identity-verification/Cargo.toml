@@ -1,0 +1,54 @@
+[package]
+name = "pallet-identity-verification"
+version = "4.0.0"
+description = "CredChain Identity Verification Pallet"
+authors = ["CredChain Team"]
+edition = "2021"
+
+[dependencies]
+# Substrate
+frame-support = { version = "4.0.0", default-features = false }
+frame-system = { version = "4.0.0", default-features = false }
+sp-std = { version = "4.0.0", default-features = false }
+sp-runtime = { version = "6.0.0", default-features = false }
+sp-io = { version = "4.0.0", default-features = false }
+sp-core = { version = "6.0.0", default-features = false }
+sp-arithmetic = { version = "4.0.0", default-features = false }
+sp-crypto = { version = "6.0.0", default-features = false }
+
+# Serde
+serde = { version = "1.0", default-features = false, features = ["derive"] }
+
+# Codec
+codec = { package = "parity-scale-codec", version = "3.0.0", default-features = false, features = ["derive"] }
+
+# Scale info
+scale-info = { version = "2.1.1", default-features = false, features = ["derive"] }
+
+# Logging
+log = { version = "0.4", default-features = false }
+
+[features]
+default = ["std"]
+std = [
+    "frame-support/std",
+    "frame-system/std",
+    "sp-std/std",
+    "sp-runtime/std",
+    "sp-io/std",
+    "sp-core/std",
+    "sp-arithmetic/std",
+    "sp-crypto/std",
+    "codec/std",
+    "scale-info/std",
+    "serde/std",
+    "log/std",
+]
+runtime-benchmarks = [
+    "frame-support/runtime-benchmarks",
+    "frame-system/runtime-benchmarks",
+]
+try-runtime = [
+    "frame-support/try-runtime",
+    "frame-system/try-runtime",
+]
