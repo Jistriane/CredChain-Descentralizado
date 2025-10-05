@@ -1,6 +1,7 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
+import { web3Enable, web3Accounts } from '@polkadot/extension-dapp'
 
 declare global {
   interface Window {
@@ -146,51 +147,57 @@ export function PolkadotWalletProvider({ children }: WalletProviderProps) {
     return true
   }, [])
 
-  const connectWallet = useCallback(async (walletType: string) => {
-    console.log(`Tentando conectar com ${walletType}...`)
+  const connectWallet = useCallback(async (walletType?: string) => {
+    console.log(`Tentando conectar com carteira Polkadot...`)
     
     setState(prev => ({ ...prev, isConnecting: true, error: null }))
 
     try {
-      // Verificar se a carteira está disponível
-      if (!window.injectedWeb3 || !window.injectedWeb3[SUPPORTED_WALLETS[walletType as keyof typeof SUPPORTED_WALLETS]?.extension]) {
-        throw new Error(`${SUPPORTED_WALLETS[walletType as keyof typeof SUPPORTED_WALLETS]?.name} não está instalado. Por favor, instale a extensão.`)
+      // Usar a API oficial do Polkadot.js
+      const extensions = await web3Enable('CredChain-Descentralizado')
+      
+      if (extensions.length === 0) {
+        throw new Error('Nenhuma carteira Polkadot encontrada. Por favor, instale Polkadot.js, Talisman, SubWallet ou Nova Wallet.')
       }
 
-      const wallet = window.injectedWeb3[SUPPORTED_WALLETS[walletType as keyof typeof SUPPORTED_WALLETS].extension]
+      const allAccounts = await web3Accounts()
       
-      console.log(`Habilitando ${walletType}...`)
-      const extension = await wallet.enable('CredChain')
-      
-      console.log('Solicitando contas...')
-      const accounts = await extension.accounts.get()
-      
-      if (accounts.length === 0) {
+      if (allAccounts.length === 0) {
         throw new Error('Nenhuma conta encontrada. Por favor, crie uma conta na sua carteira.')
       }
 
-      const account = accounts[0]
-      console.log(`Conta conectada: ${account.address}`)
+      let targetAccount = allAccounts[0]
+      
+      // Se um tipo específico foi solicitado, tentar encontrar uma conta dessa carteira
+      if (walletType) {
+        const filteredAccounts = allAccounts.filter(acc => acc.meta.source === walletType)
+        if (filteredAccounts.length > 0) {
+          targetAccount = filteredAccounts[0]
+        }
+      }
+
+      console.log(`Conta conectada: ${targetAccount.address}`)
 
       setState(prev => ({
         ...prev,
         isConnected: true,
-        address: account.address,
+        address: targetAccount.address,
         chainId: polkadotMainnetConfig.chainId,
         isConnecting: false,
         error: null,
-        walletType: walletType,
+        walletType: targetAccount.meta.source,
       }))
 
       // Obter saldo após conectar
       await getWalletBalance()
 
-      console.log(`Conexão com ${walletType} estabelecida com sucesso!`)
-      console.log(`Endereço: ${account.address}`)
+      console.log(`Conexão estabelecida com sucesso!`)
+      console.log(`Endereço: ${targetAccount.address}`)
+      console.log(`Carteira: ${targetAccount.meta.source}`)
       console.log(`Rede: ${polkadotMainnetConfig.chainName}`)
 
     } catch (error: any) {
-      console.error(`Erro ao conectar com ${walletType}:`, error)
+      console.error(`Erro ao conectar com carteira:`, error)
       setState(prev => ({
         ...prev,
         isConnected: false,

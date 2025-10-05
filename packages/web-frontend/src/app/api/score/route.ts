@@ -5,11 +5,29 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const walletAddress = searchParams.get('walletAddress')
     
+    // Se não há carteira conectada, retornar dados padrão
     if (!walletAddress) {
-      return NextResponse.json(
-        { error: 'Endereço da carteira é obrigatório' },
-        { status: 400 }
-      )
+      const defaultScoreData = {
+        currentScore: 0,
+        previousScore: 0,
+        trend: 0,
+        walletAddress: null,
+        factors: [
+          { name: 'Histórico de Pagamentos', score: 0, weight: 0.35 },
+          { name: 'Utilização de Crédito', score: 0, weight: 0.30 },
+          { name: 'Tempo de Conta', score: 0, weight: 0.15 },
+          { name: 'Tipos de Crédito', score: 0, weight: 0.10 },
+          { name: 'Consultas Recentes', score: 0, weight: 0.10 }
+        ],
+        recommendations: [
+          'Conecte sua carteira para obter análise real',
+          'Complete seu perfil para melhor precisão',
+          'Configure suas informações financeiras'
+        ],
+        lastUpdated: new Date().toISOString(),
+        message: 'Conecte sua carteira para obter seu score de crédito'
+      }
+      return NextResponse.json(defaultScoreData)
     }
 
     // Score baseado na carteira real conectada
