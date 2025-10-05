@@ -3,8 +3,8 @@
 import { useState } from 'react'
 import { motion } from 'framer-motion'
 import { 
-  TrendingUpIcon, 
-  TrendingDownIcon,
+  ArrowTrendingUpIcon, 
+  ArrowTrendingDownIcon,
   InformationCircleIcon,
   ArrowPathIcon
 } from '@heroicons/react/24/outline'
@@ -82,7 +82,6 @@ export function ScoreCard({ score, trend, isLoading = false }: ScoreCardProps) {
                   textColor: '#1f2937',
                   trailColor: '#e5e7eb',
                   textSize: '24px',
-                  fontWeight: 'bold'
                 })}
               />
             </div>
@@ -103,9 +102,9 @@ export function ScoreCard({ score, trend, isLoading = false }: ScoreCardProps) {
               {/* Trend */}
               <div className="flex items-center space-x-2">
                 {trend > 0 ? (
-                  <TrendingUpIcon className="h-5 w-5 text-success-500" />
+                  <ArrowTrendingUpIcon className="h-5 w-5 text-success-500" />
                 ) : trend < 0 ? (
-                  <TrendingDownIcon className="h-5 w-5 text-error-500" />
+                  <ArrowTrendingDownIcon className="h-5 w-5 text-error-500" />
                 ) : null}
                 <span className={`text-sm font-medium ${
                   trend > 0 ? 'text-success-600' : 

@@ -57,13 +57,11 @@ export default function RegisterPage() {
     }
 
     try {
-      await register({
-        firstName: formData.firstName,
-        lastName: formData.lastName,
-        email: formData.email,
-        password: formData.password,
-        walletAddress: formData.walletAddress
-      });
+      await register(
+        `${formData.firstName} ${formData.lastName}`,
+        formData.email,
+        formData.password
+      );
       router.push('/auth/kyc');
     } catch (err: any) {
       setError(err.message || 'Erro ao criar conta');

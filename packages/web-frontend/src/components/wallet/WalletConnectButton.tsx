@@ -1,6 +1,12 @@
 'use client';
 
 import React, { useState, useEffect } from 'react';
+
+declare global {
+  interface Window {
+    ethereum?: any
+  }
+}
 import { ethers } from 'ethers';
 import { useTranslation } from '../../hooks/useTranslation';
 
@@ -57,7 +63,7 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
   const connectWallet = async () => {
     if (typeof window.ethereum === 'undefined') {
-      setError(t.wallet.metamaskRequired);
+      setError('MetaMask não está instalado. Por favor, instale a extensão MetaMask.');
       return;
     }
 
@@ -81,9 +87,9 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
       }
     } catch (error: any) {
       if (error.code === 4001) {
-        setError(t.wallet.connectionRejected);
+        setError('Conexão rejeitada pelo usuário.');
       } else {
-        setError(`${t.common.error}: ${error.message}`);
+        setError(`Erro: ${error.message}`);
       }
     } finally {
       setIsConnecting(false);
@@ -110,10 +116,10 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
             params: [paseoConfig],
           });
         } catch (addError) {
-          setError(t.wallet.networkError);
+          setError('Erro ao trocar rede. Certifique-se de estar na Polkadot Hub TestNet.');
         }
       } else {
-        setError(t.wallet.networkError);
+        setError('Erro ao trocar rede. Certifique-se de estar na Polkadot Hub TestNet.');
       }
     }
   };
@@ -158,7 +164,7 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
           onClick={disconnectWallet}
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors duration-200 font-medium"
         >
-          {t.wallet.disconnect}
+          Desconectar
         </button>
       </div>
     );
@@ -174,14 +180,14 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
         {isConnecting ? (
           <>
             <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-            <span>{t.wallet.connecting}</span>
+            <span>Conectando...</span>
           </>
         ) : (
           <>
             <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M17.778 8.222c-4.296-4.296-11.26-4.296-15.556 0A1 1 0 01.808 6.808c5.076-5.076 13.308-5.076 18.384 0a1 1 0 01-1.414 1.414zM14.95 11.05c-3.035-3.035-7.952-3.035-10.987 0A1 1 0 012.515 9.636c3.76-3.76 9.854-3.76 13.614 0a1 1 0 01-1.414 1.414zM12.12 13.88c-1.775-1.775-4.652-1.775-6.427 0a1 1 0 01-1.414-1.414c2.55-2.55 6.685-2.55 9.235 0a1 1 0 01-1.414 1.414z" clipRule="evenodd" />
             </svg>
-            <span>{t.wallet.connect}</span>
+            <span>Conectar Carteira</span>
           </>
         )}
       </button>
@@ -193,11 +199,11 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
       )}
       
       <div className="text-xs text-gray-600">
-        <p>{t.wallet.instructions}</p>
-        <p>{t.wallet.instruction1}</p>
-        <p>{t.wallet.instruction2}</p>
-        <p>{t.wallet.instruction3}</p>
-        <p>{t.wallet.instruction4}</p>
+        <p>Instruções:</p>
+        <p>1. Instale a extensão MetaMask</p>
+        <p>2. Clique em "Conectar Carteira"</p>
+        <p>3. Aprove a conexão no MetaMask</p>
+        <p>4. A rede será trocada automaticamente para Polkadot Hub TestNet</p>
       </div>
     </div>
   );

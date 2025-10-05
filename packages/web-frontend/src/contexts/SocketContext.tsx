@@ -1,120 +1,164 @@
 'use client'
 
-import { createContext, useContext, useEffect, useState, ReactNode } from 'react'
-import { io, Socket } from 'socket.io-client'
-import { useAuth } from './AuthContext'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+
+interface SocketMessage {
+  id: string
+  type: 'score_update' | 'payment' | 'notification' | 'alert'
+  title: string
+  message: string
+  timestamp: string
+  data?: any
+}
 
 interface SocketContextType {
-  socket: Socket | null
   isConnected: boolean
-  connectionError: string | null
-  reconnect: () => void
+  messages: SocketMessage[]
+  sendMessage: (message: any) => void
+  subscribe: (event: string, callback: (data: any) => void) => void
+  unsubscribe: (event: string, callback: (data: any) => void) => void
+  lastMessage: SocketMessage | null
 }
 
 const SocketContext = createContext<SocketContextType | undefined>(undefined)
 
-export function SocketProvider({ children }: { children: ReactNode }) {
-  const [socket, setSocket] = useState<Socket | null>(null)
+interface SocketProviderProps {
+  children: ReactNode
+}
+
+export function SocketProvider({ children }: SocketProviderProps) {
   const [isConnected, setIsConnected] = useState(false)
-  const [connectionError, setConnectionError] = useState<string | null>(null)
-  const { user, isAuthenticated } = useAuth()
+  const [messages, setMessages] = useState<SocketMessage[]>([])
+  const [lastMessage, setLastMessage] = useState<SocketMessage | null>(null)
+  const [subscriptions, setSubscriptions] = useState<Map<string, Set<(data: any) => void>>>(new Map())
 
+  // Simular conexão WebSocket
   useEffect(() => {
-    if (isAuthenticated && user) {
-      const socketUrl = process.env.NEXT_PUBLIC_SOCKET_URL || 'http://localhost:4000'
-      
-      const newSocket = io(socketUrl, {
-        auth: {
-          token: localStorage.getItem('token'),
-          userId: user.id
-        },
-        transports: ['websocket', 'polling'],
-        timeout: 20000,
-        forceNew: true
-      })
-
-      newSocket.on('connect', () => {
-        console.log('Socket connected:', newSocket.id)
+    const connectSocket = () => {
+      // Simular conexão
+      setTimeout(() => {
         setIsConnected(true)
-        setConnectionError(null)
-      })
+        console.log('Socket conectado')
+      }, 1000)
+    }
 
-      newSocket.on('disconnect', (reason) => {
-        console.log('Socket disconnected:', reason)
-        setIsConnected(false)
-        setConnectionError(reason)
-      })
+    connectSocket()
 
-      newSocket.on('connect_error', (error) => {
-        console.error('Socket connection error:', error)
-        setConnectionError(error.message)
-        setIsConnected(false)
-      })
+    // Simular mensagens periódicas
+    const interval = setInterval(() => {
+      if (isConnected) {
+        const mockMessages: SocketMessage[] = [
+          {
+            id: Date.now().toString(),
+            type: 'score_update',
+            title: 'Score Atualizado',
+            message: 'Seu score foi atualizado com base em novos dados',
+            timestamp: new Date().toISOString(),
+            data: { score: 750 + Math.floor(Math.random() * 20) - 10 }
+          },
+          {
+            id: (Date.now() + 1).toString(),
+            type: 'payment',
+            title: 'Pagamento Confirmado',
+            message: 'Pagamento de R$ 1.250,00 foi confirmado',
+            timestamp: new Date().toISOString(),
+            data: { amount: 1250, status: 'confirmed' }
+          },
+          {
+            id: (Date.now() + 2).toString(),
+            type: 'notification',
+            title: 'Nova Oferta',
+            message: 'Você tem uma nova oferta de crédito disponível',
+            timestamp: new Date().toISOString(),
+            data: { offer: { amount: 5000, rate: 2.5 } }
+          },
+          {
+            id: (Date.now() + 3).toString(),
+            type: 'alert',
+            title: 'Alerta de Score',
+            message: 'Seu score caiu 5 pontos devido a atraso em pagamento',
+            timestamp: new Date().toISOString(),
+            data: { scoreChange: -5, reason: 'late_payment' }
+          }
+        ]
 
-      newSocket.on('reconnect', (attemptNumber) => {
-        console.log('Socket reconnected after', attemptNumber, 'attempts')
-        setIsConnected(true)
-        setConnectionError(null)
-      })
+        const randomMessage = mockMessages[Math.floor(Math.random() * mockMessages.length)]
+        
+        setMessages(prev => [randomMessage, ...prev.slice(0, 9)]) // Manter apenas 10 mensagens
+        setLastMessage(randomMessage)
 
-      newSocket.on('reconnect_error', (error) => {
-        console.error('Socket reconnection error:', error)
-        setConnectionError(error.message)
-      })
-
-      newSocket.on('reconnect_failed', () => {
-        console.error('Socket reconnection failed')
-        setConnectionError('Falha na reconexão')
-      })
-
-      // Listen for real-time updates
-      newSocket.on('scoreUpdate', (data) => {
-        console.log('Score update received:', data)
-        // Handle score updates
-      })
-
-      newSocket.on('paymentUpdate', (data) => {
-        console.log('Payment update received:', data)
-        // Handle payment updates
-      })
-
-      newSocket.on('notification', (data) => {
-        console.log('Notification received:', data)
-        // Handle notifications
-      })
-
-      newSocket.on('complianceAlert', (data) => {
-        console.log('Compliance alert received:', data)
-        // Handle compliance alerts
-      })
-
-      newSocket.on('fraudAlert', (data) => {
-        console.log('Fraud alert received:', data)
-        // Handle fraud alerts
-      })
-
-      setSocket(newSocket)
-
-      return () => {
-        newSocket.close()
-        setSocket(null)
-        setIsConnected(false)
+        // Notificar subscribers
+        const callbacks = subscriptions.get(randomMessage.type)
+        if (callbacks) {
+          callbacks.forEach(callback => callback(randomMessage))
+        }
       }
-    }
-  }, [isAuthenticated, user])
+    }, 10000) // Mensagem a cada 10 segundos
 
-  const reconnect = () => {
-    if (socket) {
-      socket.disconnect()
-      socket.connect()
+    return () => {
+      clearInterval(interval)
+      setIsConnected(false)
     }
+  }, [isConnected, subscriptions])
+
+  const sendMessage = (message: any) => {
+    if (!isConnected) {
+      console.warn('Socket não conectado')
+      return
+    }
+
+    // Simular envio de mensagem
+    console.log('Enviando mensagem:', message)
+    
+    // Simular resposta
+    setTimeout(() => {
+      const response: SocketMessage = {
+        id: Date.now().toString(),
+        type: 'notification',
+        title: 'Mensagem Enviada',
+        message: 'Sua mensagem foi processada com sucesso',
+        timestamp: new Date().toISOString(),
+        data: message
+      }
+      
+      setMessages(prev => [response, ...prev.slice(0, 9)])
+      setLastMessage(response)
+    }, 500)
   }
 
-  const value = {
-    socket,
+  const subscribe = (event: string, callback: (data: any) => void) => {
+    setSubscriptions(prev => {
+      const newSubscriptions = new Map(prev)
+      const callbacks = newSubscriptions.get(event) || new Set()
+      callbacks.add(callback)
+      newSubscriptions.set(event, callbacks)
+      return newSubscriptions
+    })
+  }
+
+  const unsubscribe = (event: string, callback: (data: any) => void) => {
+    setSubscriptions(prev => {
+      const newSubscriptions = new Map(prev)
+      const callbacks = newSubscriptions.get(event)
+      if (callbacks) {
+        callbacks.delete(callback)
+        if (callbacks.size === 0) {
+          newSubscriptions.delete(event)
+        } else {
+          newSubscriptions.set(event, callbacks)
+        }
+      }
+      return newSubscriptions
+    })
+  }
+
+  const value: SocketContextType = {
     isConnected,
-    connectionError,
-    reconnect
+    messages,
+    sendMessage,
+    subscribe,
+    unsubscribe,
+    lastMessage
   }
 
   return (
@@ -127,7 +171,7 @@ export function SocketProvider({ children }: { children: ReactNode }) {
 export function useSocket() {
   const context = useContext(SocketContext)
   if (context === undefined) {
-    throw new Error('useSocket must be used within a SocketProvider')
+    throw new Error('useSocket deve ser usado dentro de um SocketProvider')
   }
   return context
 }

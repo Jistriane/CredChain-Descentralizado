@@ -18,13 +18,13 @@ export const LanguageSwitcher: React.FC = () => {
     localStorage.setItem('credchain-language', newLanguage);
   };
 
-  const getFlagEmoji = (lang: Language): string => {
-    const flags = {
+  const getFlagEmoji = (lang: string): string => {
+    const flags: Record<string, string> = {
       'pt-BR': '🇧🇷',
       'en': '🇺🇸',
       'es': '🇪🇸',
     };
-    return flags[lang];
+    return flags[lang] || '🇧🇷';
   };
 
   return (
@@ -34,7 +34,7 @@ export const LanguageSwitcher: React.FC = () => {
         className="flex items-center space-x-2 px-3 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
       >
         <span className="text-lg">{getFlagEmoji(language)}</span>
-        <span>{getLanguageName(language)}</span>
+        <span>{getLanguageName(language as Language)}</span>
         <svg
           className={`w-4 h-4 transition-transform ${isOpen ? 'rotate-180' : ''}`}
           fill="none"
@@ -57,7 +57,7 @@ export const LanguageSwitcher: React.FC = () => {
                 }`}
               >
                 <span className="text-lg">{getFlagEmoji(lang)}</span>
-                <span>{getLanguageName(lang)}</span>
+                <span>{getLanguageName(lang as Language)}</span>
                 {language === lang && (
                   <svg className="w-4 h-4 ml-auto text-blue-600" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />

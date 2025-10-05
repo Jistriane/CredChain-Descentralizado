@@ -1,17 +1,16 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
-import { useRouter } from 'next/navigation'
-import axios from 'axios'
 
 interface User {
   id: string
   name: string
   email: string
   avatar?: string
-  role: 'user' | 'admin' | 'institution'
+  score: number
+  verified: boolean
   createdAt: string
-  lastLogin?: string
+  lastLogin: string
 }
 
 interface AuthContextType {
@@ -19,166 +18,166 @@ interface AuthContextType {
   isLoading: boolean
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
-  logout: () => Promise<void>
-  register: (data: RegisterData) => Promise<void>
-  refreshToken: () => Promise<void>
+  logout: () => void
+  register: (name: string, email: string, password: string) => Promise<void>
   updateProfile: (data: Partial<User>) => Promise<void>
-}
-
-interface RegisterData {
-  name: string
-  email: string
-  password: string
-  confirmPassword: string
+  refreshUser: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-export function AuthProvider({ children }: { children: ReactNode }) {
+interface AuthProviderProps {
+  children: ReactNode
+}
+
+export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null)
   const [isLoading, setIsLoading] = useState(true)
-  const router = useRouter()
 
   const isAuthenticated = !!user
 
+  // Simular carregamento inicial
   useEffect(() => {
-    checkAuth()
+    const loadUser = async () => {
+      try {
+        // Simular verificação de token/sessão
+        await new Promise(resolve => setTimeout(resolve, 1000))
+        
+        // Mock user para desenvolvimento
+        const mockUser: User = {
+          id: '1',
+          name: 'João Silva',
+          email: 'joao@example.com',
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face',
+          score: 750,
+          verified: true,
+          createdAt: '2024-01-15T10:00:00Z',
+          lastLogin: new Date().toISOString()
+        }
+        
+        setUser(mockUser)
+      } catch (error) {
+        console.error('Erro ao carregar usuário:', error)
+        setUser(null)
+      } finally {
+        setIsLoading(false)
+      }
+    }
+
+    loadUser()
   }, [])
 
-  const checkAuth = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        setIsLoading(false)
-        return
-      }
-
-      const response = await axios.get('/api/auth/me', {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      setUser(response.data.user)
-    } catch (error) {
-      console.error('Auth check failed:', error)
-      localStorage.removeItem('token')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
   const login = async (email: string, password: string) => {
+    setIsLoading(true)
     try {
-      setIsLoading(true)
-      const response = await axios.post('/api/auth/login', {
+      // Simular login
+      await new Promise(resolve => setTimeout(resolve, 1500))
+      
+      if (email === 'joao@example.com' && password === '123456') {
+        const mockUser: User = {
+          id: '1',
+          name: 'João Silva',
+          email: email,
+          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face',
+          score: 750,
+          verified: true,
+          createdAt: '2024-01-15T10:00:00Z',
+          lastLogin: new Date().toISOString()
+        }
+        
+        setUser(mockUser)
+        localStorage.setItem('auth_token', 'mock_token_123')
+      } else {
+        throw new Error('Credenciais inválidas')
+      }
+    } catch (error) {
+      console.error('Erro no login:', error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const logout = () => {
+    setUser(null)
+    localStorage.removeItem('auth_token')
+  }
+
+  const register = async (name: string, email: string, password: string) => {
+    setIsLoading(true)
+    try {
+      // Simular registro
+      await new Promise(resolve => setTimeout(resolve, 2000))
+      
+      const newUser: User = {
+        id: Date.now().toString(),
+        name,
         email,
-        password
-      })
-
-      const { token, user: userData } = response.data
-      localStorage.setItem('token', token)
-      setUser(userData)
+        score: 600, // Score inicial
+        verified: false,
+        createdAt: new Date().toISOString(),
+        lastLogin: new Date().toISOString()
+      }
       
-      router.push('/')
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Erro ao fazer login')
+      setUser(newUser)
+      localStorage.setItem('auth_token', 'mock_token_123')
+    } catch (error) {
+      console.error('Erro no registro:', error)
+      throw error
     } finally {
       setIsLoading(false)
-    }
-  }
-
-  const logout = async () => {
-    try {
-      await axios.post('/api/auth/logout', {}, {
-        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-      })
-    } catch (error) {
-      console.error('Logout error:', error)
-    } finally {
-      localStorage.removeItem('token')
-      setUser(null)
-      router.push('/login')
-    }
-  }
-
-  const register = async (data: RegisterData) => {
-    try {
-      setIsLoading(true)
-      const response = await axios.post('/api/auth/register', data)
-      
-      const { token, user: userData } = response.data
-      localStorage.setItem('token', token)
-      setUser(userData)
-      
-      router.push('/')
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Erro ao criar conta')
-    } finally {
-      setIsLoading(false)
-    }
-  }
-
-  const refreshToken = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      if (!token) return
-
-      const response = await axios.post('/api/auth/refresh', {}, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      const { token: newToken } = response.data
-      localStorage.setItem('token', newToken)
-    } catch (error) {
-      console.error('Token refresh failed:', error)
-      logout()
     }
   }
 
   const updateProfile = async (data: Partial<User>) => {
+    if (!user) return
+    
+    setIsLoading(true)
     try {
-      const token = localStorage.getItem('token')
-      const response = await axios.patch('/api/auth/profile', data, {
-        headers: { Authorization: `Bearer ${token}` }
-      })
-
-      setUser(response.data.user)
-    } catch (error: any) {
-      throw new Error(error.response?.data?.message || 'Erro ao atualizar perfil')
+      // Simular atualização
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      const updatedUser = { ...user, ...data }
+      setUser(updatedUser)
+    } catch (error) {
+      console.error('Erro ao atualizar perfil:', error)
+      throw error
+    } finally {
+      setIsLoading(false)
     }
   }
 
-  // Setup axios interceptor for token refresh
-  useEffect(() => {
-    const interceptor = axios.interceptors.response.use(
-      (response) => response,
-      async (error) => {
-        if (error.response?.status === 401 && user) {
-          try {
-            await refreshToken()
-            return axios.request(error.config)
-          } catch (refreshError) {
-            logout()
-            return Promise.reject(refreshError)
-          }
-        }
-        return Promise.reject(error)
+  const refreshUser = async () => {
+    if (!user) return
+    
+    setIsLoading(true)
+    try {
+      // Simular refresh
+      await new Promise(resolve => setTimeout(resolve, 500))
+      
+      const refreshedUser = {
+        ...user,
+        lastLogin: new Date().toISOString(),
+        score: user.score + Math.floor(Math.random() * 10) - 5 // Simular mudança no score
       }
-    )
-
-    return () => {
-      axios.interceptors.response.eject(interceptor)
+      
+      setUser(refreshedUser)
+    } catch (error) {
+      console.error('Erro ao atualizar usuário:', error)
+    } finally {
+      setIsLoading(false)
     }
-  }, [user])
+  }
 
-  const value = {
+  const value: AuthContextType = {
     user,
     isLoading,
     isAuthenticated,
     login,
     logout,
     register,
-    refreshToken,
-    updateProfile
+    updateProfile,
+    refreshUser
   }
 
   return (
@@ -191,7 +190,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider')
+    throw new Error('useAuth deve ser usado dentro de um AuthProvider')
   }
   return context
 }

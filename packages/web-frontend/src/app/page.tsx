@@ -7,7 +7,7 @@ import {
   CreditCardIcon, 
   ShieldCheckIcon, 
   UserGroupIcon,
-  TrendingUpIcon,
+  ArrowTrendingUpIcon,
   ClockIcon,
   CheckCircleIcon,
   ExclamationTriangleIcon
@@ -24,7 +24,7 @@ import { useSocket } from '@/contexts/SocketContext'
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth()
-  const { socket, isConnected } = useSocket()
+  const { isConnected } = useSocket()
   const [dashboardData, setDashboardData] = useState({
     score: 0,
     trend: 0,
@@ -42,29 +42,19 @@ export default function DashboardPage() {
   }, [user, authLoading])
 
   useEffect(() => {
-    if (socket && isConnected) {
-      // Listen for real-time updates
-      socket.on('scoreUpdate', (data) => {
+    if (isConnected) {
+      // Simular atualizações em tempo real
+      const interval = setInterval(() => {
         setDashboardData(prev => ({
           ...prev,
-          score: data.score,
-          trend: data.trend
+          score: prev.score + Math.floor(Math.random() * 3) - 1,
+          trend: Math.floor(Math.random() * 10) - 5
         }))
-      })
+      }, 30000) // Atualizar a cada 30 segundos
 
-      socket.on('activityUpdate', (data) => {
-        setDashboardData(prev => ({
-          ...prev,
-          recentActivity: [data, ...prev.recentActivity.slice(0, 9)]
-        }))
-      })
-
-      return () => {
-        socket.off('scoreUpdate')
-        socket.off('activityUpdate')
-      }
+      return () => clearInterval(interval)
     }
-  }, [socket, isConnected])
+  }, [isConnected])
 
   const loadDashboardData = async () => {
     try {
@@ -150,10 +140,7 @@ export default function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
             >
-              <CreditFactors 
-                factors={dashboardData.factors}
-                isLoading={isLoading}
-              />
+              <CreditFactors />
             </motion.div>
 
             {/* Financial Health */}
@@ -162,10 +149,7 @@ export default function DashboardPage() {
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <FinancialHealth 
-                data={dashboardData.financialHealth}
-                isLoading={isLoading}
-              />
+              <FinancialHealth />
             </motion.div>
           </div>
 
@@ -186,10 +170,7 @@ export default function DashboardPage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <RecentActivity 
-                activities={dashboardData.recentActivity}
-                isLoading={isLoading}
-              />
+              <RecentActivity />
             </motion.div>
           </div>
         </div>
@@ -219,7 +200,7 @@ export default function DashboardPage() {
             <div className="card-body">
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <TrendingUpIcon className="h-8 w-8 text-success-600" />
+                  <ArrowTrendingUpIcon className="h-8 w-8 text-success-600" />
                 </div>
                 <div className="ml-4">
                   <p className="text-sm font-medium text-gray-600">Tendência</p>

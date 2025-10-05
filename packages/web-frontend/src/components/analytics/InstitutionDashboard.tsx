@@ -398,8 +398,8 @@ export const InstitutionDashboard: React.FC = () => {
                         <div className="text-sm text-gray-500">{fraud.severity}</div>
                       </div>
                       <Badge variant={
-                        fraud.severity === 'Alta' ? 'destructive' :
-                        fraud.severity === 'Média' ? 'default' : 'secondary'
+                        fraud.severity === 'Alta' ? 'error' :
+                        fraud.severity === 'Média' ? 'warning' : 'secondary'
                       }>
                         {fraud.count} casos
                       </Badge>

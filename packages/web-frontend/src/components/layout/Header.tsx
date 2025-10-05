@@ -2,14 +2,14 @@
 
 import React from 'react';
 import Link from 'next/link';
-import { useWallet } from '../../hooks/useWallet';
+import { useWallet } from '../../app/WalletProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 import { WalletConnectButton } from '../wallet/WalletConnectButton';
 import { LanguageSwitcher } from '../language/LanguageSwitcher';
 import { Logo } from '../ui/Logo';
 
 export const Header: React.FC = () => {
-  const { isConnected, account } = useWallet();
+  const { isConnected, address } = useWallet();
   const { t } = useTranslation();
 
   const formatAddress = (address: string) => {
@@ -33,31 +33,55 @@ export const Header: React.FC = () => {
               href="/" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t.navigation.dashboard}
+              {t('dashboard')}
             </Link>
             <Link 
               href="/score" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t.navigation.score}
+              {t('score')}
             </Link>
             <Link 
               href="/payments" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t.navigation.payments}
+              {t('payments')}
             </Link>
             <Link 
               href="/chat" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t.navigation.chat}
+              {t('chat')}
             </Link>
             <Link 
               href="/wallet" 
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t.navigation.wallet}
+              {t('wallet')}
+            </Link>
+            <Link 
+              href="/payments" 
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Pagamentos
+            </Link>
+            <Link 
+              href="/reports" 
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Relatórios
+            </Link>
+            <Link 
+              href="/settings" 
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Configurações
+            </Link>
+            <Link 
+              href="/help" 
+              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+            >
+              Ajuda
             </Link>
           </nav>
 
@@ -69,7 +93,7 @@ export const Header: React.FC = () => {
                 <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-3 py-2 rounded-lg">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-sm font-medium">
-                    {formatAddress(account || '')}
+                    {formatAddress(address || '')}
                   </span>
                 </div>
                 <WalletConnectButton />

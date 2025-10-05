@@ -41,7 +41,7 @@ interface UserProfile {
 }
 
 export default function ProfilePage() {
-  const { user, updateUser } = useAuth();
+  const { user, updateProfile } = useAuth();
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -79,7 +79,7 @@ export default function ProfilePage() {
           address: 'São Paulo, SP, Brasil',
           dateOfBirth: '1990-01-01',
           kycStatus: 'approved',
-          walletAddress: user.walletAddress || '0x...',
+          walletAddress: '0x...',
           creditScore: 750,
           lastUpdated: new Date().toISOString(),
           preferences: {
