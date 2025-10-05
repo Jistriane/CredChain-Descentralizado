@@ -6,18 +6,21 @@
   "scripts": {
     "compile": "hardhat compile",
     "test": "hardhat test",
-    "deploy:polkadot": "hardhat run scripts/deploy.js --network polkadot",
-    "deploy:paseo": "hardhat run scripts/deploy.js --network paseo",
+    "deploy:mainnet": "hardhat run scripts/deploy.js --network polkadot",
+    "deploy:testnet": "hardhat run scripts/deploy.js --network paseo",
     "deploy:assetHub": "hardhat run scripts/deploy.js --network assetHub",
-    "verify:polkadot": "hardhat run scripts/verify-contracts.js --network polkadot",
-    "verify:paseo": "hardhat run scripts/verify-contracts.js --network paseo",
+    "verify:mainnet": "hardhat run scripts/verify-contracts.js --network polkadot",
+    "verify:testnet": "hardhat run scripts/verify-contracts.js --network paseo",
     "verify:assetHub": "hardhat run scripts/verify-contracts.js --network assetHub",
     "size": "hardhat size-contracts",
     "gas": "REPORT_GAS=true hardhat test",
     "coverage": "hardhat coverage",
     "clean": "hardhat clean",
-    "check:mainnet": "hardhat run scripts/check-mainnet-readiness.js",
-    "security:audit": "hardhat run scripts/security-audit.js"
+    "check:mainnet": "node scripts/verify-mainnet-readiness.js",
+    "security:audit": "hardhat run scripts/security-audit.js",
+    "fix:security": "node scripts/fix-security-issues.js",
+    "audit:full": "npm run security:audit && npm run check:mainnet",
+    "deploy:production": "npm run audit:full && npm run deploy:mainnet"
   },
   "keywords": [
     "blockchain",

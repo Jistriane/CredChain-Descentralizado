@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 /**
  * @title CredChainCreditScore
  * @dev Smart contract para gerenciamento de scores de crédito no CredChain
  * @author CredChain Team
  * @notice Este contrato implementa o sistema de credit scoring descentralizado
  */
-contract CredChainCreditScore {
+contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
     // Estruturas de dados
     struct CreditScore {
         uint256 score;           // Score de 0 a 1000
@@ -52,20 +56,14 @@ contract CredChainCreditScore {
     mapping(address => bool) public authorizedOracles;
     
     // Variáveis de estado
-    address public owner;
-    uint256 public currentVersion;
+        uint256 public currentVersion;
     uint256 public constant MAX_SCORE = 1000;
     uint256 public constant MIN_SCORE = 0;
     
     // Modificadores
-    modifier onlyOwner() {
-        require(msg.sender == owner, "CredChain: Only owner can call this function");
-        _;
-    }
-    
-    modifier onlyAuthorizedCalculator() {
+        modifier onlyAuthorizedCalculator() {
         require(
-            authorizedCalculators[msg.sender] || msg.sender == owner,
+            authorizedCalculators[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized calculators can call this function"
         );
         _;
@@ -73,7 +71,7 @@ contract CredChainCreditScore {
     
     modifier onlyAuthorizedOracle() {
         require(
-            authorizedOracles[msg.sender] || msg.sender == owner,
+            authorizedOracles[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized oracles can call this function"
         );
         _;
@@ -89,8 +87,7 @@ contract CredChainCreditScore {
 
     // Construtor
     constructor() {
-        owner = msg.sender;
-        currentVersion = 1;
+                currentVersion = 1;
     }
 
     /**

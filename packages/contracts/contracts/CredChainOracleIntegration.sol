@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 /**
  * @title CredChainOracleIntegration
  * @dev Smart contract para integração com oráculos externos no CredChain
  * @author CredChain Team
  * @notice Este contrato gerencia dados de oráculos para cálculo de credit scoring
  */
-contract CredChainOracleIntegration {
+contract CredChainOracleIntegration is ReentrancyGuard, Ownable, Pausable {
     // Estruturas de dados
     struct OracleData {
         string key;              // Chave do dado (ex: "exchange_rate_USD_BRL")
@@ -57,19 +61,13 @@ contract CredChainOracleIntegration {
     mapping(string => address[]) public keyToOracles; // Chave -> oráculos que podem atualizar
     
     // Variáveis de estado
-    address public owner;
-    uint256 public constant DATA_EXPIRY = 24 hours; // Dados expiram em 24 horas
+        uint256 public constant DATA_EXPIRY = 24 hours; // Dados expiram em 24 horas
     uint256 public constant MAX_ORACLES = 100; // Máximo de oráculos
     
     // Modificadores
-    modifier onlyOwner() {
-        require(msg.sender == owner, "CredChain: Only owner can call this function");
-        _;
-    }
-    
-    modifier onlyAuthorizedOracle() {
+        modifier onlyAuthorizedOracle() {
         require(
-            authorizedOracles[msg.sender] || msg.sender == owner,
+            authorizedOracles[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized oracles can call this function"
         );
         _;
@@ -87,8 +85,7 @@ contract CredChainOracleIntegration {
 
     // Construtor
     constructor() {
-        owner = msg.sender;
-    }
+            }
 
     /**
      * @dev Registra um novo oráculo

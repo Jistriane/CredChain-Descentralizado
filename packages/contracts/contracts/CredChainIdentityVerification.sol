@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 /**
  * @title CredChainIdentityVerification
  * @dev Smart contract para verificação de identidade (KYC) no CredChain
  * @author CredChain Team
  * @notice Este contrato gerencia o processo de verificação de identidade dos usuários
  */
-contract CredChainIdentityVerification {
+contract CredChainIdentityVerification is ReentrancyGuard, Ownable, Pausable {
     // Estruturas de dados
     struct IdentityInfo {
         string name;             // Nome completo
@@ -76,19 +80,13 @@ contract CredChainIdentityVerification {
     mapping(string => address) public documentToUser; // Hash do documento -> usuário
     
     // Variáveis de estado
-    address public owner;
-    uint256 public nextRequestId;
+        uint256 public nextRequestId;
     uint256 public constant VERIFICATION_EXPIRY = 30 days; // 30 dias para expirar
     
     // Modificadores
-    modifier onlyOwner() {
-        require(msg.sender == owner, "CredChain: Only owner can call this function");
-        _;
-    }
-    
-    modifier onlyAuthorizedVerifier() {
+        modifier onlyAuthorizedVerifier() {
         require(
-            authorizedVerifiers[msg.sender] || msg.sender == owner,
+            authorizedVerifiers[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized verifiers can call this function"
         );
         _;
@@ -96,7 +94,7 @@ contract CredChainIdentityVerification {
     
     modifier onlyAuthorizedOracle() {
         require(
-            authorizedOracles[msg.sender] || msg.sender == owner,
+            authorizedOracles[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized oracles can call this function"
         );
         _;
@@ -118,8 +116,7 @@ contract CredChainIdentityVerification {
 
     // Construtor
     constructor() {
-        owner = msg.sender;
-        nextRequestId = 1;
+                nextRequestId = 1;
     }
 
     /**

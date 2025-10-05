@@ -1,38 +1,30 @@
 {
-  "timestamp": "2025-10-05T05:04:03.971Z",
-  "network": "hardhat",
+  "timestamp": "2025-10-05T18:41:30.735Z",
+  "network": "polkadot",
   "isMainnet": false,
   "checks": [
     {
-      "name": "Rede Mainnet",
-      "status": "⚠️  TESTNET"
-    },
-    {
-      "name": "Variáveis de Ambiente",
+      "name": "Variáveis de ambiente",
       "status": "❌ FAIL"
-    },
-    {
-      "name": "Saldo da Conta",
-      "status": "✅ PASS"
     },
     {
       "name": "Compilação",
       "status": "✅ PASS"
     },
     {
-      "name": "Tamanho dos Contratos",
+      "name": "Dados mockados",
       "status": "✅ PASS"
-    },
-    {
-      "name": "Testes",
-      "status": "✅ READY"
     },
     {
       "name": "Segurança",
+      "status": "❌ FAIL"
+    },
+    {
+      "name": "Otimização de gas",
       "status": "✅ PASS"
     },
     {
-      "name": "Dados Mocados",
+      "name": "Configuração de rede",
       "status": "✅ PASS"
     }
   ],

@@ -1,13 +1,17 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 /**
  * @title CredChainPaymentRegistry
  * @dev Smart contract para registro de pagamentos no CredChain
  * @author CredChain Team
  * @notice Este contrato registra e valida pagamentos para cálculo de credit scoring
  */
-contract CredChainPaymentRegistry {
+contract CredChainPaymentRegistry is ReentrancyGuard, Ownable, Pausable {
     // Estruturas de dados
     struct Payment {
         uint256 id;             // ID único do pagamento
@@ -65,20 +69,14 @@ contract CredChainPaymentRegistry {
     mapping(address => bool) public authorizedOracles;
     
     // Variáveis de estado
-    address public owner;
-    uint256 public nextPaymentId;
+        uint256 public nextPaymentId;
     uint256 public constant LATE_PAYMENT_THRESHOLD = 7 days; // 7 dias para considerar atrasado
     uint256 public constant DEFAULT_THRESHOLD = 30 days;     // 30 dias para considerar inadimplente
     
     // Modificadores
-    modifier onlyOwner() {
-        require(msg.sender == owner, "CredChain: Only owner can call this function");
-        _;
-    }
-    
-    modifier onlyAuthorizedVerifier() {
+        modifier onlyAuthorizedVerifier() {
         require(
-            authorizedVerifiers[msg.sender] || msg.sender == owner,
+            authorizedVerifiers[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized verifiers can call this function"
         );
         _;
@@ -86,7 +84,7 @@ contract CredChainPaymentRegistry {
     
     modifier onlyAuthorizedOracle() {
         require(
-            authorizedOracles[msg.sender] || msg.sender == owner,
+            authorizedOracles[msg.sender] || msg.sender == owner(),
             "CredChain: Only authorized oracles can call this function"
         );
         _;
@@ -108,8 +106,7 @@ contract CredChainPaymentRegistry {
 
     // Construtor
     constructor() {
-        owner = msg.sender;
-        nextPaymentId = 1;
+                nextPaymentId = 1;
     }
 
     /**
