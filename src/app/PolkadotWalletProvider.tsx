@@ -234,7 +234,7 @@ export function PolkadotWalletProvider({ children }: WalletProviderProps) {
 
   // Verificar se há carteiras disponíveis
   const checkAvailableWallets = useCallback(() => {
-    const availableWallets: any[] = []
+    const availableWallets = []
     
     Object.entries(SUPPORTED_WALLETS).forEach(([key, wallet]) => {
       if (window.injectedWeb3 && window.injectedWeb3[wallet.extension]) {

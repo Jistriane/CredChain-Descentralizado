@@ -8,9 +8,7 @@ const nextConfig = {
       'polkascan.io',
       'blockscout-passet-hub.parity-testnet.parity.io',
       'render.com',
-      'credchain.onrender.com',
-      'netlify.app',
-      'credchain.netlify.app'
+      'credchain.onrender.com'
     ],
   },
   env: {
@@ -20,12 +18,12 @@ const nextConfig = {
     API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.credchain.io',
   },
   
-  // Netlify optimizations
-  output: 'export',
-  trailingSlash: true,
+  // Render.com optimizations
+  output: 'standalone',
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
+  trailingSlash: false,
   swcMinify: true,
   
   // Disable static generation
