@@ -9,15 +9,26 @@ const nextConfig = {
       'api.credchain.io',
       'rpc.polkadot.io',
       'polkascan.io',
-      'blockscout-passet-hub.parity-testnet.parity.io'
+      'blockscout-passet-hub.parity-testnet.parity.io',
+      'vercel.app',
+      'credchain.vercel.app'
     ],
   },
   env: {
-    POLKADOT_RPC: process.env.POLKADOT_RPC || 'https://rpc.polkadot.io',
-    CHAIN_ID: process.env.CHAIN_ID || '0x0000000000000000000000000000000000000000000000000000000000000000',
-    BLOCK_EXPLORER: process.env.BLOCK_EXPLORER || 'https://polkascan.io',
-    API_BASE_URL: process.env.API_BASE_URL || 'https://api.credchain.io',
+    POLKADOT_RPC: process.env.NEXT_PUBLIC_POLKADOT_RPC_URL || 'https://rpc.polkadot.io',
+    CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID || '0x0000000000000000000000000000000000000000000000000000000000000000',
+    BLOCK_EXPLORER: process.env.NEXT_PUBLIC_BLOCK_EXPLORER || 'https://polkascan.io',
+    API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.credchain.io',
   },
+  // Production optimizations
+  output: 'standalone',
+  compress: true,
+  poweredByHeader: false,
+  generateEtags: false,
+  // Enable static optimization
+  trailingSlash: false,
+  // Optimize for Vercel
+  swcMinify: true,
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
