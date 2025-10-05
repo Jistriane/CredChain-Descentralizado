@@ -3,8 +3,8 @@ services:
     name: credchain-frontend
     env: node
     plan: starter
-    buildCommand: cd packages/web-frontend && npm install && npm run build
-    startCommand: cd packages/web-frontend && npm start
+    buildCommand: npm install && npm run build
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
