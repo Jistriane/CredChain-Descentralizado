@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
-import { useWallet } from '../../app/WalletProvider';
+import { useWallet } from '../../app/PolkadotWalletProvider';
 import { useTranslation } from '../../hooks/useTranslation';
 
 interface WalletConnectButtonProps {

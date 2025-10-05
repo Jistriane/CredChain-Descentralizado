@@ -1,7 +1,7 @@
 'use client';
 
 import React from 'react';
-import { WalletConnectButton } from '../../components/wallet/WalletConnectButton';
+import { PolkadotWalletSelector } from '../../components/wallet/PolkadotWalletSelector';
 import { WalletInfo } from '../../components/wallet/WalletInfo';
 import { useWalletSafe } from '../../hooks/useWalletSafe';
 
@@ -16,7 +16,7 @@ export default function WalletPage() {
             Gerenciamento de Carteira
           </h1>
           <p className="text-lg text-gray-600">
-            Conecte sua carteira MetaMask para acessar o sistema
+            Conecte sua carteira Polkadot para acessar o sistema
           </p>
         </div>
 
@@ -28,14 +28,7 @@ export default function WalletPage() {
             </h2>
             
             <div className="space-y-4">
-              <WalletConnectButton
-                onWalletConnected={(address) => {
-                  console.log('Carteira conectada:', address);
-                }}
-                onWalletDisconnected={() => {
-                  console.log('Carteira desconectada');
-                }}
-              />
+              <PolkadotWalletSelector />
             </div>
 
           </div>

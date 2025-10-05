@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useWallet, SUPPORTED_WALLETS } from '../../app/PolkadotWalletProvider'
+import { useWallet } from '../../app/PolkadotWalletProvider'
 
 interface WalletOption {
   key: string
@@ -22,10 +22,18 @@ export const PolkadotWalletSelector: React.FC = () => {
     const checkWallets = () => {
       const wallets: WalletOption[] = []
       
-      Object.entries(SUPPORTED_WALLETS).forEach(([key, wallet]) => {
+      // Carteiras Polkadot suportadas
+      const supportedWallets = [
+        { key: 'polkadot-js', name: 'Polkadot.js', extension: 'polkadot-js', icon: '🌐', description: 'Carteira oficial Polkadot.js' },
+        { key: 'talisman', name: 'Talisman', extension: 'talisman', icon: '⚡', description: 'Carteira Talisman' },
+        { key: 'subwallet-js', name: 'SubWallet', extension: 'subwallet-js', icon: '🔷', description: 'Carteira SubWallet' },
+        { key: 'nova wallet', name: 'Nova Wallet', extension: 'nova wallet', icon: '✨', description: 'Carteira Nova Wallet' }
+      ]
+      
+      supportedWallets.forEach((wallet) => {
         const isAvailable = !!(window as any).injectedWeb3 && (window as any).injectedWeb3[wallet.extension]
         wallets.push({
-          key,
+          key: wallet.key,
           name: wallet.name,
           extension: wallet.extension,
           icon: wallet.icon,
@@ -57,6 +65,26 @@ export const PolkadotWalletSelector: React.FC = () => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`
   }
 
+  const getWalletIcon = (walletType: string) => {
+    switch (walletType) {
+      case 'polkadot-js': return '🌐'
+      case 'talisman': return '⚡'
+      case 'subwallet-js': return '🔷'
+      case 'nova wallet': return '✨'
+      default: return '💼'
+    }
+  }
+
+  const getWalletName = (walletType: string) => {
+    switch (walletType) {
+      case 'polkadot-js': return 'Polkadot.js'
+      case 'talisman': return 'Talisman'
+      case 'subwallet-js': return 'SubWallet'
+      case 'nova wallet': return 'Nova Wallet'
+      default: return 'Carteira'
+    }
+  }
+
   if (isConnected) {
     return (
       <div className="flex items-center space-x-4">
@@ -64,7 +92,7 @@ export const PolkadotWalletSelector: React.FC = () => {
         <div className="flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
           <span className="text-sm font-medium text-green-800">
-            {SUPPORTED_WALLETS[walletType as keyof typeof SUPPORTED_WALLETS]?.icon} {SUPPORTED_WALLETS[walletType as keyof typeof SUPPORTED_WALLETS]?.name}
+            {walletType ? `${getWalletIcon(walletType)} ${getWalletName(walletType)}` : 'Carteira Conectada'}
           </span>
         </div>
 
