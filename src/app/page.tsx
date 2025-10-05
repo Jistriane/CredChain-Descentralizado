@@ -48,57 +48,72 @@ export default function Dashboard() {
     try {
       setIsLoading(true)
       
-      // Simular carregamento de dados
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      // Verificar se há carteira conectada
+      const walletAddress = localStorage.getItem('walletAddress')
       
-      // Dados mockados para demonstração
-      const mockData: DashboardData = {
-        score: 750,
-        trend: 15,
-        walletAddress: '0x742d35Cc6634C0532925a3b8D4C9db96C4b4d8b6',
-        factors: [
-          { name: 'Histórico de Pagamentos', score: 85, impact: 'high' },
-          { name: 'Utilização de Crédito', score: 70, impact: 'medium' },
-          { name: 'Tempo de Conta', score: 60, impact: 'high' },
-          { name: 'Tipos de Crédito', score: 45, impact: 'low' }
-        ],
-        recentActivity: [
-          {
-            id: '1',
-            type: 'payment',
-            description: 'Pagamento realizado com sucesso',
-            amount: 150.00,
-            date: new Date().toISOString()
+      if (!walletAddress) {
+        // Sem carteira conectada - mostrar estado vazio
+        setDashboardData({
+          score: 0,
+          trend: 0,
+          walletAddress: undefined,
+          factors: [
+            { name: 'Histórico de Pagamentos', score: 0, impact: 'high' },
+            { name: 'Utilização de Crédito', score: 0, impact: 'medium' },
+            { name: 'Tempo de Conta', score: 0, impact: 'high' },
+            { name: 'Tipos de Crédito', score: 0, impact: 'low' }
+          ],
+          recentActivity: [],
+          financialHealth: {
+            totalDebt: 0,
+            monthlyIncome: 0,
+            creditUtilization: 0,
+            paymentHistory: 0
           },
-          {
-            id: '2',
-            type: 'score_update',
-            description: 'Score atualizado',
-            date: new Date(Date.now() - 86400000).toISOString()
-          },
-          {
-            id: '3',
-            type: 'wallet_connected',
-            description: 'Carteira conectada',
-            date: new Date(Date.now() - 172800000).toISOString()
-          }
-        ],
-        financialHealth: {
-          totalDebt: 2500.00,
-          monthlyIncome: 5000.00,
-          creditUtilization: 0.25,
-          paymentHistory: 95
-        },
-        recommendations: [
-          'Mantenha seus pagamentos em dia',
-          'Diversifique seus tipos de crédito',
-          'Monitore sua utilização de crédito'
-        ]
+          recommendations: [
+            'Conecte sua carteira para obter dados reais',
+            'Configure suas informações financeiras',
+            'Complete seu perfil para melhor análise'
+          ]
+        })
+        return
+      }
+
+      // Carregar dados reais da API
+      const response = await fetch(`/api/dashboard?walletAddress=${walletAddress}`)
+      
+      if (!response.ok) {
+        throw new Error('Erro ao carregar dados do dashboard')
       }
       
-      setDashboardData(mockData)
+      const data = await response.json()
+      setDashboardData(data)
     } catch (error) {
       console.error('Erro ao carregar dados do dashboard:', error)
+      // Em caso de erro, mostrar estado vazio
+      setDashboardData({
+        score: 0,
+        trend: 0,
+        walletAddress: undefined,
+        factors: [
+          { name: 'Histórico de Pagamentos', score: 0, impact: 'high' },
+          { name: 'Utilização de Crédito', score: 0, impact: 'medium' },
+          { name: 'Tempo de Conta', score: 0, impact: 'high' },
+          { name: 'Tipos de Crédito', score: 0, impact: 'low' }
+        ],
+        recentActivity: [],
+        financialHealth: {
+          totalDebt: 0,
+          monthlyIncome: 0,
+          creditUtilization: 0,
+          paymentHistory: 0
+        },
+        recommendations: [
+          'Erro ao carregar dados. Tente novamente.',
+          'Verifique sua conexão com a internet',
+          'Conecte sua carteira novamente se necessário'
+        ]
+      })
     } finally {
       setIsLoading(false)
     }

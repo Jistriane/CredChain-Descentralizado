@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
@@ -43,8 +43,28 @@ export default function HelpPage() {
   const [selectedCategory, setSelectedCategory] = useState('all')
   const [expandedFAQ, setExpandedFAQ] = useState<string | null>(null)
 
-  // Dados mockados
-  const faqs: FAQ[] = [
+  // Dados serão carregados da API
+  const [faqs, setFaqs] = useState<FAQ[]>([])
+  const [articles, setArticles] = useState<Article[]>([])
+
+  useEffect(() => {
+    loadHelpData()
+  }, [])
+
+  const loadHelpData = async () => {
+    try {
+      const response = await fetch('/api/help')
+      if (response.ok) {
+        const data = await response.json()
+        setFaqs(data.faqs || [])
+        setArticles(data.articles || [])
+      }
+    } catch (error) {
+      console.error('Erro ao carregar dados de ajuda:', error)
+    }
+  }
+
+  const defaultFaqs: FAQ[] = [
     {
       id: '1',
       question: 'Como funciona o sistema de score de crédito?',
@@ -82,7 +102,7 @@ export default function HelpPage() {
     }
   ]
 
-  const articles: Article[] = [
+  const defaultArticles: Article[] = [
     {
       id: '1',
       title: 'Guia Completo: Como Usar o Sistema',
@@ -125,7 +145,10 @@ export default function HelpPage() {
     { id: 'ai', name: 'IA', count: faqs.filter(f => f.category === 'ai').length }
   ]
 
-  const filteredFAQs = faqs.filter(faq => {
+  const currentFaqs = faqs.length > 0 ? faqs : defaultFaqs
+  const currentArticles = articles.length > 0 ? articles : defaultArticles
+
+  const filteredFAQs = currentFaqs.filter(faq => {
     const matchesSearch = faq.question.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          faq.answer.toLowerCase().includes(searchTerm.toLowerCase())
     const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory

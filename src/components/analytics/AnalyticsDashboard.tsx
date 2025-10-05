@@ -117,91 +117,15 @@ export default function AnalyticsDashboard() {
   const loadAnalyticsData = async () => {
     setIsLoading(true);
     try {
-      // Simular carregamento de dados
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Carregar dados reais da API
+      const response = await fetch('/api/analytics');
       
-      const mockData: AnalyticsData = {
-        overview: {
-          totalUsers: 12543,
-          totalTransactions: 89432,
-          totalVolume: 12500000,
-          averageScore: 720,
-          growthRate: 12.5,
-          riskLevel: 'low',
-        },
-        scoreDistribution: [
-          { range: '0-300', count: 234, percentage: 1.9 },
-          { range: '301-500', count: 1256, percentage: 10.0 },
-          { range: '501-700', count: 3456, percentage: 27.5 },
-          { range: '701-850', count: 4567, percentage: 36.4 },
-          { range: '851-1000', count: 3030, percentage: 24.2 },
-        ],
-        transactionTrends: [
-          { date: '2024-01-01', transactions: 1200, volume: 150000, averageAmount: 125 },
-          { date: '2024-01-02', transactions: 1350, volume: 168000, averageAmount: 124 },
-          { date: '2024-01-03', transactions: 1100, volume: 140000, averageAmount: 127 },
-          { date: '2024-01-04', transactions: 1450, volume: 180000, averageAmount: 124 },
-          { date: '2024-01-05', transactions: 1600, volume: 200000, averageAmount: 125 },
-          { date: '2024-01-06', transactions: 1300, volume: 165000, averageAmount: 127 },
-          { date: '2024-01-07', transactions: 1400, volume: 175000, averageAmount: 125 },
-        ],
-        userGrowth: [
-          { date: '2024-01-01', newUsers: 45, activeUsers: 1200, totalUsers: 12000 },
-          { date: '2024-01-02', newUsers: 52, activeUsers: 1250, totalUsers: 12052 },
-          { date: '2024-01-03', newUsers: 38, activeUsers: 1280, totalUsers: 12090 },
-          { date: '2024-01-04', newUsers: 61, activeUsers: 1320, totalUsers: 12151 },
-          { date: '2024-01-05', newUsers: 48, activeUsers: 1350, totalUsers: 12199 },
-          { date: '2024-01-06', newUsers: 55, activeUsers: 1380, totalUsers: 12254 },
-          { date: '2024-01-07', newUsers: 42, activeUsers: 1400, totalUsers: 12296 },
-        ],
-        paymentStatus: [
-          { status: 'Paid', count: 45678, percentage: 51.1, color: COLORS.success },
-          { status: 'Pending', count: 23456, percentage: 26.2, color: COLORS.warning },
-          { status: 'Late', count: 12345, percentage: 13.8, color: COLORS.danger },
-          { status: 'Defaulted', count: 7953, percentage: 8.9, color: COLORS.danger },
-        ],
-        riskAnalysis: [
-          { category: 'Credit Score', low: 45, medium: 30, high: 20, critical: 5 },
-          { category: 'Payment History', low: 60, medium: 25, high: 12, critical: 3 },
-          { category: 'Transaction Patterns', low: 50, medium: 35, high: 13, critical: 2 },
-          { category: 'Identity Verification', low: 70, medium: 20, high: 8, critical: 2 },
-        ],
-        topPerformers: [
-          { userId: 'user_001', name: 'João Silva', score: 950, improvement: 25, transactions: 45 },
-          { userId: 'user_002', name: 'Maria Santos', score: 920, improvement: 18, transactions: 38 },
-          { userId: 'user_003', name: 'Pedro Costa', score: 890, improvement: 22, transactions: 42 },
-          { userId: 'user_004', name: 'Ana Oliveira', score: 875, improvement: 15, transactions: 35 },
-          { userId: 'user_005', name: 'Carlos Lima', score: 860, improvement: 20, transactions: 40 },
-        ],
-        alerts: [
-          {
-            id: 'alert_001',
-            type: 'warning',
-            title: 'Alto Volume de Transações',
-            message: 'Detectado aumento de 150% no volume de transações nas últimas 24h',
-            timestamp: '2024-01-07T10:30:00Z',
-            severity: 'medium',
-          },
-          {
-            id: 'alert_002',
-            type: 'error',
-            title: 'Falha na Integração',
-            message: 'Erro na integração com o sistema de pagamentos PIX',
-            timestamp: '2024-01-07T09:15:00Z',
-            severity: 'high',
-          },
-          {
-            id: 'alert_003',
-            type: 'info',
-            title: 'Nova Atualização',
-            message: 'Sistema atualizado para versão 2.1.0',
-            timestamp: '2024-01-07T08:00:00Z',
-            severity: 'low',
-          },
-        ],
-      };
+      if (!response.ok) {
+        throw new Error('Erro ao carregar dados de analytics');
+      }
       
-      setData(mockData);
+      const data: AnalyticsData = await response.json();
+      setData(data);
     } catch (error) {
       console.error('Erro ao carregar dados de analytics:', error);
     } finally {

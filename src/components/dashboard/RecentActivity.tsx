@@ -20,42 +20,7 @@ interface ActivityItem {
   value?: string
 }
 
-const mockActivities: ActivityItem[] = [
-  {
-    id: '1',
-    type: 'score_update',
-    title: 'Score Atualizado',
-    description: 'Seu score de crédito foi atualizado com base em novos dados',
-    timestamp: '2 minutos atrás',
-    status: 'success',
-    value: '+15 pontos'
-  },
-  {
-    id: '2',
-    type: 'payment',
-    title: 'Pagamento Registrado',
-    description: 'Pagamento de R$ 1.250,00 registrado com sucesso',
-    timestamp: '1 hora atrás',
-    status: 'success'
-  },
-  {
-    id: '3',
-    type: 'verification',
-    title: 'Verificação Pendente',
-    description: 'Documento de identidade aguardando verificação',
-    timestamp: '3 horas atrás',
-    status: 'warning'
-  },
-  {
-    id: '4',
-    type: 'alert',
-    title: 'Alerta de Score',
-    description: 'Seu score caiu 5 pontos devido a atraso em pagamento',
-    timestamp: '1 dia atrás',
-    status: 'error',
-    value: '-5 pontos'
-  }
-]
+// Dados serão carregados dinamicamente da API
 
 const getActivityIcon = (type: string, status: string) => {
   switch (type) {
@@ -119,7 +84,7 @@ export function RecentActivity({ activities: propActivities, isLoading = false }
       }))
       setActivities(convertedActivities)
     } else {
-      setActivities(mockActivities)
+      setActivities([])
     }
   }, [propActivities])
 

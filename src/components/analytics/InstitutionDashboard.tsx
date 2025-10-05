@@ -65,46 +65,15 @@ export const InstitutionDashboard: React.FC = () => {
   const loadAnalyticsData = async () => {
     setIsLoading(true);
     try {
-      // Simular carregamento de dados
-      const mockData: AnalyticsData = {
-        totalUsers: 15420,
-        totalScore: 11580000,
-        averageScore: 751,
-        scoreDistribution: [
-          { range: '800-1000', count: 3200, percentage: 20.8 },
-          { range: '700-799', count: 4800, percentage: 31.1 },
-          { range: '600-699', count: 4200, percentage: 27.3 },
-          { range: '500-599', count: 2200, percentage: 14.3 },
-          { range: '0-499', count: 1020, percentage: 6.6 }
-        ],
-        monthlyTrends: [
-          { month: 'Jan', users: 1200, scores: 850, transactions: 2400 },
-          { month: 'Fev', users: 1350, scores: 920, transactions: 2800 },
-          { month: 'Mar', users: 1500, scores: 980, transactions: 3200 },
-          { month: 'Abr', users: 1650, scores: 1050, transactions: 3600 },
-          { month: 'Mai', users: 1800, scores: 1120, transactions: 4000 },
-          { month: 'Jun', users: 1950, scores: 1180, transactions: 4400 }
-        ],
-        riskLevels: [
-          { level: 'Baixo', count: 12000, color: '#10b981' },
-          { level: 'Médio', count: 2800, color: '#f59e0b' },
-          { level: 'Alto', count: 520, color: '#ef4444' },
-          { level: 'Crítico', count: 100, color: '#dc2626' }
-        ],
-        complianceStatus: [
-          { status: 'Aprovado', count: 14200, percentage: 92.1 },
-          { status: 'Pendente', count: 800, percentage: 5.2 },
-          { status: 'Rejeitado', count: 420, percentage: 2.7 }
-        ],
-        fraudDetection: [
-          { type: 'Transação Suspeita', count: 45, severity: 'Média' },
-          { type: 'Login Anômalo', count: 23, severity: 'Baixa' },
-          { type: 'Identidade Falsa', count: 12, severity: 'Alta' },
-          { type: 'Comportamento Atípico', count: 8, severity: 'Média' }
-        ]
-      };
+      // Carregar dados reais da API
+      const response = await fetch('/api/analytics/institution');
       
-      setAnalyticsData(mockData);
+      if (!response.ok) {
+        throw new Error('Erro ao carregar dados de analytics da instituição');
+      }
+      
+      const data: AnalyticsData = await response.json();
+      setAnalyticsData(data);
     } catch (error) {
       console.error('Erro ao carregar dados:', error);
     } finally {
