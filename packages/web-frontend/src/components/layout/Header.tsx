@@ -2,9 +2,9 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useWallet } from '../../app/WalletProvider';
+import { useWallet } from '../../app/PolkadotWalletProvider';
 import { useTranslation } from '../../hooks/useTranslation';
-import { WalletConnectButton } from '../wallet/WalletConnectButton';
+import { PolkadotWalletSelector } from '../wallet/PolkadotWalletSelector';
 import { LanguageSwitcher } from '../language/LanguageSwitcher';
 import { Logo } from '../ui/Logo';
 
@@ -102,19 +102,7 @@ export const Header: React.FC = () => {
           {/* Wallet Connection & Language */}
           <div className="flex items-center space-x-4">
             <LanguageSwitcher />
-            {isConnected ? (
-              <div className="flex items-center space-x-3">
-                <div className="flex items-center space-x-2 bg-green-100 text-green-800 px-3 py-2 rounded-lg">
-                  <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium">
-                    {formatAddress(address || '')}
-                  </span>
-                </div>
-                <WalletConnectButton />
-              </div>
-            ) : (
-              <WalletConnectButton />
-            )}
+            <PolkadotWalletSelector />
           </div>
         </div>
       </div>

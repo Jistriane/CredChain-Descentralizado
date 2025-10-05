@@ -1,6 +1,6 @@
 'use client'
 
-import { useWallet } from '../app/WalletProvider'
+import { useWallet } from '../app/PolkadotWalletProvider'
 
 export function useWalletSafe() {
   try {

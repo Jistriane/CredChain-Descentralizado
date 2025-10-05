@@ -6,7 +6,7 @@ import { ThemeProvider } from 'next-themes'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { SocketProvider } from '@/contexts/SocketContext'
 import { NotificationProvider } from '@/contexts/NotificationContext'
-import { WalletProvider } from './WalletProvider'
+import { PolkadotWalletProvider } from './PolkadotWalletProvider'
 import { TranslationProvider } from './TranslationProvider'
 import { Header } from '@/components/layout/Header'
 import { useState } from 'react'
@@ -44,7 +44,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
           <AuthProvider>
             <SocketProvider>
               <NotificationProvider>
-                <WalletProvider>
+                <PolkadotWalletProvider>
                   <TranslationProvider>
                     <div className="min-h-screen bg-gray-50">
                       <Header />
@@ -53,7 +53,7 @@ export function Providers({ children }: { children: React.ReactNode }) {
                       </main>
                     </div>
                   </TranslationProvider>
-                </WalletProvider>
+                </PolkadotWalletProvider>
               </NotificationProvider>
             </SocketProvider>
           </AuthProvider>

@@ -1,16 +1,16 @@
 // Configurações para produção
 export const productionConfig = {
-  // Blockchain - Ethereum Mainnet
+  // Blockchain - Polkadot Mainnet
   blockchain: {
-    rpcUrl: process.env.ETHEREUM_RPC_URL || 'https://eth.llamarpc.com',
-    chainId: process.env.CHAIN_ID || '0x1',
-    chainName: 'Ethereum Mainnet',
+    rpcUrl: process.env.POLKADOT_RPC_URL || 'wss://rpc.polkadot.io',
+    chainId: process.env.CHAIN_ID || '0x0',
+    chainName: 'Polkadot Mainnet',
     nativeCurrency: {
-      name: 'Ether',
-      symbol: 'ETH',
-      decimals: 18
+      name: 'Polkadot',
+      symbol: 'DOT',
+      decimals: 10
     },
-    blockExplorerUrl: 'https://etherscan.io',
+    blockExplorerUrl: 'https://polkascan.io/polkadot',
     networkName: process.env.NETWORK_NAME || 'Polkadot',
     blockExplorer: process.env.BLOCK_EXPLORER || 'https://polkascan.io',
   },
