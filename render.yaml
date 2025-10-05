@@ -3,7 +3,6 @@ services:
     name: credchain-frontend
     env: node
     plan: starter
-    rootDir: packages/web-frontend
     buildCommand: npm install && npm run build
     startCommand: npm start
     envVars:

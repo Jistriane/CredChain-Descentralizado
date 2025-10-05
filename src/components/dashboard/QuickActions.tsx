@@ -1,0 +1,186 @@
+'use client'
+
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { 
+  CreditCardIcon,
+  DocumentTextIcon,
+  ChartBarIcon,
+  BanknotesIcon,
+  ShieldCheckIcon,
+  ArrowPathIcon,
+  PlusIcon,
+  EyeIcon
+} from '@heroicons/react/24/outline'
+
+interface QuickAction {
+  id: string
+  title: string
+  description: string
+  icon: any
+  color: string
+  bgColor: string
+  borderColor: string
+  action: () => void
+  disabled?: boolean
+}
+
+const quickActions: QuickAction[] = [
+  {
+    id: '1',
+    title: 'Solicitar Crédito',
+    description: 'Faça uma nova solicitação de crédito',
+    icon: CreditCardIcon,
+    color: 'text-blue-600',
+    bgColor: 'bg-blue-50',
+    borderColor: 'border-blue-200',
+    action: () => console.log('Solicitar crédito')
+  },
+  {
+    id: '2',
+    title: 'Relatório de Score',
+    description: 'Baixe seu relatório detalhado',
+    icon: DocumentTextIcon,
+    color: 'text-green-600',
+    bgColor: 'bg-green-50',
+    borderColor: 'border-green-200',
+    action: () => console.log('Baixar relatório')
+  },
+  {
+    id: '3',
+    title: 'Análise de Crédito',
+    description: 'Veja sua análise completa',
+    icon: ChartBarIcon,
+    color: 'text-purple-600',
+    bgColor: 'bg-purple-50',
+    borderColor: 'border-purple-200',
+    action: () => console.log('Ver análise')
+  },
+  {
+    id: '4',
+    title: 'Histórico de Pagamentos',
+    description: 'Consulte seu histórico',
+    icon: BanknotesIcon,
+    color: 'text-yellow-600',
+    bgColor: 'bg-yellow-50',
+    borderColor: 'border-yellow-200',
+    action: () => console.log('Ver histórico')
+  },
+  {
+    id: '5',
+    title: 'Verificação de Identidade',
+    description: 'Complete sua verificação',
+    icon: ShieldCheckIcon,
+    color: 'text-red-600',
+    bgColor: 'bg-red-50',
+    borderColor: 'border-red-200',
+    action: () => console.log('Verificar identidade'),
+    disabled: false
+  },
+  {
+    id: '6',
+    title: 'Atualizar Dados',
+    description: 'Atualize suas informações',
+    icon: ArrowPathIcon,
+    color: 'text-gray-600',
+    bgColor: 'bg-gray-50',
+    borderColor: 'border-gray-200',
+    action: () => console.log('Atualizar dados')
+  }
+]
+
+export function QuickActions() {
+  const [loading, setLoading] = useState<string | null>(null)
+
+  const handleAction = async (action: QuickAction) => {
+    if (action.disabled) return
+    
+    setLoading(action.id)
+    
+    // Simular carregamento
+    await new Promise(resolve => setTimeout(resolve, 1000))
+    
+    action.action()
+    setLoading(null)
+  }
+
+  return (
+    <div className="card">
+      <div className="card-header">
+        <h3 className="text-lg font-semibold text-gray-900">Ações Rápidas</h3>
+        <p className="text-sm text-gray-500">Acesse as principais funcionalidades</p>
+      </div>
+      
+      <div className="card-body">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {quickActions.map((action, index) => {
+            const Icon = action.icon
+            const isLoading = loading === action.id
+            
+            return (
+              <motion.button
+                key={action.id}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => handleAction(action)}
+                disabled={action.disabled || isLoading}
+                className={`
+                  relative p-4 rounded-lg border-2 transition-all duration-200
+                  ${action.bgColor} ${action.borderColor} ${action.color}
+                  ${action.disabled ? 'opacity-50 cursor-not-allowed' : 'hover:shadow-md cursor-pointer'}
+                  ${isLoading ? 'animate-pulse' : ''}
+                `}
+              >
+                <div className="flex flex-col items-center text-center space-y-3">
+                  <div className="relative">
+                    <Icon className="h-8 w-8" />
+                    {isLoading && (
+                      <div className="absolute inset-0 flex items-center justify-center">
+                        <div className="animate-spin rounded-full h-4 w-4 border-2 border-current border-t-transparent"></div>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div>
+                    <h4 className="font-medium text-sm">{action.title}</h4>
+                    <p className="text-xs opacity-75 mt-1">{action.description}</p>
+                  </div>
+                  
+                  {action.disabled && (
+                    <div className="absolute top-2 right-2">
+                      <div className="w-2 h-2 bg-yellow-500 rounded-full"></div>
+                    </div>
+                  )}
+                </div>
+              </motion.button>
+            )
+          })}
+        </div>
+        
+        {/* Ações adicionais */}
+        <div className="mt-6 pt-4 border-t border-gray-200">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-4">
+              <button className="flex items-center space-x-2 text-sm text-primary-600 hover:text-primary-700">
+                <PlusIcon className="h-4 w-4" />
+                <span>Adicionar Conta</span>
+              </button>
+              
+              <button className="flex items-center space-x-2 text-sm text-gray-600 hover:text-gray-700">
+                <EyeIcon className="h-4 w-4" />
+                <span>Ver Todas</span>
+              </button>
+            </div>
+            
+            <div className="text-xs text-gray-500">
+              Última atualização: há 2 horas
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
