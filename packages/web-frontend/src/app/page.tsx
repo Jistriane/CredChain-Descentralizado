@@ -5,7 +5,6 @@ import { useEffect, useState } from 'react'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
-export const revalidate = 0
 
 // Dynamic imports to prevent SSR issues
 const Hero = dynamic(() => import('@/components/sections/Hero'), { ssr: false })
@@ -48,4 +47,3 @@ export default function Home() {
     </main>
   )
 }
-export const dynamic = "force-dynamic"

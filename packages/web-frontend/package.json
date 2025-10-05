@@ -51,19 +51,5 @@
   },
   "engines": {
     "node": "18.x"
-  },
-  "overrides": {
-    "rimraf": "^5.0.0",
-    "inflight": "^1.0.6",
-    "node-domexception": "^2.0.0",
-    "glob": "^10.0.0",
-    "@substrate/connect": "^1.0.0"
-  },
-  "resolutions": {
-    "rimraf": "^5.0.0",
-    "inflight": "^1.0.6",
-    "node-domexception": "^2.0.0",
-    "glob": "^10.0.0",
-    "@substrate/connect": "^1.0.0"
   }
 }
