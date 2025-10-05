@@ -13,9 +13,6 @@ export const LanguageSwitcher: React.FC = () => {
   const handleLanguageChange = (newLanguage: Language) => {
     setLanguage(newLanguage);
     setIsOpen(false);
-    
-    // Salvar preferência no localStorage
-    localStorage.setItem('credchain-language', newLanguage);
   };
 
   const getFlagEmoji = (lang: string): string => {

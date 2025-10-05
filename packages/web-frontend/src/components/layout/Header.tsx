@@ -59,55 +59,43 @@ export const Header: React.FC = () => {
               href="/"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t('dashboard')}
+              {t('navigation.dashboard')}
             </Link>
             <Link
               href="/score"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t('score')}
+              {t('navigation.score')}
             </Link>
             <Link
               href="/payments"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t('payments')}
+              {t('navigation.payments')}
             </Link>
             <Link
               href="/chat"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t('chat')}
+              {t('navigation.chat')}
             </Link>
             <Link
               href="/wallet"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              {t('wallet')}
-            </Link>
-            <Link
-              href="/payments"
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Pagamentos
+              {t('navigation.wallet')}
             </Link>
             <Link
               href="/reports"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              Relatórios
+              {t('navigation.reports')}
             </Link>
             <Link
               href="/settings"
               className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
             >
-              Configurações
-            </Link>
-            <Link
-              href="/help"
-              className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
-            >
-              Ajuda
+              {t('navigation.settings')}
             </Link>
           </nav>
 

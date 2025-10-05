@@ -10,6 +10,7 @@ export interface Translations {
     wallet: string;
     profile: string;
     settings: string;
+    reports: string;
   };
   
   // Wallet
@@ -167,6 +168,7 @@ export const translations: Record<Language, Translations> = {
       wallet: 'Carteira',
       profile: 'Perfil',
       settings: 'Configurações',
+      reports: 'Relatórios',
     },
     wallet: {
       connect: 'Conectar Carteira',
@@ -306,6 +308,7 @@ export const translations: Record<Language, Translations> = {
       wallet: 'Wallet',
       profile: 'Profile',
       settings: 'Settings',
+      reports: 'Reports',
     },
     wallet: {
       connect: 'Connect Wallet',
@@ -445,6 +448,7 @@ export const translations: Record<Language, Translations> = {
       wallet: 'Cartera',
       profile: 'Perfil',
       settings: 'Configuración',
+      reports: 'Reportes',
     },
     wallet: {
       connect: 'Conectar Cartera',

@@ -1,44 +1,48 @@
 'use client'
 
-import { createContext, useContext, useState, ReactNode } from 'react'
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
+import { Language, getTranslations, getSupportedLanguages } from '../lib/i18n'
 
 interface TranslationContextType {
   t: (key: string) => string
-  language: string
-  setLanguage: (lang: string) => void
+  language: Language
+  setLanguage: (lang: Language) => void
 }
 
 const TranslationContext = createContext<TranslationContextType | undefined>(undefined)
 
 export function TranslationProvider({ children }: { children: ReactNode }) {
-  const [language, setLanguage] = useState('pt-BR')
+  const [language, setLanguageState] = useState<Language>('pt-BR')
+
+  // Carregar idioma do localStorage na inicialização
+  useEffect(() => {
+    const savedLanguage = localStorage.getItem('credchain-language') as Language
+    if (savedLanguage && getSupportedLanguages().includes(savedLanguage)) {
+      setLanguageState(savedLanguage)
+    }
+  }, [])
+
+  const setLanguage = (newLanguage: Language) => {
+    setLanguageState(newLanguage)
+    localStorage.setItem('credchain-language', newLanguage)
+  }
 
   const t = (key: string): string => {
-    // Simular tradução - em produção, isso viria de um arquivo de tradução
-    const translations: Record<string, string> = {
-      'welcome': 'Bem-vindo',
-      'dashboard': 'Dashboard',
-      'profile': 'Perfil',
-      'settings': 'Configurações',
-      'logout': 'Sair',
-      'login': 'Entrar',
-      'register': 'Registrar',
-      'email': 'E-mail',
-      'password': 'Senha',
-      'name': 'Nome',
-      'save': 'Salvar',
-      'cancel': 'Cancelar',
-      'edit': 'Editar',
-      'delete': 'Excluir',
-      'confirm': 'Confirmar',
-      'loading': 'Carregando...',
-      'error': 'Erro',
-      'success': 'Sucesso',
-      'warning': 'Aviso',
-      'info': 'Informação'
+    const translations = getTranslations(language)
+    
+    // Navegar pela estrutura aninhada usando notação de ponto
+    const keys = key.split('.')
+    let value: any = translations
+    
+    for (const k of keys) {
+      if (value && typeof value === 'object' && k in value) {
+        value = value[k]
+      } else {
+        return key // Retorna a chave se não encontrar a tradução
+      }
     }
     
-    return translations[key] || key
+    return typeof value === 'string' ? value : key
   }
 
   const value = {
