@@ -48,7 +48,7 @@ export default function HelpPage() {
     {
       id: '1',
       question: 'Como funciona o sistema de score de crédito?',
-      answer: 'O CredChain utiliza inteligência artificial e dados da blockchain para calcular seu score de crédito. Analisamos seu histórico de pagamentos, comportamento financeiro e outros fatores para gerar uma pontuação de 0 a 1000.',
+      answer: 'O sistema utiliza inteligência artificial e dados da blockchain para calcular seu score de crédito. Analisamos seu histórico de pagamentos, comportamento financeiro e outros fatores para gerar uma pontuação de 0 a 1000.',
       category: 'score',
       helpful: 45
     },
@@ -85,7 +85,7 @@ export default function HelpPage() {
   const articles: Article[] = [
     {
       id: '1',
-      title: 'Guia Completo: Como Usar o CredChain',
+      title: 'Guia Completo: Como Usar o Sistema',
       description: 'Aprenda os conceitos básicos e como navegar pela plataforma',
       category: 'getting-started',
       readTime: '5 min',
@@ -151,7 +151,7 @@ export default function HelpPage() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Central de Ajuda</h1>
-          <p className="text-gray-600 mt-2">Encontre respostas para suas dúvidas e aprenda a usar o CredChain</p>
+          <p className="text-gray-600 mt-2">Encontre respostas para suas dúvidas e aprenda a usar o sistema</p>
         </div>
 
         {/* Busca */}

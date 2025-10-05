@@ -33,7 +33,7 @@ export const Logo: React.FC<LogoProps> = ({
     <div className={`flex items-center ${className}`}>
       <Image
         src="/logo.png"
-        alt="CredChain Logo"
+        alt="Logo"
         width={logoSize.width}
         height={logoSize.height}
         className="object-contain"
@@ -44,7 +44,6 @@ export const Logo: React.FC<LogoProps> = ({
           <h1 className="text-2xl font-bold text-blue-900">
             Cred<span className="text-yellow-600">Chain</span>
           </h1>
-          <p className="text-sm text-gray-600">Secure. Connected. Trusted.</p>
         </div>
       )}
     </div>

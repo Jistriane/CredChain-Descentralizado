@@ -269,7 +269,7 @@ export default function AnalyticsDashboard() {
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-3xl font-bold text-gray-900 mb-2">Dashboard de Analytics</h1>
-          <p className="text-gray-600">Visão geral do sistema CredChain</p>
+          <p className="text-gray-600">Visão geral do sistema</p>
           
           {/* Filtros */}
           <div className="flex items-center space-x-4 mt-4">

@@ -22,6 +22,23 @@
 
 O CredChain é uma plataforma descentralizada que utiliza **ElizaOS** (agentes de IA especializados) e **Polkadot/Substrate** para criar um sistema transparente, justo e verificável de credit scoring.
 
+### 📱 Dashboard do Sistema
+
+<div align="center">
+  <img src="dashboard-screenshot.png" alt="CredChain Dashboard - Sistema de Credit Scoring Descentralizado" width="100%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <br>
+  <em>Dashboard principal do CredChain mostrando o sistema de credit scoring em tempo real</em>
+</div>
+
+**Descrição da Interface:**
+- **Header Superior**: Navegação completa com logo, menu, seletor de idioma e status da carteira conectada
+- **Sidebar**: Menu lateral com acesso rápido a todas as funcionalidades
+- **Score de Crédito**: Círculo central mostrando o score atual (0-1000 pontos)
+- **Fatores de Crédito**: Análise detalhada dos componentes que influenciam o score
+- **Ações Rápidas**: Botões para funcionalidades principais como solicitar crédito e relatórios
+- **Atividade Recente**: Timeline das últimas atualizações e transações
+- **Integração Blockchain**: Status da carteira conectada com dados reais da rede Ethereum
+
 ### 🚀 Características Principais
 
 - **🤖 Multi-Agente ElizaOS**: 6 agentes especializados em análise de crédito, compliance, detecção de fraude e suporte
@@ -99,6 +116,23 @@ npm run dev
 
 CredChain is a decentralized platform that uses **ElizaOS** (specialized AI agents) and **Polkadot/Substrate** to create a transparent, fair, and verifiable credit scoring system.
 
+### 📱 System Dashboard
+
+<div align="center">
+  <img src="dashboard-screenshot.png" alt="CredChain Dashboard - Decentralized Credit Scoring System" width="100%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <br>
+  <em>Main CredChain dashboard showing real-time credit scoring system</em>
+</div>
+
+**Interface Description:**
+- **Top Header**: Complete navigation with logo, menu, language selector and connected wallet status
+- **Sidebar**: Lateral menu with quick access to all functionalities
+- **Credit Score**: Central circle showing current score (0-1000 points)
+- **Credit Factors**: Detailed analysis of components that influence the score
+- **Quick Actions**: Buttons for main functionalities like credit requests and reports
+- **Recent Activity**: Timeline of latest updates and transactions
+- **Blockchain Integration**: Connected wallet status with real Ethereum network data
+
 ### 🚀 Key Features
 
 - **🤖 Multi-Agent ElizaOS**: 6 specialized agents for credit analysis, compliance, fraud detection, and support
@@ -138,6 +172,23 @@ npm run dev
 ### 🎯 Visión General
 
 CredChain es una plataforma descentralizada que utiliza **ElizaOS** (agentes de IA especializados) y **Polkadot/Substrate** para crear un sistema transparente, justo y verificable de scoring crediticio.
+
+### 📱 Dashboard del Sistema
+
+<div align="center">
+  <img src="dashboard-screenshot.png" alt="CredChain Dashboard - Sistema Descentralizado de Credit Scoring" width="100%" style="border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);">
+  <br>
+  <em>Dashboard principal de CredChain mostrando el sistema de credit scoring en tiempo real</em>
+</div>
+
+**Descripción de la Interfaz:**
+- **Header Superior**: Navegación completa con logo, menú, selector de idioma y estado de la cartera conectada
+- **Sidebar**: Menú lateral con acceso rápido a todas las funcionalidades
+- **Score de Crédito**: Círculo central mostrando el score actual (0-1000 puntos)
+- **Factores de Crédito**: Análisis detallado de los componentes que influyen en el score
+- **Acciones Rápidas**: Botones para funcionalidades principales como solicitar crédito y reportes
+- **Actividad Reciente**: Timeline de las últimas actualizaciones y transacciones
+- **Integración Blockchain**: Estado de la cartera conectada con datos reales de la red Ethereum
 
 ### 🚀 Características Principales
 

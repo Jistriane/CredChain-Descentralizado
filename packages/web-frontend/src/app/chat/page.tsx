@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Badge } from '@/components/ui/badge'
 import { ScrollArea } from '@/components/ui/scroll-area'
+import { useAuth } from '@/contexts/AuthContext'
 import { 
   PaperAirplaneIcon,
   UserIcon,
@@ -29,6 +30,7 @@ interface Message {
 }
 
 export default function ChatPage() {
+  const { user } = useAuth()
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -63,12 +65,12 @@ export default function ChatPage() {
     }
 
     setMessages(prev => [...prev, userMessage])
+    const currentMessage = inputMessage
     setInputMessage('')
     setIsTyping(true)
 
-    // Simular resposta da IA
-    setTimeout(() => {
-      const aiResponse = generateAIResponse(inputMessage)
+    try {
+      const aiResponse = await generateAIResponse(currentMessage)
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
         text: aiResponse.text,
@@ -79,41 +81,54 @@ export default function ChatPage() {
       }
 
       setMessages(prev => [...prev, aiMessage])
+    } catch (error) {
+      console.error('Error sending message:', error)
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        text: 'Desculpe, ocorreu um erro ao processar sua mensagem. Tente novamente.',
+        sender: 'ai',
+        timestamp: new Date(),
+        type: 'text'
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
       setIsTyping(false)
-    }, 1500)
+    }
   }
 
-  const generateAIResponse = (userInput: string) => {
-    const input = userInput.toLowerCase()
-    
-    if (input.includes('score') || input.includes('pontuação')) {
-      return {
-        text: 'Seu score atual é 750 pontos, que está na faixa "Bom". Para melhorar seu score, recomendo:\n\n• Manter pagamentos em dia\n• Reduzir utilização de crédito\n• Diversificar tipos de crédito\n\nGostaria de ver um relatório detalhado?',
-        type: 'suggestion' as const,
-        suggestions: ['Ver relatório de score', 'Como melhorar meu score', 'Histórico de score']
+  const generateAIResponse = async (userInput: string) => {
+    try {
+      // Chamada real para API do ElizaOS
+      const response = await fetch('/api/chat', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${user?.token}`
+        },
+        body: JSON.stringify({
+          message: userInput,
+          userId: user?.id,
+          sessionId: Date.now().toString()
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
       }
-    }
-    
-    if (input.includes('pagamento') || input.includes('pagar')) {
+
+      const data = await response.json()
       return {
-        text: 'Vejo que você tem 2 pagamentos pendentes totalizando R$ 2.000,00. Posso ajudá-lo a:\n\n• Agendar pagamentos\n• Configurar lembretes\n• Analisar impacto no score\n\nO que gostaria de fazer?',
-        type: 'suggestion' as const,
-        suggestions: ['Agendar pagamento', 'Configurar lembretes', 'Ver impacto no score']
+        text: data.response,
+        type: data.type || 'text',
+        suggestions: data.suggestions || []
       }
-    }
-    
-    if (input.includes('ajuda') || input.includes('help')) {
+    } catch (error) {
+      console.error('Error calling ElizaOS API:', error)
       return {
-        text: 'Estou aqui para ajudá-lo! Posso auxiliar com:\n\n• Análise do seu score de crédito\n• Gestão de pagamentos\n• Recomendações financeiras\n• Explicações sobre produtos\n\nO que você gostaria de saber?',
-        type: 'suggestion' as const,
-        suggestions: ['Explicar meu score', 'Recomendações financeiras', 'Como funciona o sistema']
+        text: 'Desculpe, não consegui processar sua mensagem no momento. Tente novamente em alguns instantes.',
+        type: 'text' as const,
+        suggestions: ['Tentar novamente', 'Verificar conexão', 'Contatar suporte']
       }
-    }
-    
-    return {
-      text: 'Entendi sua pergunta. Posso ajudá-lo com questões relacionadas ao seu score de crédito, pagamentos, relatórios financeiros e muito mais. Poderia ser mais específico sobre o que gostaria de saber?',
-      type: 'suggestion' as const,
-      suggestions: ['Ver meu score', 'Gerenciar pagamentos', 'Relatórios financeiros']
     }
   }
 

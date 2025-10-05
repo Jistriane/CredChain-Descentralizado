@@ -11,6 +11,8 @@ interface User {
   verified: boolean
   createdAt: string
   lastLogin: string
+  token?: string
+  walletAddress?: string
 }
 
 interface AuthContextType {

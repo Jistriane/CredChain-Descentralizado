@@ -20,66 +20,67 @@ interface CreditFactor {
   lastUpdate: string
 }
 
-const mockFactors: CreditFactor[] = [
+// Dados serão carregados dinamicamente com base na carteira conectada
+const getDefaultFactors = (): CreditFactor[] => [
   {
     id: '1',
     name: 'Histórico de Pagamentos',
     weight: 35,
-    score: 85,
-    impact: 'positive',
-    description: 'Pagamentos em dia nos últimos 12 meses',
-    trend: 'up',
-    lastUpdate: '2 dias atrás'
+    score: 0,
+    impact: 'neutral',
+    description: 'Será calculado com base no histórico da carteira',
+    trend: 'stable',
+    lastUpdate: 'Aguardando dados da carteira'
   },
   {
     id: '2',
     name: 'Renda vs Dívidas',
     weight: 25,
-    score: 72,
-    impact: 'positive',
-    description: 'Boa relação entre renda e compromissos',
+    score: 0,
+    impact: 'neutral',
+    description: 'Será calculado com base nas transações',
     trend: 'stable',
-    lastUpdate: '1 semana atrás'
+    lastUpdate: 'Aguardando dados da carteira'
   },
   {
     id: '3',
     name: 'Tempo de Conta',
     weight: 15,
-    score: 45,
-    impact: 'negative',
-    description: 'Contas recentes podem impactar o score',
-    trend: 'down',
-    lastUpdate: '3 dias atrás'
+    score: 0,
+    impact: 'neutral',
+    description: 'Será calculado com base na idade da carteira',
+    trend: 'stable',
+    lastUpdate: 'Aguardando dados da carteira'
   },
   {
     id: '4',
     name: 'Tipos de Crédito',
     weight: 10,
-    score: 60,
+    score: 0,
     impact: 'neutral',
-    description: 'Diversificação de produtos de crédito',
+    description: 'Será calculado com base na diversificação',
     trend: 'stable',
-    lastUpdate: '1 semana atrás'
+    lastUpdate: 'Aguardando dados da carteira'
   },
   {
     id: '5',
     name: 'Consultas Recentes',
     weight: 10,
-    score: 80,
-    impact: 'positive',
-    description: 'Poucas consultas nos últimos 6 meses',
-    trend: 'up',
-    lastUpdate: '5 dias atrás'
+    score: 0,
+    impact: 'neutral',
+    description: 'Será calculado com base nas consultas recentes',
+    trend: 'stable',
+    lastUpdate: 'Aguardando dados da carteira'
   },
   {
     id: '6',
     name: 'Utilização de Limite',
     weight: 5,
-    score: 30,
-    impact: 'negative',
-    description: 'Alta utilização dos limites disponíveis',
-    trend: 'down',
-    lastUpdate: '1 dia atrás'
+    score: 0,
+    impact: 'neutral',
+    description: 'Será calculado com base na utilização',
+    trend: 'stable',
+    lastUpdate: 'Aguardando dados da carteira'
   }
 ]
 
@@ -122,7 +123,7 @@ export function CreditFactors() {
   const [factors, setFactors] = useState<CreditFactor[]>([])
 
   useEffect(() => {
-    setFactors(mockFactors)
+    setFactors(getDefaultFactors())
   }, [])
 
   const totalScore = factors.reduce((acc, factor) => {

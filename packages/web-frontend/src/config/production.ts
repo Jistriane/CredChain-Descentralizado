@@ -1,9 +1,16 @@
-// Configurações para produção - CredChain
+// Configurações para produção
 export const productionConfig = {
-  // Blockchain
+  // Blockchain - Ethereum Mainnet
   blockchain: {
-    rpcUrl: process.env.POLKADOT_RPC_URL || 'https://rpc.polkadot.io',
-    chainId: process.env.CHAIN_ID || '0x0000000000000000000000000000000000000000000000000000000000000000',
+    rpcUrl: process.env.ETHEREUM_RPC_URL || 'https://eth.llamarpc.com',
+    chainId: process.env.CHAIN_ID || '0x1',
+    chainName: 'Ethereum Mainnet',
+    nativeCurrency: {
+      name: 'Ether',
+      symbol: 'ETH',
+      decimals: 18
+    },
+    blockExplorerUrl: 'https://etherscan.io',
     networkName: process.env.NETWORK_NAME || 'Polkadot',
     blockExplorer: process.env.BLOCK_EXPLORER || 'https://polkascan.io',
   },

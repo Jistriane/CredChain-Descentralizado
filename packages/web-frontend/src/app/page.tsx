@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
+import { useAuth } from '@/contexts/AuthContext'
+import { useWalletSafe } from '../hooks/useWalletSafe'
 import { 
   ChartBarIcon, 
   CreditCardIcon, 
@@ -19,12 +21,11 @@ import { CreditFactors } from '@/components/dashboard/CreditFactors'
 import { FinancialHealth } from '@/components/dashboard/FinancialHealth'
 import { QuickActions } from '@/components/dashboard/QuickActions'
 import { Logo } from '@/components/ui/Logo'
-import { useAuth } from '@/contexts/AuthContext'
 import { useSocket } from '@/contexts/SocketContext'
 
 export default function DashboardPage() {
   const { user, isLoading: authLoading } = useAuth()
-  const { isConnected } = useSocket()
+  const { isConnected, address, balance } = useWalletSafe()
   const [dashboardData, setDashboardData] = useState({
     score: 0,
     trend: 0,
@@ -34,36 +35,46 @@ export default function DashboardPage() {
     recommendations: []
   })
   const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     if (user && !authLoading) {
       loadDashboardData()
     }
-  }, [user, authLoading])
-
-  useEffect(() => {
-    if (isConnected) {
-      // Simular atualizações em tempo real
-      const interval = setInterval(() => {
-        setDashboardData(prev => ({
-          ...prev,
-          score: prev.score + Math.floor(Math.random() * 3) - 1,
-          trend: Math.floor(Math.random() * 10) - 5
-        }))
-      }, 30000) // Atualizar a cada 30 segundos
-
-      return () => clearInterval(interval)
-    }
-  }, [isConnected])
+  }, [user, authLoading, isConnected, address])
 
   const loadDashboardData = async () => {
     try {
       setIsLoading(true)
-      const response = await fetch('/api/dashboard')
+      setError(null)
+      
+      // Incluir endereço da carteira se conectada
+      const url = isConnected && address 
+        ? `/api/dashboard?walletAddress=${address}`
+        : '/api/dashboard'
+      
+      // Chamada real para API do backend
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
       const data = await response.json()
       setDashboardData(data)
+      
+      if (isConnected && address) {
+        console.log('Dashboard carregado com dados da carteira:', address)
+      }
     } catch (error) {
       console.error('Error loading dashboard data:', error)
+      setError('Erro ao carregar dados do dashboard')
     } finally {
       setIsLoading(false)
     }
@@ -74,6 +85,26 @@ export default function DashboardPage() {
       <DashboardLayout>
         <div className="flex items-center justify-center min-h-screen">
           <div className="loading-spinner w-8 h-8"></div>
+        </div>
+      </DashboardLayout>
+    )
+  }
+
+  if (error) {
+    return (
+      <DashboardLayout>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <ExclamationTriangleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
+            <h1 className="text-xl font-bold text-gray-900 mb-2">Erro ao carregar dados</h1>
+            <p className="text-gray-600 mb-4">{error}</p>
+            <button 
+              onClick={loadDashboardData}
+              className="btn btn-primary"
+            >
+              Tentar Novamente
+            </button>
+          </div>
         </div>
       </DashboardLayout>
     )

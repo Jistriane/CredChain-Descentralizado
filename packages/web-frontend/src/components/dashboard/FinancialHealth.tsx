@@ -18,70 +18,71 @@ interface FinancialMetric {
   previousValue: number
   unit: string
   trend: 'up' | 'down' | 'stable'
-  status: 'good' | 'warning' | 'critical'
+  status: 'good' | 'warning' | 'critical' | 'neutral'
   description: string
 }
 
-const mockMetrics: FinancialMetric[] = [
+// Dados serão carregados dinamicamente com base na carteira conectada
+const getDefaultMetrics = (): FinancialMetric[] => [
   {
     id: '1',
-    name: 'Renda Mensal',
-    value: 8500,
-    previousValue: 8200,
-    unit: 'R$',
-    trend: 'up',
-    status: 'good',
-    description: 'Renda líquida mensal'
+    name: 'Saldo da Carteira',
+    value: 0,
+    previousValue: 0,
+    unit: 'ETH',
+    trend: 'stable',
+    status: 'neutral',
+    description: 'Saldo atual da carteira blockchain'
   },
   {
     id: '2',
-    name: 'Dívidas Totais',
-    value: 12500,
-    previousValue: 13200,
-    unit: 'R$',
-    trend: 'down',
-    status: 'good',
-    description: 'Total de dívidas ativas'
+    name: 'Transações Totais',
+    value: 0,
+    previousValue: 0,
+    unit: '',
+    trend: 'stable',
+    status: 'neutral',
+    description: 'Total de transações realizadas'
   },
   {
     id: '3',
-    name: 'Limite Disponível',
-    value: 8500,
-    previousValue: 7200,
-    unit: 'R$',
-    trend: 'up',
-    status: 'good',
-    description: 'Limite de crédito disponível'
+    name: 'Valor Total Movimentado',
+    value: 0,
+    previousValue: 0,
+    unit: 'ETH',
+    trend: 'stable',
+    status: 'neutral',
+    description: 'Valor total movimentado na carteira'
   },
   {
     id: '4',
-    name: 'Utilização de Crédito',
-    value: 68,
-    previousValue: 72,
-    unit: '%',
-    trend: 'down',
-    status: 'warning',
-    description: 'Percentual do limite utilizado'
+    name: 'Atividade Recente',
+    value: 0,
+    previousValue: 0,
+    unit: 'dias',
+    trend: 'stable',
+    status: 'neutral',
+    description: 'Última atividade na carteira'
   },
   {
     id: '5',
-    name: 'Parcelas em Atraso',
+    name: 'Idade da Carteira',
     value: 0,
-    previousValue: 1,
-    unit: '',
-    trend: 'down',
-    status: 'good',
-    description: 'Parcelas em atraso nos últimos 30 dias'
+    previousValue: 0,
+    unit: 'dias',
+    trend: 'stable',
+    status: 'neutral',
+    description: 'Tempo desde a criação da carteira'
   },
   {
     id: '6',
     name: 'Score de Crédito',
-    value: 750,
-    previousValue: 735,
+    value: 0,
+    previousValue: 0,
     unit: '',
-    trend: 'up',
-    status: 'good',
-    description: 'Score atual no sistema'
+    trend: 'stable',
+    status: 'neutral',
+    description: 'Score será calculado com base nos dados da carteira'
   }
 ]
 
@@ -93,6 +94,8 @@ const getStatusColor = (status: string) => {
       return 'text-yellow-600 bg-yellow-50 border-yellow-200'
     case 'critical':
       return 'text-red-600 bg-red-50 border-red-200'
+    case 'neutral':
+      return 'text-blue-600 bg-blue-50 border-blue-200'
     default:
       return 'text-gray-600 bg-gray-50 border-gray-200'
   }
@@ -137,7 +140,7 @@ export function FinancialHealth() {
   const [metrics, setMetrics] = useState<FinancialMetric[]>([])
 
   useEffect(() => {
-    setMetrics(mockMetrics)
+    setMetrics(getDefaultMetrics())
   }, [])
 
   const overallHealth = metrics.reduce((acc, metric) => {

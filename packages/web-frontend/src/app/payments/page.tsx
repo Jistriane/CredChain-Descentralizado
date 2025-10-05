@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { useAuth } from '@/contexts/AuthContext'
+import { useWalletSafe } from '../../hooks/useWalletSafe'
 import { 
   CalendarIcon, 
   CreditCardIcon, 
@@ -25,44 +27,53 @@ interface Payment {
 }
 
 export default function PaymentsPage() {
+  const { user } = useAuth()
+  const { isConnected, address } = useWalletSafe()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterStatus, setFilterStatus] = useState<'all' | 'pending' | 'paid' | 'overdue'>('all')
+  const [payments, setPayments] = useState<Payment[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Dados mockados
-  const payments: Payment[] = [
-    {
-      id: '1',
-      description: 'Cartão de Crédito - Visa',
-      amount: 1250.00,
-      dueDate: '2024-01-15',
-      status: 'pending',
-      category: 'Cartão de Crédito'
-    },
-    {
-      id: '2',
-      description: 'Empréstimo Pessoal',
-      amount: 850.00,
-      dueDate: '2024-01-10',
-      status: 'overdue',
-      category: 'Empréstimo'
-    },
-    {
-      id: '3',
-      description: 'Financiamento Veículo',
-      amount: 2100.00,
-      dueDate: '2024-01-20',
-      status: 'paid',
-      category: 'Financiamento'
-    },
-    {
-      id: '4',
-      description: 'Cartão de Crédito - Mastercard',
-      amount: 750.00,
-      dueDate: '2024-01-25',
-      status: 'pending',
-      category: 'Cartão de Crédito'
+  useEffect(() => {
+    loadPayments()
+  }, [isConnected, address])
+
+  const loadPayments = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      // Incluir endereço da carteira se conectada
+      const url = isConnected && address 
+        ? `/api/payments?walletAddress=${address}`
+        : '/api/payments'
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      setPayments(data.payments || [])
+      
+      if (isConnected && address) {
+        console.log('Pagamentos carregados com dados da carteira:', address)
+      }
+    } catch (error) {
+      console.error('Error loading payments:', error)
+      setError('Erro ao carregar pagamentos')
+    } finally {
+      setIsLoading(false)
     }
-  ]
+  }
 
   const filteredPayments = payments.filter(payment => {
     const matchesSearch = payment.description.toLowerCase().includes(searchTerm.toLowerCase())
@@ -114,6 +125,40 @@ export default function PaymentsPage() {
   const totalOverdue = payments
     .filter(p => p.status === 'overdue')
     .reduce((sum, p) => sum + p.amount, 0)
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="loading-spinner w-8 h-8"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <ExclamationTriangleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <h1 className="text-xl font-bold text-gray-900 mb-2">Erro ao carregar dados</h1>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button 
+                onClick={loadPayments}
+                className="btn btn-primary"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">

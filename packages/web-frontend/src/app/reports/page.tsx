@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Input } from '@/components/ui/input'
+import { useAuth } from '@/contexts/AuthContext'
+import { useWalletSafe } from '../../hooks/useWalletSafe'
 import { 
   ChartBarIcon,
   DocumentTextIcon,
@@ -33,60 +35,106 @@ interface Report {
 }
 
 export default function ReportsPage() {
+  const { user } = useAuth()
+  const { isConnected, address } = useWalletSafe()
   const [searchTerm, setSearchTerm] = useState('')
   const [filterType, setFilterType] = useState<'all' | 'credit' | 'payment' | 'financial' | 'compliance'>('all')
+  const [reports, setReports] = useState<Report[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  // Dados mockados
-  const reports: Report[] = [
-    {
-      id: '1',
-      title: 'Relatório de Score de Crédito',
-      description: 'Análise detalhada do seu score de crédito e fatores de influência',
-      type: 'credit',
-      status: 'ready',
-      createdAt: '2024-01-10',
-      fileSize: '2.3 MB',
-      downloadCount: 5
-    },
-    {
-      id: '2',
-      title: 'Histórico de Pagamentos',
-      description: 'Relatório completo de todos os pagamentos realizados',
-      type: 'payment',
-      status: 'ready',
-      createdAt: '2024-01-08',
-      fileSize: '1.8 MB',
-      downloadCount: 12
-    },
-    {
-      id: '3',
-      title: 'Análise Financeira Mensal',
-      description: 'Relatório de saúde financeira e recomendações',
-      type: 'financial',
-      status: 'generating',
-      createdAt: '2024-01-12',
-      downloadCount: 0
-    },
-    {
-      id: '4',
-      title: 'Relatório de Compliance',
-      description: 'Verificação de conformidade com regulamentações',
-      type: 'compliance',
-      status: 'ready',
-      createdAt: '2024-01-05',
-      fileSize: '3.1 MB',
-      downloadCount: 3
-    },
-    {
-      id: '5',
-      title: 'Score de Crédito - Dezembro',
-      description: 'Relatório mensal de evolução do score',
-      type: 'credit',
-      status: 'error',
-      createdAt: '2024-01-15',
-      downloadCount: 0
+  useEffect(() => {
+    loadReports()
+  }, [isConnected, address])
+
+  const loadReports = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      // Incluir endereço da carteira se conectada
+      const url = isConnected && address 
+        ? `/api/reports?walletAddress=${address}`
+        : '/api/reports'
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      setReports(data.reports || [])
+      
+      if (isConnected && address) {
+        console.log('Relatórios carregados com dados da carteira:', address)
+      }
+    } catch (error) {
+      console.error('Error loading reports:', error)
+      setError('Erro ao carregar relatórios')
+    } finally {
+      setIsLoading(false)
     }
-  ]
+  }
+
+  // Dados serão carregados dinamicamente com base na carteira conectada
+
+  const handleDownload = async (reportId: string) => {
+    try {
+      const response = await fetch(`/api/reports/${reportId}/download`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const blob = await response.blob()
+      const url = window.URL.createObjectURL(blob)
+      const a = document.createElement('a')
+      a.href = url
+      a.download = `relatorio-${reportId}.pdf`
+      document.body.appendChild(a)
+      a.click()
+      window.URL.revokeObjectURL(url)
+      document.body.removeChild(a)
+    } catch (error) {
+      console.error('Error downloading report:', error)
+      alert('Erro ao baixar relatório')
+    }
+  }
+
+  const handleGenerateReport = async (type: string) => {
+    try {
+      const response = await fetch('/api/reports/generate', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ type })
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      // Recarregar lista de relatórios
+      loadReports()
+    } catch (error) {
+      console.error('Error generating report:', error)
+      alert('Erro ao gerar relatório')
+    }
+  }
 
   const filteredReports = reports.filter(report => {
     const matchesSearch = report.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -153,6 +201,40 @@ export default function ReportsPage() {
       default:
         return <DocumentTextIcon className="w-6 h-6 text-gray-600" />
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="loading-spinner w-8 h-8"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <ExclamationTriangleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <h1 className="text-xl font-bold text-gray-900 mb-2">Erro ao carregar dados</h1>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button 
+                onClick={loadReports}
+                className="btn btn-primary"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

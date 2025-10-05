@@ -3,10 +3,10 @@
 import React from 'react';
 import { WalletConnectButton } from '../../components/wallet/WalletConnectButton';
 import { WalletInfo } from '../../components/wallet/WalletInfo';
-import { useWallet } from '../../hooks/useWallet';
+import { useWalletSafe } from '../../hooks/useWalletSafe';
 
 export default function WalletPage() {
-  const { isConnected, account, balance, chainId } = useWallet();
+  const { isConnected, address, balance, chainId } = useWalletSafe();
 
   return (
     <div className="min-h-screen bg-gray-50 py-8">
@@ -16,7 +16,7 @@ export default function WalletPage() {
             Gerenciamento de Carteira
           </h1>
           <p className="text-lg text-gray-600">
-            Conecte sua carteira MetaMask para acessar o CredChain
+            Conecte sua carteira MetaMask para acessar o sistema
           </p>
         </div>
 
@@ -38,17 +38,6 @@ export default function WalletPage() {
               />
             </div>
 
-            <div className="mt-6 p-4 bg-blue-50 rounded-lg">
-              <h3 className="font-medium text-blue-900 mb-2">
-                Instruções:
-              </h3>
-              <ol className="text-sm text-blue-800 space-y-1">
-                <li>1. Instale a extensão MetaMask</li>
-                <li>2. Clique em "Conectar Carteira"</li>
-                <li>3. Aprove a conexão no MetaMask</li>
-                <li>4. A rede será trocada automaticamente para Polkadot Hub TestNet</li>
-              </ol>
-            </div>
           </div>
 
           {/* Seção de Informações */}
@@ -80,7 +69,7 @@ export default function WalletPage() {
         {/* Seção de Recursos */}
         <div className="mt-8 bg-white rounded-lg shadow-md p-6">
           <h2 className="text-xl font-semibold text-gray-900 mb-4">
-            Recursos da Rede Polkadot
+            Recursos da Rede Ethereum
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -92,7 +81,7 @@ export default function WalletPage() {
               </div>
               <h3 className="font-medium text-gray-900 mb-2">Rede Rápida</h3>
               <p className="text-sm text-gray-600">
-                Transações rápidas e eficientes na rede Polkadot
+                Transações rápidas e eficientes na rede Ethereum
               </p>
             </div>
 
@@ -127,11 +116,11 @@ export default function WalletPage() {
           <h3 className="font-medium text-gray-900 mb-4">Links Úteis</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <h4 className="font-medium text-gray-700 mb-2">Rede Polkadot</h4>
+              <h4 className="font-medium text-gray-700 mb-2">Rede Ethereum</h4>
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>
                   <a 
-                    href="https://testnet-passet-hub-eth-rpc.polkadot.io" 
+                    href="https://eth.llamarpc.com" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
@@ -141,22 +130,22 @@ export default function WalletPage() {
                 </li>
                 <li>
                   <a 
-                    href="https://blockscout-passet-hub.parity-testnet.parity.io" 
+                    href="https://etherscan.io" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Block Explorer
+                    Etherscan Explorer
                   </a>
                 </li>
                 <li>
                   <a 
-                    href="https://faucet.polkadot.io/?parachain=1111" 
+                    href="https://metamask.io/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Faucet (Obter tokens de teste)
+                    MetaMask Wallet
                   </a>
                 </li>
               </ul>
@@ -166,17 +155,17 @@ export default function WalletPage() {
               <ul className="text-sm text-gray-600 space-y-1">
                 <li>
                   <a 
-                    href="https://polkadot-survival-guide.w3d.community/pt" 
+                    href="https://ethereum.org/pt/developers/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Polkadot Survival Guide
+                    Guia de Desenvolvimento
                   </a>
                 </li>
                 <li>
                   <a 
-                    href="https://docs.polkadot.network/" 
+                    href="https://docs.ethereum.org/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
@@ -186,12 +175,12 @@ export default function WalletPage() {
                 </li>
                 <li>
                   <a 
-                    href="https://substrate.io/" 
+                    href="https://ethers.org/" 
                     target="_blank" 
                     rel="noopener noreferrer"
                     className="text-blue-600 hover:text-blue-800"
                   >
-                    Substrate Framework
+                    Ethers.js Library
                   </a>
                 </li>
               </ul>

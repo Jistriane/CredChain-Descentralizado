@@ -1,17 +1,23 @@
 'use client';
 
 import React from 'react';
-import { useWallet } from '../../hooks/useWallet';
+import { useWalletSafe } from '../../hooks/useWalletSafe';
 
 export const WalletInfo: React.FC = () => {
   const { 
     isConnected, 
-    account, 
+    address, 
     balance, 
     chainId, 
     error,
-    getBalance 
-  } = useWallet();
+    getWalletBalance 
+  } = useWalletSafe();
+
+  // Debug logs
+  console.log('WalletInfo - isConnected:', isConnected);
+  console.log('WalletInfo - address:', address);
+  console.log('WalletInfo - balance:', balance);
+  console.log('WalletInfo - chainId:', chainId);
 
   const formatAddress = (address: string) => {
     return `${address.slice(0, 6)}...${address.slice(-4)}`;
@@ -67,7 +73,7 @@ export const WalletInfo: React.FC = () => {
         <div className="flex justify-between items-center">
           <span className="text-sm text-gray-600">Endereço:</span>
           <span className="font-mono text-sm bg-gray-100 px-2 py-1 rounded">
-            {formatAddress(account || '')}
+            {formatAddress(address || '')}
           </span>
         </div>
 
@@ -75,10 +81,13 @@ export const WalletInfo: React.FC = () => {
           <span className="text-sm text-gray-600">Saldo:</span>
           <div className="flex items-center space-x-2">
             <span className="font-mono text-sm">
-              {formatBalance(balance)} PAS
+              {formatBalance(balance)} ETH
             </span>
             <button
-              onClick={getBalance}
+              onClick={async () => {
+                console.log('Botão de atualizar saldo clicado');
+                await getWalletBalance();
+              }}
               className="text-blue-500 hover:text-blue-700 text-sm"
             >
               ↻
@@ -107,9 +116,9 @@ export const WalletInfo: React.FC = () => {
 
       <div className="pt-4 border-t border-gray-200">
         <div className="text-xs text-gray-500 space-y-1">
-          <p>• Rede: Polkadot Hub TestNet</p>
-          <p>• RPC: https://testnet-passet-hub-eth-rpc.polkadot.io</p>
-          <p>• Explorer: https://blockscout-passet-hub.parity-testnet.parity.io</p>
+          <p>• Rede: Ethereum Mainnet</p>
+          <p>• RPC: https://eth.llamarpc.com</p>
+          <p>• Explorer: https://etherscan.io</p>
         </div>
       </div>
     </div>

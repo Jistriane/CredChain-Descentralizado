@@ -1,10 +1,12 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Card } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Badge } from '@/components/ui/badge'
 import { Tabs } from '@/components/ui/tabs'
+import { useAuth } from '@/contexts/AuthContext'
+import { useWalletSafe } from '../../hooks/useWalletSafe'
 import { 
   ChartBarIcon,
   ArrowTrendingUpIcon,
@@ -38,11 +40,58 @@ interface ScoreHistory {
 }
 
 export default function ScorePage() {
+  const { user } = useAuth()
+  const { isConnected, address } = useWalletSafe()
   const [activeTab, setActiveTab] = useState('overview')
+  const [scoreData, setScoreData] = useState({
+    currentScore: 0,
+    previousScore: 0,
+    factors: [],
+    history: [],
+    recommendations: []
+  })
+  const [isLoading, setIsLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
   
-  const currentScore = 750
-  const previousScore = 720
+  const currentScore = scoreData.currentScore
+  const previousScore = scoreData.previousScore
   const scoreChange = currentScore - previousScore
+
+  useEffect(() => {
+    loadScoreData()
+  }, [isConnected, address])
+
+  const loadScoreData = async () => {
+    try {
+      setIsLoading(true)
+      setError(null)
+      
+      // Incluir endereço da carteira se conectada
+      const url = isConnected && address 
+        ? `/api/score?walletAddress=${address}`
+        : '/api/score'
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      setScoreData(data)
+    } catch (error) {
+      console.error('Error loading score data:', error)
+      setError('Erro ao carregar dados do score')
+    } finally {
+      setIsLoading(false)
+    }
+  }
   
   const scoreRange = {
     excellent: { min: 800, max: 1000, color: '#10B981' },
@@ -60,82 +109,9 @@ export default function ScorePage() {
 
   const scoreLevel = getScoreLevel(currentScore)
 
-  const factors: ScoreFactor[] = [
-    {
-      name: 'Histórico de Pagamentos',
-      impact: 'positive',
-      weight: 35,
-      current: 85,
-      max: 100,
-      description: 'Sua pontualidade nos pagamentos é excelente',
-      recommendation: 'Continue mantendo os pagamentos em dia'
-    },
-    {
-      name: 'Utilização de Crédito',
-      impact: 'negative',
-      weight: 30,
-      current: 75,
-      max: 30,
-      description: 'Sua utilização está acima do recomendado',
-      recommendation: 'Reduza o uso do cartão de crédito para menos de 30%'
-    },
-    {
-      name: 'Idade do Crédito',
-      impact: 'positive',
-      weight: 15,
-      current: 60,
-      max: 100,
-      description: 'Você tem um bom histórico de crédito',
-      recommendation: 'Mantenha contas antigas abertas'
-    },
-    {
-      name: 'Tipos de Crédito',
-      impact: 'neutral',
-      weight: 10,
-      current: 50,
-      max: 100,
-      description: 'Diversificação moderada de produtos',
-      recommendation: 'Considere diversificar seus produtos de crédito'
-    },
-    {
-      name: 'Consultas Recentes',
-      impact: 'negative',
-      weight: 10,
-      current: 20,
-      max: 100,
-      description: 'Muitas consultas nos últimos meses',
-      recommendation: 'Evite novas consultas por 6 meses'
-    }
-  ]
-
-  const scoreHistory: ScoreHistory[] = [
-    { date: '2024-01-01', score: 720, change: 15 },
-    { date: '2023-12-01', score: 705, change: -10 },
-    { date: '2023-11-01', score: 715, change: 25 },
-    { date: '2023-10-01', score: 690, change: 5 },
-    { date: '2023-09-01', score: 685, change: -15 }
-  ]
-
-  const recommendations = [
-    {
-      title: 'Reduza a utilização de crédito',
-      description: 'Mantenha o uso do cartão abaixo de 30% do limite',
-      impact: '+25 pontos',
-      priority: 'high'
-    },
-    {
-      title: 'Evite novas consultas',
-      description: 'Não solicite novos créditos por 6 meses',
-      impact: '+15 pontos',
-      priority: 'medium'
-    },
-    {
-      title: 'Mantenha pagamentos em dia',
-      description: 'Continue com a pontualidade atual',
-      impact: 'Mantém score',
-      priority: 'low'
-    }
-  ]
+  const factors: ScoreFactor[] = scoreData.factors || []
+  const scoreHistory: ScoreHistory[] = scoreData.history || []
+  const recommendations = scoreData.recommendations || []
 
   const getFactorIcon = (impact: string) => {
     switch (impact) {
@@ -159,6 +135,40 @@ export default function ScorePage() {
       default:
         return <Badge variant="secondary">{priority}</Badge>
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="loading-spinner w-8 h-8"></div>
+          </div>
+        </div>
+      </div>
+    )
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gray-50 py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex items-center justify-center min-h-screen">
+            <div className="text-center">
+              <ExclamationTriangleIcon className="w-12 h-12 text-red-500 mx-auto mb-4" />
+              <h1 className="text-xl font-bold text-gray-900 mb-2">Erro ao carregar dados</h1>
+              <p className="text-gray-600 mb-4">{error}</p>
+              <button 
+                onClick={loadScoreData}
+                className="btn btn-primary"
+              >
+                Tentar Novamente
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

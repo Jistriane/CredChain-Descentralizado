@@ -3,6 +3,7 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react'
 import { useAuth } from './AuthContext'
 import { useSocket } from './SocketContext'
+import { useWalletSafe } from '../hooks/useWalletSafe'
 
 interface Notification {
   id: string
@@ -31,6 +32,7 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const { isConnected } = useSocket()
   const { user } = useAuth()
+  const { address } = useWalletSafe()
 
   const unreadCount = notifications.filter(n => !n.read).length
 
@@ -45,74 +47,123 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
     setNotifications(prev => [newNotification, ...prev.slice(0, 49)]) // Manter apenas 50 notificações
   }
 
-  const markAsRead = (id: string) => {
-    setNotifications(prev => 
-      prev.map(n => n.id === id ? { ...n, read: true } : n)
-    )
+  const markAsRead = async (id: string) => {
+    try {
+      await fetch(`/api/notifications/${id}/read`, {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      setNotifications(prev => 
+        prev.map(n => n.id === id ? { ...n, read: true } : n)
+      )
+    } catch (error) {
+      console.error('Error marking notification as read:', error)
+    }
   }
 
-  const markAllAsRead = () => {
-    setNotifications(prev => 
-      prev.map(n => ({ ...n, read: true }))
-    )
+  const markAllAsRead = async () => {
+    try {
+      await fetch('/api/notifications/read-all', {
+        method: 'PATCH',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      setNotifications(prev => 
+        prev.map(n => ({ ...n, read: true }))
+      )
+    } catch (error) {
+      console.error('Error marking all notifications as read:', error)
+    }
   }
 
-  const removeNotification = (id: string) => {
-    setNotifications(prev => prev.filter(n => n.id !== id))
+  const removeNotification = async (id: string) => {
+    try {
+      await fetch(`/api/notifications/${id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      setNotifications(prev => prev.filter(n => n.id !== id))
+    } catch (error) {
+      console.error('Error removing notification:', error)
+    }
   }
 
-  const clearAll = () => {
-    setNotifications([])
+  const clearAll = async () => {
+    try {
+      await fetch('/api/notifications/clear', {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
+        }
+      })
+      
+      setNotifications([])
+    } catch (error) {
+      console.error('Error clearing all notifications:', error)
+    }
   }
 
   // Carregar notificações do usuário
   useEffect(() => {
     if (user) {
-      // Simular carregamento de notificações
-      const mockNotifications: Notification[] = [
-        {
-          id: '1',
-          type: 'success',
-          title: 'Score Atualizado',
-          message: 'Seu score foi atualizado para 750 pontos',
-          actionUrl: '/dashboard',
-          timestamp: new Date(Date.now() - 3600000).toISOString(),
-          read: false
-        },
-        {
-          id: '2',
-          type: 'info',
-          title: 'Nova Oferta',
-          message: 'Você tem uma nova oferta de crédito disponível',
-          actionUrl: '/offers',
-          timestamp: new Date(Date.now() - 7200000).toISOString(),
-          read: true
-        }
-      ]
-      
-      setNotifications(mockNotifications)
+      loadNotifications()
+    } else {
+      setNotifications([])
     }
   }, [user])
 
-  // Simular notificações em tempo real
-  useEffect(() => {
-    if (isConnected) {
-      const interval = setInterval(() => {
-        // Simular notificação ocasional
-        if (Math.random() < 0.1) {
-          addNotification({
-            type: 'info',
-            title: 'Nova Atualização',
-            message: 'Seu score foi atualizado',
-            actionUrl: '/dashboard',
-            metadata: {}
-          })
+  const loadNotifications = async () => {
+    try {
+      // Incluir endereço da carteira se conectada
+      const url = address 
+        ? `/api/notifications?walletAddress=${address}`
+        : '/api/notifications'
+      
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${user?.token}`,
+          'Content-Type': 'application/json'
         }
-      }, 30000) // Verificar a cada 30 segundos
-
-      return () => clearInterval(interval)
+      })
+      
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+      
+      const data = await response.json()
+      setNotifications(data.notifications || [])
+      
+      if (address) {
+        console.log('Notificações carregadas com dados da carteira:', address)
+      }
+    } catch (error) {
+      console.error('Error loading notifications:', error)
+      // Em caso de erro, manter array vazio
+      setNotifications([])
     }
-  }, [isConnected])
+  }
+
+  // Conectar com WebSocket para notificações em tempo real
+  useEffect(() => {
+    if (isConnected && user) {
+      // Aqui seria implementada a conexão real com WebSocket
+      // para receber notificações em tempo real do servidor
+      console.log('Conectado ao WebSocket para notificações em tempo real')
+    }
+  }, [isConnected, user])
 
   const value: NotificationContextType = {
     notifications,
