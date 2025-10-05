@@ -1,0 +1,55 @@
+name: Deploy to Vercel
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        cache-dependency-path: packages/web-frontend/package-lock.json
+        
+    - name: Install dependencies
+      run: |
+        cd packages/web-frontend
+        npm ci
+        
+    - name: Build project
+      run: |
+        cd packages/web-frontend
+        npm run build
+        
+    - name: Deploy to Vercel
+      uses: amondnet/vercel-action@v25
+      with:
+        vercel-token: ${{ secrets.VERCEL_TOKEN }}
+        vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
+        vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
+        working-directory: packages/web-frontend
+        vercel-args: '--prod'
+        
+    - name: Set deployment URL
+      run: |
+        echo "DEPLOYMENT_URL=${{ steps.deploy.outputs.preview-url }}" >> $GITHUB_ENV
+        
+    - name: Comment deployment URL
+      uses: actions/github-script@v7
+      with:
+        script: |
+          github.rest.issues.createComment({
+            issue_number: context.issue.number,
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            body: '🚀 Deploy realizado com sucesso!\n\n🔗 **URL do Deploy:** ${{ env.DEPLOYMENT_URL }}\n\n✅ Frontend do CredChain está em produção!'
+          })
