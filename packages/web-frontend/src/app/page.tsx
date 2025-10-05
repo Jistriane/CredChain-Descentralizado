@@ -1,18 +1,21 @@
 'use client'
 
+import dynamic from 'next/dynamic'
 import { useEffect, useState } from 'react'
-import { Hero } from '@/components/sections/Hero'
-import { Features } from '@/components/sections/Features'
-import { HowItWorks } from '@/components/sections/HowItWorks'
-import { Stats } from '@/components/sections/Stats'
-import { Testimonials } from '@/components/sections/Testimonials'
-import { CTA } from '@/components/sections/CTA'
-import { Footer } from '@/components/layout/Footer'
-import { Header } from '@/components/layout/Header'
 
 // Force dynamic rendering
 export const dynamic = 'force-dynamic'
 export const revalidate = 0
+
+// Dynamic imports to prevent SSR issues
+const Hero = dynamic(() => import('@/components/sections/Hero'), { ssr: false })
+const Features = dynamic(() => import('@/components/sections/Features'), { ssr: false })
+const HowItWorks = dynamic(() => import('@/components/sections/HowItWorks'), { ssr: false })
+const Stats = dynamic(() => import('@/components/sections/Stats'), { ssr: false })
+const Testimonials = dynamic(() => import('@/components/sections/Testimonials'), { ssr: false })
+const CTA = dynamic(() => import('@/components/sections/CTA'), { ssr: false })
+const Footer = dynamic(() => import('@/components/layout/Footer'), { ssr: false })
+const Header = dynamic(() => import('@/components/layout/Header'), { ssr: false })
 
 export default function Home() {
   const [mounted, setMounted] = useState(false)
@@ -22,7 +25,14 @@ export default function Home() {
   }, [])
 
   if (!mounted) {
-    return null
+    return (
+      <main className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600">Carregando CredChain...</p>
+        </div>
+      </main>
+    )
   }
 
   return (
@@ -37,4 +47,5 @@ export default function Home() {
       <Footer />
     </main>
   )
-}export const dynamic = "force-dynamic"
+}
+export const dynamic = "force-dynamic"

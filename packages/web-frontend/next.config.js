@@ -17,41 +17,47 @@ const nextConfig = {
     BLOCK_EXPLORER: process.env.NEXT_PUBLIC_BLOCK_EXPLORER || 'https://polkascan.io',
     API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.credchain.io',
   },
-  // Production optimizations
-  output: 'standalone',
-  compress: true,
-  poweredByHeader: false,
-  generateEtags: false,
-  trailingSlash: false,
-  swcMinify: true,
   
-  // Disable static generation to prevent window errors
+  // Disable ALL static generation
+  output: 'export',
+  trailingSlash: true,
+  skipTrailingSlashRedirect: true,
+  distDir: 'dist',
+  
+  // Force dynamic rendering for all pages
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
   
-  // Force dynamic rendering for all pages
+  // Disable static optimization completely
   generateStaticParams: false,
   staticPageGenerationTimeout: 1000,
-  skipTrailingSlashRedirect: true,
   
-  webpack: (config, { isServer }) => {
-    config.resolve.fallback = {
-      ...config.resolve.fallback,
-      fs: false,
-      net: false,
-      tls: false,
-    };
-    
-    // Fix for window is not defined errors during build
+  webpack: (config, { isServer, dev }) => {
+    // Fix for window is not defined errors
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
         net: false,
         tls: false,
+        crypto: false,
+        stream: false,
+        url: false,
+        zlib: false,
+        http: false,
+        https: false,
+        assert: false,
+        os: false,
+        path: false,
       };
     }
+    
+    // Disable static optimization
+    config.optimization = {
+      ...config.optimization,
+      splitChunks: false,
+    };
     
     return config;
   },

@@ -62,3 +62,4 @@ export function Providers({ children }: { children: React.ReactNode }) {
     </QueryClientProvider>
   )
 }
+export const dynamic = "force-dynamic"

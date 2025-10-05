@@ -274,3 +274,4 @@ export function useWallet() {
 // Exportar tipos e constantes para uso em outros componentes
 export { SUPPORTED_WALLETS, polkadotMainnetConfig }
 export type { WalletState, WalletActions, WalletContextType }
+export const dynamic = "force-dynamic"

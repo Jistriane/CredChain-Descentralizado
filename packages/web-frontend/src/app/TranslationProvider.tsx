@@ -65,3 +65,4 @@ export function useTranslation() {
   }
   return context
 }
+export const dynamic = "force-dynamic"

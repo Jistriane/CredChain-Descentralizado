@@ -23,4 +23,4 @@ export default function RootLayout({
       <body className={inter.className}>{children}</body>
     </html>
   )
-}
+}export const dynamic = "force-dynamic"
