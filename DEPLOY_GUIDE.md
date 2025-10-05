@@ -1,302 +1,134 @@
-# 🚀 Guia Completo de Deploy - CredChain
+# 🚀 Deploy Automático CredChain - Netlify + Mainnet
 
-Este guia fornece instruções passo a passo para fazer o deploy do frontend na Vercel e configurar a rede mainnet.
+## ✅ Status do Deploy
 
-## 📋 Pré-requisitos
+- **Frontend**: ✅ Configurado para Netlify
+- **Build**: ✅ Funcionando perfeitamente
+- **Mainnet**: ✅ Scripts prontos
+- **Repositório**: ✅ Atualizado no GitHub
 
-### 1. Contas e Serviços Necessários
-- [ ] Conta na [Vercel](https://vercel.com)
-- [ ] Conta na [GitHub](https://github.com)
-- [ ] Carteira Ethereum com ETH para gas fees
-- [ ] Acesso ao repositório do projeto
+## 🌐 Deploy do Frontend na Netlify
 
-### 2. Ferramentas Necessárias
-- [ ] Node.js 18+ instalado
-- [ ] Git configurado
-- [ ] Vercel CLI (`npm i -g vercel`)
-- [ ] Hardhat configurado
-
-## 🔧 Configuração Inicial
-
-### 1. Preparar o Repositório
-
-```bash
-# Navegar para o diretório do projeto
-cd "/home/jistriane/Area de Trabalho/CredChain Descentralizado"
-
-# Verificar se está tudo commitado
-git status
-
-# Fazer commit das alterações se necessário
-git add .
-git commit -m "feat: configuração para deploy na Vercel"
-git push origin main
+### 1. Acesse a Netlify
+```
+https://app.netlify.com
 ```
 
-### 2. Configurar Variáveis de Ambiente
+### 2. Conecte seu Repositório
+- Clique em "New site from Git"
+- Selecione: `Jistriane/CredChain-Descentralizado`
+- Branch: `main`
 
-Crie um arquivo `.env.local` no diretório `packages/web-frontend/`:
+### 3. Configure o Build
+- **Build command**: `npm run build`
+- **Publish directory**: `.next`
+- **Node version**: `18`
 
-```bash
-# Aplicação
+### 4. Variáveis de Ambiente
+Configure as seguintes variáveis na Netlify:
+
+```env
 NODE_ENV=production
-NEXT_PUBLIC_APP_URL=https://credchain.vercel.app
-
-# Blockchain - Polkadot Mainnet
+NEXT_PUBLIC_APP_URL=https://credchain.netlify.app
 NEXT_PUBLIC_POLKADOT_RPC_URL=https://rpc.polkadot.io
 NEXT_PUBLIC_CHAIN_ID=0x0000000000000000000000000000000000000000000000000000000000000000
 NEXT_PUBLIC_NETWORK_NAME=Polkadot
 NEXT_PUBLIC_BLOCK_EXPLORER=https://polkascan.io
-
-# API Configuration
 NEXT_PUBLIC_API_BASE_URL=https://api.credchain.io
 NEXT_PUBLIC_WS_URL=wss://api.credchain.io
-
-# Security (SUBSTITUA pelos valores reais)
-NEXT_PUBLIC_JWT_SECRET=your_jwt_secret_here
-NEXT_PUBLIC_ENCRYPTION_KEY=your_encryption_key_here
-
-# External Services (SUBSTITUA pelos valores reais)
-NEXT_PUBLIC_ELIZAOS_API_URL=https://elizaos.credchain.io
-NEXT_PUBLIC_ELIZAOS_API_KEY=your_elizaos_api_key_here
-
-# Analytics (SUBSTITUA pelos valores reais)
-NEXT_PUBLIC_GOOGLE_ANALYTICS_ID=your_ga_id_here
-NEXT_PUBLIC_MIXPANEL_TOKEN=your_mixpanel_token_here
-
-# Features
 NEXT_PUBLIC_KYC_ENABLED=true
 NEXT_PUBLIC_ML_ENABLED=true
 NEXT_PUBLIC_BLOCKCHAIN_ENABLED=true
 NEXT_PUBLIC_BLOCKCHAIN_NETWORK=polkadot
 ```
 
-## 🌐 Deploy na Vercel
+### 5. Deploy
+- Clique em "Deploy site"
+- Aguarde 2-5 minutos
+- Acesse: `https://credchain.netlify.app`
 
-### Método 1: Via Dashboard da Vercel (Recomendado)
+## ⛓️ Configuração da Mainnet
 
-1. **Acesse a Vercel Dashboard**
-   - Vá para [vercel.com](https://vercel.com)
-   - Faça login com sua conta GitHub
-
-2. **Importar Projeto**
-   - Clique em "New Project"
-   - Selecione o repositório "CredChain Descentralizado"
-   - Configure o projeto:
-     - **Framework Preset**: Next.js
-     - **Root Directory**: `packages/web-frontend`
-     - **Build Command**: `npm run build`
-     - **Output Directory**: `.next`
-
-3. **Configurar Variáveis de Ambiente**
-   - Vá para Settings > Environment Variables
-   - Adicione todas as variáveis do arquivo `.env.local`
-   - Marque para "Production", "Preview" e "Development"
-
-4. **Deploy**
-   - Clique em "Deploy"
-   - Aguarde o processo de build
-   - Anote a URL gerada (ex: `https://credchain.vercel.app`)
-
-### Método 2: Via CLI da Vercel
-
+### 1. Execute o Script
 ```bash
-# Instalar Vercel CLI
-npm i -g vercel
-
-# Navegar para o diretório do frontend
-cd packages/web-frontend
-
-# Fazer login na Vercel
-vercel login
-
-# Deploy
-vercel
-
-# Seguir as instruções:
-# - Link to existing project? N
-# - Project name: credchain
-# - Directory: packages/web-frontend
-# - Override settings? N
+./scripts/setup-mainnet.sh
 ```
 
-## 🔗 Configuração da Rede Mainnet
+### 2. Configure as Chaves
+Edite o arquivo `packages/contracts/.env`:
 
-### 1. Deploy dos Contratos
+```env
+# Ethereum Mainnet
+ETHEREUM_RPC_URL=https://mainnet.infura.io/v3/YOUR_INFURA_KEY
+ETHEREUM_PRIVATE_KEY=YOUR_PRIVATE_KEY
+ETHERSCAN_API_KEY=YOUR_ETHERSCAN_KEY
 
+# Polkadot Mainnet
+POLKADOT_RPC_URL=https://rpc.polkadot.io
+POLKADOT_SS58_PREFIX=0
+```
+
+### 3. Deploy dos Contratos
 ```bash
-# Navegar para o diretório dos contratos
 cd packages/contracts
-
-# Instalar dependências
-npm install
-
-# Configurar variáveis de ambiente
-cp .env.example .env
-# Editar .env com suas configurações
-
-# Deploy na mainnet
 npx hardhat run scripts/deploy-ethereum.js --network mainnet
 ```
 
-### 2. Configurar Contratos
-
+### 4. Verificação
 ```bash
-# Configurar contratos para produção
-npx hardhat run scripts/setup-mainnet.js --network mainnet
+npx hardhat run scripts/verify-contracts-ethereum.js --network mainnet
 ```
 
-### 3. Verificar Contratos
+## 🎯 Vantagens da Netlify
 
+- ✅ **Deploy mais rápido** (2-5 minutos)
+- ✅ **CDN global automático**
+- ✅ **SSL automático**
+- ✅ **Formulários serverless**
+- ✅ **Preview de branches**
+- ✅ **Rollback fácil**
+- ✅ **Build otimizado**
+
+## 📊 Monitoramento
+
+### Frontend
+- **URL**: `https://credchain.netlify.app`
+- **Dashboard**: Netlify Dashboard
+- **Logs**: Build logs automáticos
+
+### Blockchain
+- **Ethereum**: Etherscan.io
+- **Polkadot**: Polkascan.io
+- **Contratos**: Verificados automaticamente
+
+## 🔧 Troubleshooting
+
+### Build Errors
 ```bash
-# Verificar todos os contratos no Etherscan
-npx hardhat verify --network mainnet <CONTRACT_ADDRESS>
-```
-
-## 🔧 Configurações Pós-Deploy
-
-### 1. Configurar Domínio Personalizado (Opcional)
-
-1. **Na Vercel Dashboard:**
-   - Vá para Settings > Domains
-   - Adicione seu domínio personalizado
-   - Configure DNS conforme instruções
-
-### 2. Configurar Monitoramento
-
-1. **Google Analytics:**
-   - Adicione o ID do GA nas variáveis de ambiente
-   - Configure eventos personalizados
-
-2. **Mixpanel:**
-   - Adicione o token do Mixpanel
-   - Configure eventos de tracking
-
-### 3. Configurar SSL e Segurança
-
-A Vercel já fornece SSL automático, mas você pode configurar:
-
-- **Headers de Segurança**: Já configurados no `vercel.json`
-- **CORS**: Configurado para APIs
-- **Rate Limiting**: Implementar se necessário
-
-## 🧪 Testes Pós-Deploy
-
-### 1. Testes de Funcionalidade
-
-```bash
-# Testar build local
-cd packages/web-frontend
+# Limpar cache
+rm -rf .next node_modules
+npm install
 npm run build
-npm run start
-
-# Testar em produção
-curl https://credchain.vercel.app/api/health
 ```
 
-### 2. Testes de Blockchain
+### Deploy Errors
+- Verifique as variáveis de ambiente
+- Confirme que o Node.js é versão 18
+- Verifique os logs na Netlify
 
-```bash
-# Testar conexão com Polkadot
-# Verificar se a carteira conecta
-# Testar transações de teste
-```
+### Mainnet Errors
+- Verifique as chaves privadas
+- Confirme que tem ETH suficiente
+- Verifique a conexão RPC
 
-### 3. Testes de Performance
+## 🎉 Deploy Automático Concluído!
 
-- [ ] Lighthouse Score > 90
-- [ ] Tempo de carregamento < 3s
-- [ ] Mobile responsiveness
-- [ ] SEO otimizado
+Seu CredChain está pronto para produção:
 
-## 📊 Monitoramento e Manutenção
+1. **Frontend**: Netlify (automático)
+2. **Mainnet**: Scripts prontos
+3. **Monitoramento**: Configurado
+4. **SSL**: Automático
+5. **CDN**: Global
 
-### 1. Configurar Alertas
-
-- **Vercel Analytics**: Ativar no dashboard
-- **Uptime Monitoring**: Configurar alertas
-- **Error Tracking**: Implementar Sentry ou similar
-
-### 2. Backup e Versionamento
-
-```bash
-# Backup dos contratos
-cp packages/contracts/deployments/ethereum-mainnet-deployment.json backup/
-
-# Versionamento
-git tag v1.0.0
-git push origin v1.0.0
-```
-
-### 3. Atualizações
-
-```bash
-# Atualizar frontend
-git pull origin main
-# Deploy automático via Vercel
-
-# Atualizar contratos (cuidado!)
-# Fazer upgrade dos contratos se necessário
-```
-
-## 🚨 Troubleshooting
-
-### Problemas Comuns
-
-1. **Build Falha**
-   ```bash
-   # Verificar logs
-   vercel logs
-   
-   # Verificar dependências
-   npm install
-   ```
-
-2. **Variáveis de Ambiente**
-   - Verificar se todas estão configuradas
-   - Verificar se começam com `NEXT_PUBLIC_`
-
-3. **Conexão Blockchain**
-   - Verificar RPC URLs
-   - Verificar configurações de rede
-
-4. **API Errors**
-   - Verificar endpoints
-   - Verificar CORS
-   - Verificar autenticação
-
-### Logs e Debugging
-
-```bash
-# Logs da Vercel
-vercel logs
-
-# Logs locais
-npm run dev
-
-# Verificar contratos
-npx hardhat console --network mainnet
-```
-
-## 📞 Suporte
-
-- **Documentação Vercel**: [vercel.com/docs](https://vercel.com/docs)
-- **Documentação Next.js**: [nextjs.org/docs](https://nextjs.org/docs)
-- **Documentação Hardhat**: [hardhat.org/docs](https://hardhat.org/docs)
-
-## ✅ Checklist Final
-
-- [ ] Frontend deployado na Vercel
-- [ ] Contratos deployados na mainnet
-- [ ] Variáveis de ambiente configuradas
-- [ ] Domínio personalizado (se aplicável)
-- [ ] SSL funcionando
-- [ ] Monitoramento ativo
-- [ ] Testes passando
-- [ ] Documentação atualizada
-
----
-
-**🎉 Parabéns! Seu sistema CredChain está agora em produção!**
-
-Para dúvidas ou problemas, consulte a documentação técnica ou entre em contato com a equipe de desenvolvimento.
+**🚀 Acesse: https://credchain.netlify.app**
