@@ -162,6 +162,11 @@ export function NotificationProvider({ children }: { children: ReactNode }) {
       // Aqui seria implementada a conexão real com WebSocket
       // para receber notificações em tempo real do servidor
       console.log('Conectado ao WebSocket para notificações em tempo real')
+      
+      // Limpar conexão anterior se existir
+      return () => {
+        console.log('Desconectando WebSocket de notificações')
+      }
     }
   }, [isConnected, user])
 

@@ -1,7 +1,7 @@
 {
-  "timestamp": "2025-10-05T05:04:12.658Z",
-  "criticalIssues": 4,
-  "warnings": 10,
+  "timestamp": "2025-10-05T19:20:22.505Z",
+  "criticalIssues": 8,
+  "warnings": 5,
   "totalChecks": 28,
   "results": [
     {
@@ -47,27 +47,27 @@
     {
       "contract": "CredChainCreditScore.sol",
       "check": "Proteção Reentrância",
-      "status": "⚠️  WARNING"
+      "status": "✅ PASS"
     },
     {
       "contract": "CredChainPaymentRegistry.sol",
       "check": "Proteção Reentrância",
-      "status": "⚠️  WARNING"
+      "status": "✅ PASS"
     },
     {
       "contract": "CredChainIdentityVerification.sol",
       "check": "Proteção Reentrância",
-      "status": "⚠️  WARNING"
+      "status": "✅ PASS"
     },
     {
       "contract": "CredChainOracleIntegration.sol",
       "check": "Proteção Reentrância",
-      "status": "⚠️  WARNING"
+      "status": "✅ PASS"
     },
     {
       "contract": "CredChainCreditScore.sol",
       "check": "Eventos de Auditoria",
-      "status": "⚠️  WARNING"
+      "status": "✅ PASS"
     },
     {
       "contract": "CredChainPaymentRegistry.sol",
@@ -107,22 +107,22 @@
     {
       "contract": "CredChainCreditScore.sol",
       "check": "Dados Mocados",
-      "status": "✅ PASS"
+      "status": "❌ FAIL"
     },
     {
       "contract": "CredChainPaymentRegistry.sol",
       "check": "Dados Mocados",
-      "status": "✅ PASS"
+      "status": "❌ FAIL"
     },
     {
       "contract": "CredChainIdentityVerification.sol",
       "check": "Dados Mocados",
-      "status": "✅ PASS"
+      "status": "❌ FAIL"
     },
     {
       "contract": "CredChainOracleIntegration.sol",
       "check": "Dados Mocados",
-      "status": "✅ PASS"
+      "status": "❌ FAIL"
     },
     {
       "contract": "CredChainCreditScore.sol",

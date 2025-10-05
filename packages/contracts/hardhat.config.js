@@ -17,6 +17,26 @@ module.exports = {
       url: "http://127.0.0.1:8545",
       chainId: 1337,
     },
+    // Ethereum Mainnet
+    mainnet: {
+      url: process.env.ETHEREUM_RPC_URL || "https://eth-mainnet.g.alchemy.com/v2/YOUR_API_KEY",
+      chainId: 1,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+      gasPrice: "auto",
+      gas: "auto",
+    },
+    // Ethereum Sepolia Testnet
+    sepolia: {
+      url: process.env.SEPOLIA_RPC_URL || "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
+      chainId: 11155111,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
+    // Ethereum Goerli Testnet (deprecated but still used)
+    goerli: {
+      url: process.env.GOERLI_RPC_URL || "https://goerli.infura.io/v3/YOUR_INFURA_KEY",
+      chainId: 5,
+      accounts: process.env.PRIVATE_KEY ? [process.env.PRIVATE_KEY] : [],
+    },
     // Polkadot Mainnet - Configuração correta conforme documentação
     polkadot: {
       url: process.env.POLKADOT_RPC_URL || "https://rpc.polkadot.io",

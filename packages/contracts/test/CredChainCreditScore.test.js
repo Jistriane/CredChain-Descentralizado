@@ -35,11 +35,13 @@ describe("CredChainCreditScore", function () {
       const score = 750;
       const metadata = '{"factors": ["payment_history", "credit_utilization"]}';
       
-      await expect(credChainCreditScore.connect(calculator).updateCreditScore(
+      const tx = await credChainCreditScore.connect(calculator).updateCreditScore(
         user.address,
         score,
         metadata
-      )).to.emit(credChainCreditScore, "ScoreUpdated")
+      );
+      
+      await expect(tx).to.emit(credChainCreditScore, "ScoreUpdated")
         .withArgs(user.address, score, await getCurrentTimestamp(), 1);
 
       const scoreInfo = await credChainCreditScore.getCreditScoreInfo(user.address);
@@ -164,7 +166,7 @@ describe("CredChainCreditScore", function () {
     it("Should not allow non-owner to authorize calculator", async function () {
       await expect(
         credChainCreditScore.connect(user).authorizeCalculator(user.address)
-      ).to.be.revertedWith("CredChain: Only owner can call this function");
+      ).to.be.revertedWith("Ownable: caller is not the owner");
     });
   });
 

@@ -37,6 +37,7 @@ export const Logo: React.FC<LogoProps> = ({
         width={logoSize.width}
         height={logoSize.height}
         className="object-contain"
+        style={{ width: 'auto', height: 'auto' }}
         priority
       />
       {showText && variant !== 'icon' && (

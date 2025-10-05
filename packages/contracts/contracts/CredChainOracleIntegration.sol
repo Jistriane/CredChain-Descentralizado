@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -85,7 +90,19 @@ contract CredChainOracleIntegration is ReentrancyGuard, Ownable, Pausable {
 
     // Construtor
     constructor() {
-            }
+    }
+    // Validações de entrada aprimoradas
+    function _validateScoreInput(uint256 _score) internal pure {
+        require(_score >= 0 && _score <= 1000, "Score must be between 0 and 1000");
+    }
+    
+    function _validateAddress(address _addr) internal pure {
+        require(_addr != address(0), "Invalid address");
+    }
+    
+    function _validateString(string memory _str) internal pure {
+        require(bytes(_str).length > 0, "String cannot be empty");
+    }
 
     /**
      * @dev Registra um novo oráculo

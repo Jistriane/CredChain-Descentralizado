@@ -1,10 +1,18 @@
 {
-  "timestamp": "2025-10-05T19:11:54.682Z",
-  "network": "polkadot",
-  "isMainnet": false,
+  "timestamp": "2025-10-05T19:50:17.086Z",
+  "network": "ethereum",
+  "isMainnet": true,
   "checks": [
     {
       "name": "Variáveis de ambiente",
+      "status": "❌ FAIL"
+    },
+    {
+      "name": "Rede Mainnet",
+      "status": "✅ PASS"
+    },
+    {
+      "name": "Saldo da conta",
       "status": "❌ FAIL"
     },
     {
@@ -12,16 +20,16 @@
       "status": "✅ PASS"
     },
     {
-      "name": "Dados mockados",
+      "name": "Testes",
       "status": "✅ PASS"
     },
     {
-      "name": "Segurança",
-      "status": "✅ PASS"
+      "name": "Auditoria de segurança",
+      "status": "❌ FAIL"
     },
     {
       "name": "Otimização de gas",
-      "status": "✅ PASS"
+      "status": "⚠️  WARNING"
     },
     {
       "name": "Configuração de rede",
@@ -29,6 +37,7 @@
     }
   ],
   "allPassed": false,
+  "readinessPercentage": 50,
   "recommendations": [
     "Corrigir problemas identificados antes do deploy"
   ]

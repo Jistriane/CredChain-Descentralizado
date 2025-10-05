@@ -1,6 +1,11 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.19;
 
+
+import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/security/Pausable.sol";
+
 import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
@@ -48,6 +53,36 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
         uint256 finalScore,
         uint256 timestamp
     );
+    // Eventos de auditoria e segurança
+    event SecurityEvent(
+        string indexed eventType,
+        address indexed user,
+        uint256 timestamp,
+        string details
+    );
+    
+    event AccessGranted(
+        address indexed user,
+        string indexed role,
+        uint256 timestamp
+    );
+    
+    event AccessRevoked(
+        address indexed user,
+        string indexed role,
+        uint256 timestamp
+    );
+    
+    event ContractPaused(
+        address indexed admin,
+        uint256 timestamp,
+        string reason
+    );
+    
+    event ContractUnpaused(
+        address indexed admin,
+        uint256 timestamp
+    );
 
     // Mapeamentos
     mapping(address => CreditScore) public creditScores;
@@ -84,10 +119,34 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
         );
         _;
     }
+    // Modificadores de segurança adicionais
+    
+    
+    modifier validAddress(address _addr) {
+        require(_addr != address(0), "Invalid address");
+        _;
+    }
+    
+    modifier validAmount(uint256 _amount) {
+        require(_amount > 0, "Amount must be greater than 0");
+        _;
+    }
 
     // Construtor
     constructor() {
-                currentVersion = 1;
+        currentVersion = 1;
+    }
+    // Validações de entrada aprimoradas
+    function _validateScoreInput(uint256 _score) internal pure {
+        require(_score >= 0 && _score <= 1000, "Score must be between 0 and 1000");
+    }
+    
+    function _validateAddress(address _addr) internal pure {
+        require(_addr != address(0), "Invalid address");
+    }
+    
+    function _validateString(string memory _str) internal pure {
+        require(bytes(_str).length > 0, "String cannot be empty");
     }
 
     /**
@@ -102,6 +161,8 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
         string memory _metadata
     ) 
         external 
+        nonReentrant
+        whenNotPaused
         onlyAuthorizedCalculator 
         validScore(_score) 
     {
@@ -116,6 +177,7 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
         });
 
         emit ScoreUpdated(_user, _score, block.timestamp, currentVersion);
+        emit SecurityEvent("ScoreUpdated", _user, block.timestamp, "Credit score updated");
     }
 
     /**
@@ -253,6 +315,8 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
     {
         require(_calculator != address(0), "CredChain: Invalid calculator address");
         authorizedCalculators[_calculator] = true;
+        emit AccessGranted(_calculator, "Calculator", block.timestamp);
+        emit SecurityEvent("AccessGranted", _calculator, block.timestamp, "Calculator authorization granted");
     }
 
     /**
@@ -264,6 +328,8 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
         onlyOwner 
     {
         authorizedCalculators[_calculator] = false;
+        emit AccessRevoked(_calculator, "Calculator", block.timestamp);
+        emit SecurityEvent("AccessRevoked", _calculator, block.timestamp, "Calculator authorization revoked");
     }
 
     /**
@@ -342,5 +408,44 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
         ) 
     {
         return (currentVersion, MAX_SCORE, MIN_SCORE);
+    }
+
+    /**
+     * @dev Pausa o contrato em caso de emergência
+     * @param _reason Motivo da pausa
+     */
+    function pauseContract(string memory _reason) 
+        external 
+        onlyOwner 
+    {
+        _pause();
+        emit ContractPaused(msg.sender, block.timestamp, _reason);
+        emit SecurityEvent("ContractPaused", msg.sender, block.timestamp, _reason);
+    }
+
+    /**
+     * @dev Despausa o contrato
+     */
+    function unpauseContract() 
+        external 
+        onlyOwner 
+    {
+        _unpause();
+        emit ContractUnpaused(msg.sender, block.timestamp);
+        emit SecurityEvent("ContractUnpaused", msg.sender, block.timestamp, "Contract unpaused");
+    }
+
+    /**
+     * @dev Função de emergência para invalidação de score
+     * @param _user Endereço do usuário
+     * @param _reason Motivo da invalidação
+     */
+    function emergencyInvalidateScore(address _user, string memory _reason) 
+        external 
+        onlyOwner 
+    {
+        require(_user != address(0), "CredChain: Invalid user address");
+        creditScores[_user].isValid = false;
+        emit SecurityEvent("EmergencyInvalidation", _user, block.timestamp, _reason);
     }
 }

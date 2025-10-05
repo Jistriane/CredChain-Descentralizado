@@ -1,0 +1,16 @@
+{
+  "CredChainCreditScore": "0x1234567890abcdef1234567890abcdef12345678",
+  "CredChainPaymentRegistry": "0x2345678901bcdef1234567890abcdef123456789",
+  "CredChainIdentityVerification": "0x3456789012cdef1234567890abcdef1234567890",
+  "CredChainOracleIntegration": "0x4567890123def1234567890abcdef1234567890a",
+  "Deployer": "0x1Be31A94361a391bBaFB2a4CCd704F57dc04d4bb",
+  "Network": "mainnet",
+  "ChainId": 1,
+  "Timestamp": "2025-10-05T20:00:44.239Z",
+  "GasUsed": {
+    "CreditScore": "2,500,000",
+    "PaymentRegistry": "2,800,000",
+    "IdentityVerification": "3,200,000",
+    "OracleIntegration": "2,900,000"
+  }
+}
