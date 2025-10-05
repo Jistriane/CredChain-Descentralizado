@@ -33,6 +33,19 @@ interface WalletProviderProps {
   children: ReactNode
 }
 
+// Configuração da rede Ethereum Mainnet
+const ethereumMainnetConfig = {
+  chainId: "0x1", // Ethereum Mainnet
+  chainName: "Ethereum Mainnet",
+  nativeCurrency: { 
+    name: "Ether", 
+    symbol: "ETH", 
+    decimals: 18 
+  },
+  rpcUrls: ["https://mainnet.infura.io/v3/YOUR_PROJECT_ID"],
+  blockExplorerUrls: ["https://etherscan.io"]
+}
+
 export function WalletProvider({ children }: WalletProviderProps) {
   const [state, setState] = useState<WalletState>({
     isConnected: false,

@@ -1,8 +1,5 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  experimental: {
-    appDir: true,
-  },
   images: {
     domains: [
       'localhost', 
@@ -29,6 +26,10 @@ const nextConfig = {
   trailingSlash: false,
   // Optimize for Vercel
   swcMinify: true,
+  // Disable static generation for pages with client-side code
+  experimental: {
+    missingSuspenseWithCSRBailout: false,
+  },
   webpack: (config) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,

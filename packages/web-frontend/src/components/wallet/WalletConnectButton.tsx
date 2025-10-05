@@ -31,7 +31,7 @@ export const WalletConnectButton: React.FC<WalletConnectButtonProps> = ({
 
   const handleConnect = async () => {
     try {
-      await connectWallet();
+      await connectWallet('polkadot-js');
       if (address) {
         onWalletConnected?.(address);
       }

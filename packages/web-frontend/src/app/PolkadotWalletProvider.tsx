@@ -31,7 +31,7 @@ interface WalletState {
 interface WalletActions {
   connectWallet: (walletType: string) => Promise<void>
   disconnectWallet: () => void
-  switchNetwork: () => Promise<void>
+  switchNetwork: () => Promise<boolean>
   getWalletBalance: () => Promise<string>
 }
 
