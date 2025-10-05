@@ -328,3 +328,4 @@ export default function HelpPage() {
     </div>
   )
 }
+export const dynamic = "force-dynamic"

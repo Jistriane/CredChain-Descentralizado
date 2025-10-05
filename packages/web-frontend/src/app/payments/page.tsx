@@ -300,3 +300,4 @@ export default function PaymentsPage() {
     </div>
   )
 }
+export const dynamic = "force-dynamic"

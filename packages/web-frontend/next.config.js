@@ -2,7 +2,7 @@
 const nextConfig = {
   images: {
     domains: [
-      'localhost', 
+      'localhost',
       'api.credchain.io',
       'rpc.polkadot.io',
       'polkascan.io',
@@ -22,27 +22,40 @@ const nextConfig = {
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
-  // Enable static optimization
   trailingSlash: false,
-  // Optimize for Vercel
   swcMinify: true,
-  // Disable static generation for pages with client-side code
+  
+  // Disable static generation to prevent window errors
   experimental: {
     missingSuspenseWithCSRBailout: false,
   },
-  webpack: (config) => {
+  
+  // Force dynamic rendering for all pages
+  generateStaticParams: false,
+  staticPageGenerationTimeout: 1000,
+  skipTrailingSlashRedirect: true,
+  
+  webpack: (config, { isServer }) => {
     config.resolve.fallback = {
       ...config.resolve.fallback,
       fs: false,
       net: false,
       tls: false,
     };
+    
+    // Fix for window is not defined errors during build
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+    
     return config;
   },
-  // Production optimizations
-  compress: true,
-  poweredByHeader: false,
-  generateEtags: false,
+  
   // Security headers
   async headers() {
     return [

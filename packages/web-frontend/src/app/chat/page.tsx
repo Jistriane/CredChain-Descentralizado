@@ -355,3 +355,4 @@ export default function ChatPage() {
     </div>
   )
 }
+export const dynamic = "force-dynamic"

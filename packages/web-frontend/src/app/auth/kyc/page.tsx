@@ -687,3 +687,4 @@ export default function KYCPage() {
     </div>
   );
 }
+export const dynamic = "force-dynamic"
