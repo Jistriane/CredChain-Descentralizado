@@ -488,4 +488,3 @@ export default function ScorePage() {
   )
 }
 export const dynamic = "force-dynamic"
-export const dynamic = "force-dynamic"

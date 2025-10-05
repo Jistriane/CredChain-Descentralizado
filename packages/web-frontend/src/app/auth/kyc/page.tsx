@@ -688,4 +688,3 @@ export default function KYCPage() {
   );
 }
 export const dynamic = "force-dynamic"
-export const dynamic = "force-dynamic"
