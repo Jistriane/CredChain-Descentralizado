@@ -13,7 +13,7 @@ const nextConfig = {
   },
   env: {
     POLKADOT_RPC: process.env.NEXT_PUBLIC_POLKADOT_RPC_URL || 'https://rpc.polkadot.io',
-    CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID || '0x0000000000000000000000000000000000000000000000000000000000000000',
+    CHAIN_ID: process.env.NEXT_PUBLIC_CHAIN_ID || '0x1',
     BLOCK_EXPLORER: process.env.NEXT_PUBLIC_BLOCK_EXPLORER || 'https://polkascan.io',
     API_BASE_URL: process.env.NEXT_PUBLIC_API_BASE_URL || 'https://api.credchain.io',
   },

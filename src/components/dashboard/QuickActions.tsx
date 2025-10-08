@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { motion } from 'framer-motion'
 import { 
   CreditCardIcon,
@@ -25,72 +26,73 @@ interface QuickAction {
   disabled?: boolean
 }
 
-const quickActions: QuickAction[] = [
-  {
-    id: '1',
-    title: 'Solicitar Crédito',
-    description: 'Faça uma nova solicitação de crédito',
-    icon: CreditCardIcon,
-    color: 'text-blue-600',
-    bgColor: 'bg-blue-50',
-    borderColor: 'border-blue-200',
-    action: () => console.log('Solicitar crédito')
-  },
-  {
-    id: '2',
-    title: 'Relatório de Score',
-    description: 'Baixe seu relatório detalhado',
-    icon: DocumentTextIcon,
-    color: 'text-green-600',
-    bgColor: 'bg-green-50',
-    borderColor: 'border-green-200',
-    action: () => console.log('Baixar relatório')
-  },
-  {
-    id: '3',
-    title: 'Análise de Crédito',
-    description: 'Veja sua análise completa',
-    icon: ChartBarIcon,
-    color: 'text-purple-600',
-    bgColor: 'bg-purple-50',
-    borderColor: 'border-purple-200',
-    action: () => console.log('Ver análise')
-  },
-  {
-    id: '4',
-    title: 'Histórico de Pagamentos',
-    description: 'Consulte seu histórico',
-    icon: BanknotesIcon,
-    color: 'text-yellow-600',
-    bgColor: 'bg-yellow-50',
-    borderColor: 'border-yellow-200',
-    action: () => console.log('Ver histórico')
-  },
-  {
-    id: '5',
-    title: 'Verificação de Identidade',
-    description: 'Complete sua verificação',
-    icon: ShieldCheckIcon,
-    color: 'text-red-600',
-    bgColor: 'bg-red-50',
-    borderColor: 'border-red-200',
-    action: () => console.log('Verificar identidade'),
-    disabled: false
-  },
-  {
-    id: '6',
-    title: 'Atualizar Dados',
-    description: 'Atualize suas informações',
-    icon: ArrowPathIcon,
-    color: 'text-gray-600',
-    bgColor: 'bg-gray-50',
-    borderColor: 'border-gray-200',
-    action: () => console.log('Atualizar dados')
-  }
-]
-
 export function QuickActions() {
+  const router = useRouter()
   const [loading, setLoading] = useState<string | null>(null)
+
+  const quickActions: QuickAction[] = [
+    {
+      id: '1',
+      title: 'Ver Score',
+      description: 'Consulte seu score de crédito',
+      icon: ChartBarIcon,
+      color: 'text-blue-600',
+      bgColor: 'bg-blue-50',
+      borderColor: 'border-blue-200',
+      action: () => router.push('/score')
+    },
+    {
+      id: '2',
+      title: 'Pagamentos',
+      description: 'Gerencie seus pagamentos',
+      icon: BanknotesIcon,
+      color: 'text-green-600',
+      bgColor: 'bg-green-50',
+      borderColor: 'border-green-200',
+      action: () => router.push('/payments')
+    },
+    {
+      id: '3',
+      title: 'Relatórios',
+      description: 'Veja seus relatórios detalhados',
+      icon: DocumentTextIcon,
+      color: 'text-purple-600',
+      bgColor: 'bg-purple-50',
+      borderColor: 'border-purple-200',
+      action: () => router.push('/reports')
+    },
+    {
+      id: '4',
+      title: 'Chat IA',
+      description: 'Converse com nossa IA',
+      icon: CreditCardIcon,
+      color: 'text-yellow-600',
+      bgColor: 'bg-yellow-50',
+      borderColor: 'border-yellow-200',
+      action: () => router.push('/chat')
+    },
+    {
+      id: '5',
+      title: 'Carteira',
+      description: 'Gerencie sua carteira',
+      icon: ShieldCheckIcon,
+      color: 'text-red-600',
+      bgColor: 'bg-red-50',
+      borderColor: 'border-red-200',
+      action: () => router.push('/wallet'),
+      disabled: false
+    },
+    {
+      id: '6',
+      title: 'Configurações',
+      description: 'Atualize suas configurações',
+      icon: ArrowPathIcon,
+      color: 'text-gray-600',
+      bgColor: 'bg-gray-50',
+      borderColor: 'border-gray-200',
+      action: () => router.push('/settings')
+    }
+  ]
 
   const handleAction = async (action: QuickAction) => {
     if (action.disabled) return

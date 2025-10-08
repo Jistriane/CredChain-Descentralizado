@@ -2,14 +2,14 @@
 
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { useWallet } from '../../app/PolkadotWalletProvider';
+import { useWalletSafe } from '../../hooks/useWalletSafe';
 import { useTranslation } from '../../hooks/useTranslation';
 import { PolkadotWalletSelector } from '../wallet/PolkadotWalletSelector';
 import { LanguageSwitcher } from '../language/LanguageSwitcher';
 import { Logo } from '../ui/Logo';
 
 export const Header: React.FC = () => {
-  const { isConnected, address } = useWallet();
+  const { isConnected, address } = useWalletSafe();
   const { t } = useTranslation();
   const [mounted, setMounted] = useState(false);
 

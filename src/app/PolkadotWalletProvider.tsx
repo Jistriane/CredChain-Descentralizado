@@ -1,7 +1,19 @@
 'use client'
 
 import { createContext, useContext, useState, useEffect, ReactNode, useCallback } from 'react'
-import { web3Enable, web3Accounts } from '@polkadot/extension-dapp'
+
+// Importações condicionais para evitar problemas de SSR
+let web3Enable: any, web3Accounts: any
+
+if (typeof window !== 'undefined') {
+  try {
+    const polkadotExtension = require('@polkadot/extension-dapp')
+    web3Enable = polkadotExtension.web3Enable
+    web3Accounts = polkadotExtension.web3Accounts
+  } catch (error) {
+    console.warn('Polkadot extension-dapp não disponível:', error)
+  }
+}
 
 declare global {
   interface Window {
@@ -106,6 +118,12 @@ export function PolkadotWalletProvider({ children }: WalletProviderProps) {
       return '0'
     }
 
+    // Verificar se estamos no cliente antes de fazer fetch
+    if (typeof window === 'undefined') {
+      console.log('getWalletBalance: Executando no servidor, retornando saldo padrão')
+      return '0'
+    }
+
     console.log(`getWalletBalance: Obtendo saldo para ${state.address}`)
 
     try {
@@ -153,6 +171,16 @@ export function PolkadotWalletProvider({ children }: WalletProviderProps) {
     setState(prev => ({ ...prev, isConnecting: true, error: null }))
 
     try {
+      // Verificar se estamos no cliente antes de usar APIs do browser
+      if (typeof window === 'undefined') {
+        throw new Error('APIs de carteira não disponíveis no servidor')
+      }
+
+      // Verificar se as funções do Polkadot estão disponíveis
+      if (!web3Enable || !web3Accounts) {
+        throw new Error('Extensões do Polkadot não estão disponíveis. Recarregue a página.')
+      }
+
       // Usar a API oficial do Polkadot.js
       const extensions = await web3Enable('CredChain-Descentralizado')
       
@@ -236,14 +264,17 @@ export function PolkadotWalletProvider({ children }: WalletProviderProps) {
   const checkAvailableWallets = useCallback(() => {
     const availableWallets = []
     
-    Object.entries(SUPPORTED_WALLETS).forEach(([key, wallet]) => {
-      if (window.injectedWeb3 && window.injectedWeb3[wallet.extension]) {
-        availableWallets.push({
-          key,
-          ...wallet
-        })
-      }
-    })
+    // Verificar se estamos no cliente antes de acessar window
+    if (typeof window !== 'undefined') {
+      Object.entries(SUPPORTED_WALLETS).forEach(([key, wallet]) => {
+        if (window.injectedWeb3 && window.injectedWeb3[wallet.extension]) {
+          availableWallets.push({
+            key,
+            ...wallet
+          })
+        }
+      })
+    }
 
     return availableWallets
   }, [])
@@ -266,7 +297,20 @@ export function PolkadotWalletProvider({ children }: WalletProviderProps) {
 export function useWallet() {
   const context = useContext(WalletContext)
   if (context === undefined) {
-    throw new Error('useWallet deve ser usado dentro de um PolkadotWalletProvider')
+    // Retornar valores padrão em vez de lançar erro durante SSR
+    return {
+      isConnected: false,
+      address: null,
+      balance: '0',
+      chainId: null,
+      isConnecting: false,
+      error: null,
+      walletType: null,
+      connectWallet: async () => {},
+      disconnectWallet: () => {},
+      switchNetwork: async () => false,
+      getWalletBalance: async () => '0'
+    }
   }
   return context
 }
@@ -274,4 +318,3 @@ export function useWallet() {
 // Exportar tipos e constantes para uso em outros componentes
 export { SUPPORTED_WALLETS, polkadotMainnetConfig }
 export type { WalletState, WalletActions, WalletContextType }
-export const dynamic = "force-dynamic"

@@ -16,6 +16,7 @@ import {
   ArrowRightOnRectangleIcon
 } from '@heroicons/react/24/outline'
 import { useAuth } from '@/contexts/AuthContext'
+import { useNotification } from '@/contexts/NotificationContext'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
@@ -35,9 +36,8 @@ const navigation = [
 export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const { user, logout } = useAuth()
-  // Mock notifications para desenvolvimento
-  const notifications = []
-  const unreadCount = 0
+  // Notificações reais
+  const { notifications, unreadCount } = useNotification()
   const pathname = usePathname()
 
   const handleLogout = async () => {

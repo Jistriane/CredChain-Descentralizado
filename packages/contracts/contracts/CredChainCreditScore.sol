@@ -6,10 +6,6 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-
 /**
  * @title CredChainCreditScore
  * @dev Smart contract para gerenciamento de scores de crédito no CredChain
@@ -138,7 +134,7 @@ contract CredChainCreditScore is ReentrancyGuard, Ownable, Pausable {
     }
     // Validações de entrada aprimoradas
     function _validateScoreInput(uint256 _score) internal pure {
-        require(_score >= 0 && _score <= 1000, "Score must be between 0 and 1000");
+        require(_score >= MIN_SCORE && _score <= MAX_SCORE, "Score must be between 0 and 1000");
     }
     
     function _validateAddress(address _addr) internal pure {

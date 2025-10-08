@@ -84,33 +84,26 @@ export default function ProfileScreen({ navigation }: ProfileScreenProps) {
       // Simular carregamento de perfil
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      const userProfile: UserProfile = {
-        id: '1',
-        name: 'João Silva',
-        email: 'joao@example.com',
-        phone: '+55 11 99999-9999',
-        address: 'São Paulo, SP, Brasil',
-        dateOfBirth: '1990-01-01',
-        kycStatus: 'approved',
-        walletAddress: '0x1234567890abcdef1234567890abcdef12345678',
-        creditScore: 750,
-        lastUpdated: new Date().toISOString(),
-        preferences: {
-          notifications: true,
-          emailUpdates: true,
-          smsAlerts: false,
-        },
-      };
-
-      setProfile(userProfile);
-      setFormData({
-        name: userProfile.name,
-        email: userProfile.email,
-        phone: userProfile.phone || '',
-        address: userProfile.address || '',
-        dateOfBirth: userProfile.dateOfBirth || '',
-        preferences: userProfile.preferences,
-      });
+      // Carregar dados reais do usuário
+      const response = await fetch('/api/user/profile', {
+        headers: {
+          'Authorization': `Bearer ${userToken}`
+        }
+      })
+      
+        const userProfile = await response.json()
+        setProfile(userProfile);
+        setFormData({
+          name: userProfile.name,
+          email: userProfile.email,
+          phone: userProfile.phone || '',
+          address: userProfile.address || '',
+          dateOfBirth: userProfile.dateOfBirth || '',
+          preferences: userProfile.preferences,
+        });
+      } else {
+        throw new Error('Erro ao carregar perfil')
+      }
     } catch (error) {
       console.error('Erro ao carregar perfil:', error);
       Alert.alert('Erro', 'Não foi possível carregar o perfil');

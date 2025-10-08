@@ -111,7 +111,7 @@ function checkMockData() {
     const mockPatterns = [
       /mock|Mock|test|Test|fake|Fake|dummy|Dummy/,
       /hardcoded|hardcoded|example|Example/,
-      /0x0000000000000000000000000000000000000000/,
+      /0x[0-9a-fA-F]{40}/,
       /123456789/,
       /test@example\.com/
     ];

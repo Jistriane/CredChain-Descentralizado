@@ -1,0 +1,16 @@
+{
+  "CredChainCreditScore": "DEPLOY_CONTRACT_ADDRESS_HERE",
+  "CredChainPaymentRegistry": "DEPLOY_CONTRACT_ADDRESS_HERE", 
+  "CredChainIdentityVerification": "DEPLOY_CONTRACT_ADDRESS_HERE",
+  "CredChainOracleIntegration": "DEPLOY_CONTRACT_ADDRESS_HERE",
+  "Deployer": "YOUR_DEPLOYER_ADDRESS_HERE",
+  "Network": "mainnet",
+  "ChainId": 1,
+  "Timestamp": "DEPLOYMENT_TIMESTAMP_HERE",
+  "GasUsed": {
+    "CreditScore": "ACTUAL_GAS_USED_HERE",
+    "PaymentRegistry": "ACTUAL_GAS_USED_HERE", 
+    "IdentityVerification": "ACTUAL_GAS_USED_HERE",
+    "OracleIntegration": "ACTUAL_GAS_USED_HERE"
+  }
+}

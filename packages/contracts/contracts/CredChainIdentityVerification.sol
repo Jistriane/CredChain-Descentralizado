@@ -6,10 +6,6 @@ import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/security/Pausable.sol";
 
-import "@openzeppelin/contracts/security/ReentrancyGuard.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/security/Pausable.sol";
-
 /**
  * @title CredChainIdentityVerification
  * @dev Smart contract para verificação de identidade (KYC) no CredChain
@@ -154,10 +150,6 @@ contract CredChainIdentityVerification is ReentrancyGuard, Ownable, Pausable {
     constructor() {
     }
     // Validações de entrada aprimoradas
-    function _validateScoreInput(uint256 _score) internal pure {
-        require(_score >= 0 && _score <= 1000, "Score must be between 0 and 1000");
-    }
-    
     function _validateAddress(address _addr) internal pure {
         require(_addr != address(0), "Invalid address");
     }

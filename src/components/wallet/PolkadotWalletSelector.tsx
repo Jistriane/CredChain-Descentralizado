@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useState, useEffect } from 'react'
-import { useWallet } from '../../app/PolkadotWalletProvider'
+import { useWalletSafe } from '../../hooks/useWalletSafe'
 
 interface WalletOption {
   key: string
@@ -13,7 +13,7 @@ interface WalletOption {
 }
 
 export const PolkadotWalletSelector: React.FC = () => {
-  const { isConnected, address, balance, isConnecting, error, connectWallet, disconnectWallet, walletType } = useWallet()
+  const { isConnected, address, balance, isConnecting, error, connectWallet, disconnectWallet } = useWalletSafe()
   const [availableWallets, setAvailableWallets] = useState<WalletOption[]>([])
   const [showSelector, setShowSelector] = useState(false)
 
@@ -101,7 +101,7 @@ export const PolkadotWalletSelector: React.FC = () => {
         <div className="flex items-center space-x-2 bg-green-50 border border-green-200 rounded-lg px-3 py-2">
           <div className="w-2 h-2 bg-green-500 rounded-full"></div>
           <span className="text-sm font-medium text-green-800">
-            {walletType ? `${getWalletIcon(walletType)} ${getWalletName(walletType)}` : 'Carteira Conectada'}
+            Carteira Conectada
           </span>
         </div>
 

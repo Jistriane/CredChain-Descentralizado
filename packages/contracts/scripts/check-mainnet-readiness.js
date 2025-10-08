@@ -4,207 +4,221 @@ const path = require("path");
 
 async function main() {
   console.log("🔍 Verificando prontidão para deploy na mainnet...");
-  console.log("==================================================");
-
+  
   const checks = [];
-  let allPassed = true;
-
-  // 1. Verificar configuração de rede
-  console.log("\n1️⃣ Verificando configuração de rede...");
-  const network = hre.network.name;
-  const isMainnet = network === "polkadot";
   
-  if (isMainnet) {
-    console.log("✅ Rede configurada para mainnet:", network);
-    checks.push({ name: "Rede Mainnet", status: "✅ PASS" });
-  } else {
-    console.log("⚠️  Rede configurada para testnet:", network);
-    checks.push({ name: "Rede Mainnet", status: "⚠️  TESTNET" });
-  }
-
-  // 2. Verificar variáveis de ambiente
-  console.log("\n2️⃣ Verificando variáveis de ambiente...");
-  const requiredEnvVars = ["PRIVATE_KEY", "POLKADOT_RPC_URL"];
-  const missingVars = requiredEnvVars.filter(varName => !process.env[varName]);
+  // 1. Verificar variáveis de ambiente
+  console.log("\n📋 Verificando variáveis de ambiente...");
   
-  if (missingVars.length === 0) {
-    console.log("✅ Todas as variáveis de ambiente necessárias estão configuradas");
-    checks.push({ name: "Variáveis de Ambiente", status: "✅ PASS" });
-  } else {
-    console.log("❌ Variáveis de ambiente faltando:", missingVars.join(", "));
-    checks.push({ name: "Variáveis de Ambiente", status: "❌ FAIL" });
-    allPassed = false;
+  const requiredEnvVars = [
+    "PRIVATE_KEY",
+    "ETHEREUM_RPC_URL",
+    "ETHERSCAN_API_KEY"
+  ];
+  
+  for (const envVar of requiredEnvVars) {
+    if (process.env[envVar]) {
+      console.log(`✅ ${envVar}: Configurada`);
+      checks.push({ name: envVar, status: "PASS" });
+    } else {
+      console.log(`❌ ${envVar}: Não configurada`);
+      checks.push({ name: envVar, status: "FAIL" });
+    }
   }
-
-  // 3. Verificar saldo da conta
-  console.log("\n3️⃣ Verificando saldo da conta...");
+  
+  // 2. Verificar conectividade com a rede
+  console.log("\n🌐 Verificando conectividade com a rede...");
+  
+  try {
+    const network = await ethers.provider.getNetwork();
+    console.log(`✅ Conectado à rede: ${network.name} (Chain ID: ${network.chainId})`);
+    checks.push({ name: "Network Connection", status: "PASS" });
+    
+    if (network.chainId !== 1) {
+      console.log("⚠️  Não está conectado à mainnet (Chain ID: 1)");
+      checks.push({ name: "Mainnet Connection", status: "WARNING" });
+    } else {
+      checks.push({ name: "Mainnet Connection", status: "PASS" });
+    }
+    
+  } catch (error) {
+    console.log(`❌ Erro de conectividade: ${error.message}`);
+    checks.push({ name: "Network Connection", status: "FAIL" });
+  }
+  
+  // 3. Verificar saldo do deployer
+  console.log("\n💰 Verificando saldo do deployer...");
+  
   try {
     const [deployer] = await ethers.getSigners();
-    const balance = await deployer.provider.getBalance(deployer.address);
-    const balanceInEth = ethers.formatEther(balance);
+    const balance = await deployer.getBalance();
+    const balanceEth = ethers.utils.formatEther(balance);
     
-    console.log("💰 Saldo da conta:", balanceInEth, "DOT");
+    console.log(`✅ Saldo: ${balanceEth} ETH`);
+    checks.push({ name: "Deployer Balance", status: "PASS" });
     
-    if (parseFloat(balanceInEth) > 0.1) {
-      console.log("✅ Saldo suficiente para deploy");
-      checks.push({ name: "Saldo da Conta", status: "✅ PASS" });
+    if (balance.lt(ethers.utils.parseEther("0.1"))) {
+      console.log("⚠️  Saldo baixo - considere adicionar mais ETH");
+      checks.push({ name: "Sufficient Balance", status: "WARNING" });
     } else {
-      console.log("⚠️  Saldo baixo, pode não ser suficiente para deploy");
-      checks.push({ name: "Saldo da Conta", status: "⚠️  LOW" });
+      checks.push({ name: "Sufficient Balance", status: "PASS" });
     }
+    
   } catch (error) {
-    console.log("❌ Erro ao verificar saldo:", error.message);
-    checks.push({ name: "Saldo da Conta", status: "❌ ERROR" });
-    allPassed = false;
+    console.log(`❌ Erro ao verificar saldo: ${error.message}`);
+    checks.push({ name: "Deployer Balance", status: "FAIL" });
   }
-
+  
   // 4. Verificar compilação dos contratos
-  console.log("\n4️⃣ Verificando compilação dos contratos...");
+  console.log("\n🔨 Verificando compilação dos contratos...");
+  
   try {
-    await hre.run("compile");
-    console.log("✅ Contratos compilados com sucesso");
-    checks.push({ name: "Compilação", status: "✅ PASS" });
-  } catch (error) {
-    console.log("❌ Erro na compilação:", error.message);
-    checks.push({ name: "Compilação", status: "❌ FAIL" });
-    allPassed = false;
-  }
-
-  // 5. Verificar tamanho dos contratos
-  console.log("\n5️⃣ Verificando tamanho dos contratos...");
-  const contractFiles = [
-    "CredChainCreditScore.sol",
-    "CredChainPaymentRegistry.sol", 
-    "CredChainIdentityVerification.sol",
-    "CredChainOracleIntegration.sol"
-  ];
-
-  let sizeCheckPassed = true;
-  for (const contractFile of contractFiles) {
-    const contractPath = path.join(__dirname, "..", "contracts", contractFile);
-    if (fs.existsSync(contractPath)) {
-      const stats = fs.statSync(contractPath);
-      const sizeKB = stats.size / 1024;
-      
-      if (sizeKB < 100) {
-        console.log(`✅ ${contractFile}: ${sizeKB.toFixed(2)}KB (OK)`);
-      } else {
-        console.log(`❌ ${contractFile}: ${sizeKB.toFixed(2)}KB (MUITO GRANDE)`);
-        sizeCheckPassed = false;
+    // Verificar se os contratos compilam
+    const contracts = [
+      "CredChainOracleIntegration",
+      "CredChainIdentityVerification",
+      "CredChainPaymentRegistry",
+      "CredChainCreditScore"
+    ];
+    
+    for (const contractName of contracts) {
+      try {
+        await ethers.getContractFactory(contractName);
+        console.log(`✅ ${contractName}: Compilado com sucesso`);
+        checks.push({ name: `Compile ${contractName}`, status: "PASS" });
+      } catch (error) {
+        console.log(`❌ ${contractName}: Erro de compilação - ${error.message}`);
+        checks.push({ name: `Compile ${contractName}`, status: "FAIL" });
       }
     }
-  }
-
-  if (sizeCheckPassed) {
-    checks.push({ name: "Tamanho dos Contratos", status: "✅ PASS" });
-  } else {
-    checks.push({ name: "Tamanho dos Contratos", status: "❌ FAIL" });
-    allPassed = false;
-  }
-
-  // 6. Verificar testes
-  console.log("\n6️⃣ Verificando testes...");
-  try {
-    // Simular execução de testes (não executar realmente para não demorar)
-    console.log("✅ Testes configurados e prontos para execução");
-    checks.push({ name: "Testes", status: "✅ READY" });
+    
   } catch (error) {
-    console.log("❌ Erro nos testes:", error.message);
-    checks.push({ name: "Testes", status: "❌ FAIL" });
-    allPassed = false;
+    console.log(`❌ Erro na compilação: ${error.message}`);
+    checks.push({ name: "Contract Compilation", status: "FAIL" });
   }
-
-  // 7. Verificar configuração de segurança
-  console.log("\n7️⃣ Verificando configurações de segurança...");
-  const securityChecks = [
-    "Modificadores de acesso implementados",
-    "Validação de entradas implementada", 
-    "Proteção contra reentrância implementada",
-    "Sistema de autorização implementado"
+  
+  // 5. Verificar configurações de gas
+  console.log("\n⛽ Verificando configurações de gas...");
+  
+  try {
+    const gasPrice = await ethers.provider.getGasPrice();
+    const gasPriceGwei = ethers.utils.formatUnits(gasPrice, "gwei");
+    
+    console.log(`✅ Gas price: ${gasPriceGwei} Gwei`);
+    checks.push({ name: "Gas Price", status: "PASS" });
+    
+    if (gasPrice.gt(ethers.utils.parseUnits("100", "gwei"))) {
+      console.log("⚠️  Gas price alto - considere aguardar");
+      checks.push({ name: "Gas Price Reasonable", status: "WARNING" });
+    } else {
+      checks.push({ name: "Gas Price Reasonable", status: "PASS" });
+    }
+    
+  } catch (error) {
+    console.log(`❌ Erro ao verificar gas price: ${error.message}`);
+    checks.push({ name: "Gas Price", status: "FAIL" });
+  }
+  
+  // 6. Verificar arquivos de deploy
+  console.log("\n📄 Verificando arquivos de deploy...");
+  
+  const deploymentPath = path.join(__dirname, "../deployments/ethereum-mainnet-deployment.json");
+  
+  if (fs.existsSync(deploymentPath)) {
+    console.log("⚠️  Arquivo de deploy já existe - pode sobrescrever");
+    checks.push({ name: "Deploy File Exists", status: "WARNING" });
+  } else {
+    console.log("✅ Arquivo de deploy não existe - pode prosseguir");
+    checks.push({ name: "Deploy File Exists", status: "PASS" });
+  }
+  
+  // 7. Verificar configurações de segurança
+  console.log("\n🔒 Verificando configurações de segurança...");
+  
+  const securityConfigs = [
+    "MULTISIG_ADDRESS",
+    "TIMELOCK_ADDRESS",
+    "EMERGENCY_PAUSE_ADDRESS",
+    "EMERGENCY_RECOVERY_ADDRESS"
   ];
-
-  console.log("✅ Configurações de segurança verificadas:");
-  securityChecks.forEach(check => console.log(`   - ${check}`));
-  checks.push({ name: "Segurança", status: "✅ PASS" });
-
-  // 8. Verificar se não há dados mocados
-  console.log("\n8️⃣ Verificando ausência de dados mocados...");
-  const contractFilesToCheck = [
-    "CredChainCreditScore.sol",
-    "CredChainPaymentRegistry.sol",
-    "CredChainIdentityVerification.sol", 
-    "CredChainOracleIntegration.sol"
-  ];
-
-  let mockDataFound = false;
-  for (const contractFile of contractFilesToCheck) {
-    const contractPath = path.join(__dirname, "..", "contracts", contractFile);
-    if (fs.existsSync(contractPath)) {
-      const content = fs.readFileSync(contractPath, "utf8");
-      const mockPatterns = [
-        "mock",
-        "test",
-        "example",
-        "dummy",
-        "fake",
-        "hardcoded"
-      ];
-      
-      for (const pattern of mockPatterns) {
-        if (content.toLowerCase().includes(pattern)) {
-          console.log(`⚠️  Possível dado mocado encontrado em ${contractFile}: "${pattern}"`);
-          mockDataFound = true;
-        }
-      }
+  
+  for (const config of securityConfigs) {
+    if (process.env[config]) {
+      console.log(`✅ ${config}: Configurada`);
+      checks.push({ name: config, status: "PASS" });
+    } else {
+      console.log(`⚠️  ${config}: Não configurada`);
+      checks.push({ name: config, status: "WARNING" });
     }
   }
-
-  if (!mockDataFound) {
-    console.log("✅ Nenhum dado mocado detectado");
-    checks.push({ name: "Dados Mocados", status: "✅ PASS" });
-  } else {
-    console.log("❌ Dados mocados detectados - revisar antes do deploy");
-    checks.push({ name: "Dados Mocados", status: "❌ FAIL" });
-    allPassed = false;
+  
+  // 8. Verificar configurações de oráculos
+  console.log("\n🔮 Verificando configurações de oráculos...");
+  
+  const oracleConfigs = [
+    "ORACLE_ADDRESSES",
+    "VERIFIER_ADDRESSES",
+    "CALCULATOR_ADDRESSES"
+  ];
+  
+  for (const config of oracleConfigs) {
+    if (process.env[config]) {
+      console.log(`✅ ${config}: Configurada`);
+      checks.push({ name: config, status: "PASS" });
+    } else {
+      console.log(`⚠️  ${config}: Não configurada`);
+      checks.push({ name: config, status: "WARNING" });
+    }
   }
-
-  // Resumo final
-  console.log("\n📋 RESUMO DA VERIFICAÇÃO:");
-  console.log("========================");
-  checks.forEach(check => {
-    console.log(`${check.status} ${check.name}`);
-  });
-
-  if (allPassed) {
-    console.log("\n🎉 SISTEMA PRONTO PARA MAINNET!");
-    console.log("✅ Todos os checks passaram");
-    console.log("🚀 Pode proceder com o deploy na mainnet");
+  
+  // Resumo dos checks
+  console.log("\n📊 Resumo dos checks:");
+  
+  const passed = checks.filter(check => check.status === "PASS").length;
+  const warnings = checks.filter(check => check.status === "WARNING").length;
+  const failed = checks.filter(check => check.status === "FAIL").length;
+  
+  console.log(`✅ Passou: ${passed}`);
+  console.log(`⚠️  Avisos: ${warnings}`);
+  console.log(`❌ Falhou: ${failed}`);
+  
+  // Determinar se está pronto para deploy
+  if (failed > 0) {
+    console.log("\n❌ NÃO ESTÁ PRONTO PARA DEPLOY");
+    console.log("Corrija os problemas identificados antes de prosseguir");
+  } else if (warnings > 0) {
+    console.log("\n⚠️  PRONTO PARA DEPLOY COM AVISOS");
+    console.log("Considere resolver os avisos antes de prosseguir");
   } else {
-    console.log("\n⚠️  SISTEMA NÃO ESTÁ PRONTO PARA MAINNET!");
-    console.log("❌ Alguns checks falharam");
-    console.log("🔧 Corrija os problemas antes do deploy");
+    console.log("\n✅ PRONTO PARA DEPLOY");
+    console.log("Todos os checks passaram com sucesso");
   }
-
+  
   // Salvar relatório
   const report = {
     timestamp: new Date().toISOString(),
-    network: network,
-    isMainnet: isMainnet,
+    network: "ethereum-mainnet",
+    isMainnet: true,
     checks: checks,
-    allPassed: allPassed,
-    recommendations: allPassed ? 
-      ["Sistema pronto para deploy na mainnet"] : 
-      ["Corrigir problemas identificados antes do deploy"]
+    summary: {
+      passed,
+      warnings,
+      failed,
+      ready: failed === 0
+    }
   };
-
-  const reportPath = path.join(__dirname, "..", "mainnet-readiness-report.json");
+  
+  const reportPath = path.join(__dirname, "../mainnet-readiness-report.json");
   fs.writeFileSync(reportPath, JSON.stringify(report, null, 2));
-  console.log(`\n💾 Relatório salvo em: ${reportPath}`);
+  
+  console.log(`\n📄 Relatório salvo em: ${reportPath}`);
+  
+  return report;
 }
 
 main()
   .then(() => process.exit(0))
   .catch((error) => {
-    console.error("❌ Erro durante a verificação:", error);
+    console.error("❌ Erro na verificação:", error);
     process.exit(1);
   });

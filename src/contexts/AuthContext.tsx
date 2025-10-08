@@ -20,6 +20,7 @@ interface AuthContextType {
   isLoading: boolean
   isAuthenticated: boolean
   login: (email: string, password: string) => Promise<void>
+  loginWithWallet: (userData: User) => Promise<void>
   logout: () => void
   register: (name: string, email: string, password: string) => Promise<void>
   updateProfile: (data: Partial<User>) => Promise<void>
@@ -38,26 +39,30 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const isAuthenticated = !!user
 
-  // Simular carregamento inicial
+  // Carregar usuário da sessão
   useEffect(() => {
     const loadUser = async () => {
       try {
-        // Simular verificação de token/sessão
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Mock user para desenvolvimento
-        const mockUser: User = {
-          id: '1',
-          name: 'João Silva',
-          email: 'joao@example.com',
-          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face',
-          score: 750,
-          verified: true,
-          createdAt: '2024-01-15T10:00:00Z',
-          lastLogin: new Date().toISOString()
+        const token = localStorage.getItem('auth_token')
+        if (!token) {
+          setUser(null)
+          return
         }
-        
-        setUser(mockUser)
+
+        // Verificar token com backend
+        const response = await fetch('/api/auth/verify', {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          }
+        })
+
+        if (response.ok) {
+          const userData = await response.json()
+          setUser(userData)
+        } else {
+          localStorage.removeItem('auth_token')
+          setUser(null)
+        }
       } catch (error) {
         console.error('Erro ao carregar usuário:', error)
         setUser(null)
@@ -72,28 +77,38 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const login = async (email: string, password: string) => {
     setIsLoading(true)
     try {
-      // Simular login
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      if (email === 'joao@example.com' && password === '123456') {
-        const mockUser: User = {
-          id: '1',
-          name: 'João Silva',
-          email: email,
-          avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=32&h=32&fit=crop&crop=face',
-          score: 750,
-          verified: true,
-          createdAt: '2024-01-15T10:00:00Z',
-          lastLogin: new Date().toISOString()
-        }
-        
-        setUser(mockUser)
-        localStorage.setItem('auth_token', 'mock_token_123')
-      } else {
-        throw new Error('Credenciais inválidas')
+      const response = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Erro no login')
       }
+
+      const { user: userData, token } = await response.json()
+      setUser(userData)
+      localStorage.setItem('auth_token', token)
     } catch (error) {
       console.error('Erro no login:', error)
+      throw error
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  const loginWithWallet = async (userData: User) => {
+    setIsLoading(true)
+    try {
+      // Simular login com carteira
+      setUser(userData)
+      localStorage.setItem('auth_token', userData.token || 'mock-jwt-token')
+    } catch (error) {
+      console.error('Erro no login com carteira:', error)
       throw error
     } finally {
       setIsLoading(false)
@@ -176,6 +191,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     isLoading,
     isAuthenticated,
     login,
+    loginWithWallet,
     logout,
     register,
     updateProfile,
@@ -192,7 +208,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
 export function useAuth() {
   const context = useContext(AuthContext)
   if (context === undefined) {
-    throw new Error('useAuth deve ser usado dentro de um AuthProvider')
+    // Retornar valores padrão em vez de lançar erro durante SSR
+    return {
+      user: null,
+      isLoading: false,
+      isAuthenticated: false,
+      login: async () => {},
+      loginWithWallet: async () => {},
+      logout: () => {},
+      register: async () => {},
+      updateProfile: async () => {},
+      refreshUser: async () => {}
+    }
   }
   return context
 }

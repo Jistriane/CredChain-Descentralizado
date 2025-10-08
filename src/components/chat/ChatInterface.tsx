@@ -193,19 +193,31 @@ export const ChatInterface: React.FC<ChatInterfaceProps> = ({
 
   const processAudioMessage = async (audioBlob: Blob) => {
     try {
-      // Simular processamento de áudio
-      const mockTranscription = 'Como posso melhorar meu score de crédito?';
+      // Integração com serviço de transcrição real
+      const formData = new FormData();
+      formData.append('audio', audioBlob);
       
-      const userMessage: Message = {
-        id: Date.now().toString(),
-        type: 'user',
-        content: mockTranscription,
-        timestamp: new Date(),
-        isAudio: true
-      };
+      const response = await fetch('/api/transcribe', {
+        method: 'POST',
+        body: formData
+      });
+      
+      if (response.ok) {
+        const { transcription } = await response.json();
+        
+        const userMessage: Message = {
+          id: Date.now().toString(),
+          type: 'user',
+          content: transcription,
+          timestamp: new Date(),
+          isAudio: true
+        };
 
-      setMessages(prev => [...prev, userMessage]);
-      await sendMessage(mockTranscription);
+        setMessages(prev => [...prev, userMessage]);
+        await sendMessage(transcription);
+      } else {
+        throw new Error('Erro na transcrição');
+      }
     } catch (error) {
       console.error('Erro ao processar áudio:', error);
     }

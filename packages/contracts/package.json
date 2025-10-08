@@ -23,11 +23,15 @@
     "clean": "hardhat clean",
     "check:ethereum:mainnet": "node scripts/verify-ethereum-readiness.js",
     "check:polkadot:mainnet": "node scripts/verify-mainnet-readiness.js",
+    "check:mainnet:readiness": "hardhat run scripts/check-mainnet-readiness.js --network mainnet",
+    "deploy:mainnet": "hardhat run scripts/deploy-mainnet.js --network mainnet",
+    "verify:mainnet": "hardhat run scripts/verify-mainnet.js --network mainnet",
+    "configure:mainnet": "hardhat run scripts/configure-mainnet.js --network mainnet",
+    "test:mainnet": "hardhat run scripts/test-mainnet.js --network mainnet",
     "security:audit": "hardhat run scripts/security-audit.js",
     "fix:security": "node scripts/fix-security-issues.js",
-    "audit:full": "npm run security:audit && npm run check:ethereum:mainnet",
-    "deploy:ethereum:production": "npm run audit:full && npm run deploy:ethereum:mainnet",
-    "deploy:polkadot:production": "npm run audit:full && npm run deploy:polkadot:mainnet"
+    "audit:full": "npm run security:audit && npm run check:mainnet:readiness",
+    "deploy:production": "npm run audit:full && npm run deploy:mainnet && npm run configure:mainnet && npm run test:mainnet"
   },
   "keywords": [
     "blockchain",

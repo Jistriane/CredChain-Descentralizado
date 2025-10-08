@@ -5,15 +5,8 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url)
     const walletAddress = searchParams.get('walletAddress')
     
-    if (!walletAddress) {
-      return NextResponse.json(
-        { error: 'Endereço da carteira é obrigatório' },
-        { status: 400 }
-      )
-    }
-
-    // Relatórios baseados na carteira real conectada
-    const reports = [
+    // Relatórios baseados na carteira real conectada ou dados gerais
+    const reports = walletAddress ? [
       {
         id: '1',
         title: `Relatório da Carteira ${walletAddress.slice(0, 6)}...${walletAddress.slice(-4)}`,
@@ -26,11 +19,24 @@ export async function GET(request: Request) {
         walletAddress,
         message: 'Relatório será gerado com base nos dados reais da sua carteira'
       }
+    ] : [
+      {
+        id: '1',
+        title: 'Relatório Geral do Sistema',
+        description: 'Análise geral do sistema de credit scoring',
+        type: 'general',
+        status: 'ready',
+        createdAt: new Date().toISOString(),
+        fileSize: '0 MB',
+        downloadCount: 0,
+        walletAddress: null,
+        message: 'Conecte sua carteira para gerar relatórios personalizados'
+      }
     ]
 
     return NextResponse.json({ 
       reports,
-      message: 'Relatórios serão gerados com base nos dados reais da sua carteira'
+      message: walletAddress ? 'Relatórios serão gerados com base nos dados reais da sua carteira' : 'Conecte sua carteira para gerar relatórios personalizados'
     })
   } catch (error) {
     return NextResponse.json(

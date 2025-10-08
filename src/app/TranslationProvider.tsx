@@ -16,15 +16,19 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
 
   // Carregar idioma do localStorage na inicialização
   useEffect(() => {
-    const savedLanguage = localStorage.getItem('credchain-language') as Language
-    if (savedLanguage && getSupportedLanguages().includes(savedLanguage)) {
-      setLanguageState(savedLanguage)
+    if (typeof window !== 'undefined') {
+      const savedLanguage = localStorage.getItem('credchain-language') as Language
+      if (savedLanguage && getSupportedLanguages().includes(savedLanguage)) {
+        setLanguageState(savedLanguage)
+      }
     }
   }, [])
 
   const setLanguage = (newLanguage: Language) => {
     setLanguageState(newLanguage)
-    localStorage.setItem('credchain-language', newLanguage)
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('credchain-language', newLanguage)
+    }
   }
 
   const t = (key: string): string => {
@@ -61,8 +65,12 @@ export function TranslationProvider({ children }: { children: ReactNode }) {
 export function useTranslation() {
   const context = useContext(TranslationContext)
   if (context === undefined) {
-    throw new Error('useTranslation deve ser usado dentro de um TranslationProvider')
+    // Retornar valores padrão em vez de lançar erro durante SSR
+    return {
+      t: (key: string) => key,
+      language: 'pt-BR' as Language,
+      setLanguage: () => {}
+    }
   }
   return context
 }
-export const dynamic = "force-dynamic"

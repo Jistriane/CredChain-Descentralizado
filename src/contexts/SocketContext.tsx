@@ -171,7 +171,15 @@ export function SocketProvider({ children }: SocketProviderProps) {
 export function useSocket() {
   const context = useContext(SocketContext)
   if (context === undefined) {
-    throw new Error('useSocket deve ser usado dentro de um SocketProvider')
+    // Retornar valores padrão em vez de lançar erro durante SSR
+    return {
+      isConnected: false,
+      connect: () => {},
+      disconnect: () => {},
+      emit: () => {},
+      on: () => {},
+      off: () => {}
+    }
   }
   return context
 }

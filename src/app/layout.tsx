@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description: 'Plataforma inovadora de credit scoring baseada em blockchain e IA para democratizar o acesso ao crédito na América Latina.',
   keywords: ['blockchain', 'credit scoring', 'polkadot', 'elizaos', 'fintech', 'brasil'],
   authors: [{ name: 'Development Team' }],
-  viewport: 'width=device-width, initial-scale=1',
 };
 
 export default function RootLayout({
@@ -27,4 +26,4 @@ export default function RootLayout({
       </body>
     </html>
   );
-}export const dynamic = "force-dynamic"
+}

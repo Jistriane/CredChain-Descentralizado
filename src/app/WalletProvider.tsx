@@ -281,4 +281,3 @@ export function useWallet() {
   }
   return context
 }
-export const dynamic = "force-dynamic"
