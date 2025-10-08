@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3006",
+    "SERVICE_NAME": "notification-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "100",
+    "JWT_SECRET": "credchain_notification_jwt_secret_production_2024",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "SENDGRID_API_KEY": "sendgrid_api_key",
+    "TWILIO_ACCOUNT_SID": "twilio_account_sid",
+    "TWILIO_AUTH_TOKEN": "twilio_auth_token",
+    "TWILIO_PHONE_NUMBER": "+1234567890",
+    "FIREBASE_SERVER_KEY": "firebase_server_key",
+    "PUSH_NOTIFICATIONS_ENABLED": "true",
+    "EMAIL_NOTIFICATIONS_ENABLED": "true",
+    "SMS_NOTIFICATIONS_ENABLED": "true",
+    "WEBHOOK_URL": "https://webhooks.credchain.io",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

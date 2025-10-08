@@ -1,0 +1,38 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3007",
+    "SERVICE_NAME": "compliance-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "50",
+    "JWT_SECRET": "credchain_compliance_jwt_secret_production_2024",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "KYC_PROVIDER": "jumio",
+    "KYC_API_KEY": "jumio_api_key",
+    "KYC_API_SECRET": "jumio_api_secret",
+    "AML_ENABLED": "true",
+    "GDPR_ENABLED": "true",
+    "LGPD_ENABLED": "true",
+    "COMPLIANCE_RULES": "strict",
+    "AUDIT_ENABLED": "true",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

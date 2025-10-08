@@ -349,3 +349,4 @@ $RECYCLE.BIN/
 logs/
 temp/
 tmp/
+.vercel

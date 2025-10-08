@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3002",
+    "SERVICE_NAME": "auth-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "100",
+    "JWT_SECRET": "credchain_auth_jwt_secret_production_2024",
+    "JWT_EXPIRES_IN": "24h",
+    "REFRESH_TOKEN_EXPIRES_IN": "7d",
+    "BCRYPT_ROUNDS": "12",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "GOOGLE_CLIENT_ID": "google_oauth_client_id",
+    "GOOGLE_CLIENT_SECRET": "google_oauth_client_secret",
+    "FACEBOOK_APP_ID": "facebook_app_id",
+    "FACEBOOK_APP_SECRET": "facebook_app_secret",
+    "EMAIL_SERVICE": "sendgrid",
+    "EMAIL_API_KEY": "sendgrid_api_key",
+    "EMAIL_FROM": "noreply@credchain.io",
+    "TOTP_ISSUER": "CredChain",
+    "SESSION_SECRET": "credchain_session_secret_2024",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

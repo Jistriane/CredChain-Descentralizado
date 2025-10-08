@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3009",
+    "SERVICE_NAME": "user-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "100",
+    "JWT_SECRET": "credchain_user_jwt_secret_production_2024",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "MONGODB_URI": "mongodb://mongodb.credchain.io:27017/credchain",
+    "PROFILE_IMAGES_ENABLED": "true",
+    "FILE_UPLOAD_ENABLED": "true",
+    "MAX_FILE_SIZE": "10485760",
+    "ALLOWED_FILE_TYPES": "image/jpeg,image/png,image/gif,application/pdf",
+    "POLKADOT_RPC_URL": "https://rpc.polkadot.io",
+    "BLOCKCHAIN_ENABLED": "true",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

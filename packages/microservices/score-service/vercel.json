@@ -1,0 +1,39 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3003",
+    "SERVICE_NAME": "score-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "50",
+    "JWT_SECRET": "credchain_score_jwt_secret_production_2024",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "ML_MODEL_URL": "https://ml.credchain.io",
+    "ML_API_KEY": "ml_api_key_2024",
+    "SCORE_ALGORITHM": "advanced_ml",
+    "SCORE_WEIGHTS": "{\"payment_history\":0.3,\"credit_utilization\":0.25,\"credit_length\":0.2,\"new_credit\":0.15,\"credit_mix\":0.1}",
+    "SCORE_RANGE_MIN": "300",
+    "SCORE_RANGE_MAX": "850",
+    "SCORE_UPDATE_INTERVAL": "86400000",
+    "POLKADOT_RPC_URL": "https://rpc.polkadot.io",
+    "BLOCKCHAIN_ENABLED": "true",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

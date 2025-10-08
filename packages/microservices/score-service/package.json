@@ -38,7 +38,7 @@
     "ml-random-forest": "^1.0.0",
     "ml-svm": "^1.0.0",
     "ml-xgboost": "^1.0.0",
-    "tensorflow": "^4.0.0",
+    "@tensorflow/tfjs-node": "^4.15.0",
     "onnxruntime-node": "^1.16.0"
   },
   "devDependencies": {

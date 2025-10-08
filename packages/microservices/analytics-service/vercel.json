@@ -1,0 +1,37 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3008",
+    "SERVICE_NAME": "analytics-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "100",
+    "JWT_SECRET": "credchain_analytics_jwt_secret_production_2024",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "GOOGLE_ANALYTICS_ID": "GA_MEASUREMENT_ID",
+    "MIXPANEL_TOKEN": "mixpanel_project_token",
+    "PROMETHEUS_ENABLED": "true",
+    "GRAFANA_URL": "https://grafana.credchain.io",
+    "METRICS_COLLECTION_ENABLED": "true",
+    "REPORT_GENERATION_ENABLED": "true",
+    "DASHBOARD_ENABLED": "true",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}

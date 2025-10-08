@@ -1,0 +1,42 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "package.json",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/(.*)",
+      "dest": "/dist/index.js"
+    }
+  ],
+  "env": {
+    "NODE_ENV": "production",
+    "PORT": "3005",
+    "SERVICE_NAME": "oracle-service",
+    "CORS_ORIGINS": "https://credchain-mainnet.vercel.app,https://credchain.vercel.app",
+    "RATE_LIMIT_WINDOW_MS": "900000",
+    "RATE_LIMIT_MAX_REQUESTS": "200",
+    "JWT_SECRET": "credchain_oracle_jwt_secret_production_2024",
+    "REDIS_URL": "redis://redis.credchain.io:6379",
+    "DATABASE_URL": "postgresql://credchain:password@postgres.credchain.io:5432/credchain",
+    "SERASA_API_KEY": "serasa_api_key",
+    "SPC_API_KEY": "spc_api_key",
+    "BOA_VISTA_API_KEY": "boa_vista_api_key",
+    "RECEITA_FEDERAL_API_KEY": "receita_federal_api_key",
+    "BANCO_CENTRAL_API_KEY": "banco_central_api_key",
+    "OPEN_BANKING_API_KEY": "open_banking_api_key",
+    "CRYPTO_API_KEY": "crypto_api_key",
+    "WEATHER_API_KEY": "weather_api_key",
+    "ECONOMIC_API_KEY": "economic_api_key",
+    "POLKADOT_RPC_URL": "https://rpc.polkadot.io",
+    "BLOCKCHAIN_ENABLED": "true",
+    "ORACLE_UPDATE_INTERVAL": "3600000",
+    "LOG_LEVEL": "info",
+    "LOG_FORMAT": "json"
+  },
+  "regions": ["iad1"],
+  "framework": null
+}
